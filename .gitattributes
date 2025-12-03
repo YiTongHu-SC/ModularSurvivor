@@ -38,3 +38,4 @@
 *.aab     binary
 *.ttf     binary
 *.otf     binary
+*.obj     binary
