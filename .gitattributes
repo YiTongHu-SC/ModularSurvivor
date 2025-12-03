@@ -1,26 +1,7 @@
-﻿# * text=auto eol=lf
+﻿# 重新建立一个非常保守的 .gitattributes
+# 不写任何 eol，也不强制 text/binary，除了确实需要 binary 的类型
 
-# 文本文件，交给 Git 自动识别即可
-* text=auto
-
-# Unity / 常见文本文件（可写可不写，写了也没问题）
-*.cs      text
-*.js      text
-*.json    text
-*.xml     text
-*.yaml    text
-*.yml     text
-*.shader  text
-*.cginc   text
-*.compute text
-*.hlsl    text
-*.asmdef  text
-*.txt     text
-*.md      text
-*.meta    text
-*.html    text
-
-# 二进制文件（明确不做任何行尾转换）
+# 图片等资源文件
 *.png     binary
 *.jpg     binary
 *.jpeg    binary
