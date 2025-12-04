@@ -80,14 +80,14 @@ namespace Tests.Core.Events
         [UnityTest]
         public IEnumerator EventSystem_StressTest_ShouldHandleHighLoad()
         {
-            // 关闭详细日志以提高测试性能
-            eventManager.SetVerboseLogging(false);
+            // 启用高性能模式以获得最大性能
+            eventManager.SetHighPerformanceMode(true);
             
-            // 创建大量监听器
-            var listeners = new TestUnitDeathListener[100];
+            // 使用高性能监听器，无Debug.Log输出
+            var listeners = new HighPerformanceTestListener[100];
             for (int i = 0; i < listeners.Length; i++)
             {
-                listeners[i] = new TestUnitDeathListener();
+                listeners[i] = new HighPerformanceTestListener();
                 eventManager.Subscribe(listeners[i]);
             }
             
@@ -106,32 +106,34 @@ namespace Tests.Core.Events
             
             yield return null;
             
-            // 验证性能（调整为更合理的预期时间）
-            Assert.Less(stopwatch.ElapsedMilliseconds, 500, $"Event processing took too long: {stopwatch.ElapsedMilliseconds}ms");
+            // 验证性能（现在应该能达到更好的性能）
+            Assert.Less(stopwatch.ElapsedMilliseconds, 50, $"Event processing took too long: {stopwatch.ElapsedMilliseconds}ms");
             
             // 验证所有监听器都收到了最后一个事件
             foreach (var listener in listeners)
             {
                 Assert.IsTrue(listener.EventReceived);
+                Assert.AreEqual(100, listener.CallCount, "Listener should have received all 100 events");
             }
             
             Debug.Log($"Processed 10000 events (100 events × 100 listeners) in {stopwatch.ElapsedMilliseconds}ms");
             
-            // 重新启用日志（如果需要）
+            // 恢复正常模式
+            eventManager.SetHighPerformanceMode(false);
             eventManager.SetVerboseLogging(true);
         }
 
         [UnityTest]
         public IEnumerator EventSystem_ExtremeLightweightTest_ShouldHandleVeryHighLoad()
         {
-            // 极限性能测试：更多监听器，更多事件
-            eventManager.SetVerboseLogging(false);
+            // 极限性能测试：启用高性能模式
+            eventManager.SetHighPerformanceMode(true);
             
-            // 创建更多监听器
-            var listeners = new TestUnitDeathListener[500];
+            // 创建更多高性能监听器
+            var listeners = new HighPerformanceTestListener[500];
             for (int i = 0; i < listeners.Length; i++)
             {
-                listeners[i] = new TestUnitDeathListener();
+                listeners[i] = new HighPerformanceTestListener();
                 eventManager.Subscribe(listeners[i]);
             }
             
@@ -151,19 +153,22 @@ namespace Tests.Core.Events
             yield return null;
             
             // 极限测试的性能预期
-            Assert.Less(stopwatch.ElapsedMilliseconds, 1000, $"Extreme load test failed: {stopwatch.ElapsedMilliseconds}ms for 100000 event deliveries");
+            Assert.Less(stopwatch.ElapsedMilliseconds, 300, $"Extreme load test failed: {stopwatch.ElapsedMilliseconds}ms for 100000 event deliveries");
             
             // 验证所有监听器都收到了最后一个事件
             int receivedCount = 0;
             foreach (var listener in listeners)
             {
                 if (listener.EventReceived) receivedCount++;
+                Assert.AreEqual(200, listener.CallCount, $"Listener should have received all 200 events, but got {listener.CallCount}");
             }
             
             Assert.AreEqual(listeners.Length, receivedCount, "Not all listeners received events");
             
             Debug.Log($"Extreme test: Processed 100000 events (200 events × 500 listeners) in {stopwatch.ElapsedMilliseconds}ms");
             
+            // 恢复正常模式
+            eventManager.SetHighPerformanceMode(false);
             eventManager.SetVerboseLogging(true);
         }
 

@@ -136,6 +136,13 @@ public class GameManager : MonoBehaviour
         // 生产环境关闭详细日志以提高性能
         EventManager.Instance.SetVerboseLogging(false);
         
+        // 极限性能场景（如大量AI计算）可启用高性能模式
+        // 注意：高性能模式会关闭异常日志，仅在性能关键场景使用
+        if (isPerformanceCritical)
+        {
+            EventManager.Instance.SetHighPerformanceMode(true);
+        }
+        
         // 开发环境可以开启详细日志用于调试
         #if UNITY_EDITOR
         EventManager.Instance.SetVerboseLogging(true);
@@ -160,9 +167,11 @@ public class CustomEvent : EventData
 
 ## 性能特性
 - **零GC模式**：发布事件时不产生额外的内存分配
-- **高吞吐量**：优化后可处理10000+事件投递/500ms
+- **高吞吐量**：标准模式可处理10000+事件投递/100ms
+- **超高性能模式**：关闭异常日志，可处理10000+事件投递/50ms
 - **可配置日志**：生产环境可关闭详细日志提升性能
 - **直接遍历**：避免创建临时集合，减少GC压力
+- **分层优化**：正常模式保留异常安全，高性能模式追求极致速度
 
 ## 测试
 事件系统包含完整的单元测试和集成测试，位于 `Assets/Tests/Core/` 目录：

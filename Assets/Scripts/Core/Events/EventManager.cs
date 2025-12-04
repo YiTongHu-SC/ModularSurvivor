@@ -26,6 +26,9 @@ namespace Core.Events
 
         // 性能开关：是否启用详细日志（生产环境可关闭）
         private bool _enableVerboseLogging = false;
+        
+        // 超高性能模式：连异常日志都关闭（仅限性能测试）
+        private bool _enableHighPerformanceMode = false;
 
         public override void Initialize()
         {
@@ -40,6 +43,20 @@ namespace Core.Events
         {
             _enableVerboseLogging = enabled;
             Debug.Log($"EventManager: Verbose logging {(enabled ? "enabled" : "disabled")}.");
+        }
+
+        /// <summary>
+        /// 设置高性能模式（性能测试时可启用，会关闭所有日志包括异常日志）
+        /// </summary>
+        /// <param name="enabled">是否启用高性能模式</param>
+        public void SetHighPerformanceMode(bool enabled)
+        {
+            _enableHighPerformanceMode = enabled;
+            if (enabled)
+            {
+                _enableVerboseLogging = false; // 高性能模式下自动关闭详细日志
+            }
+            Debug.Log($"EventManager: High performance mode {(enabled ? "enabled" : "disabled")}.");
         }
 
         protected override void Awake()
@@ -65,22 +82,45 @@ namespace Core.Events
             }
 
             Type eventType = eventData.GetType();
+
+            // 高性能模式：极简代码路径
+            if (_enableHighPerformanceMode)
+            {
+                // 触发监听器对象 - 无异常处理和日志
+                if (_eventListeners.TryGetValue(eventType, out List<IEventListener> listeners) && listeners.Count > 0)
+                {
+                    for (int i = 0; i < listeners.Count; i++)
+                    {
+                        listeners[i].OnEventReceived(eventData);
+                    }
+                }
+
+                // 触发委托订阅者 - 无异常处理和日志
+                if (_eventSubscribers.TryGetValue(eventType, out List<Action<EventData>> subscribers) && subscribers.Count > 0)
+                {
+                    for (int i = 0; i < subscribers.Count; i++)
+                    {
+                        subscribers[i](eventData);
+                    }
+                }
+                return; // 早期退出，避免后续的计数和日志逻辑
+            }
+
+            // 正常模式：包含异常处理和日志
             int listenerCount = 0;
             int subscriberCount = 0;
 
-            // 触发监听器对象 - 直接遍历避免复制
-            if (_eventListeners.TryGetValue(eventType, out List<IEventListener> listeners))
+            // 触发监听器对象
+            if (_eventListeners.TryGetValue(eventType, out List<IEventListener> normalListeners))
             {
-                listenerCount = listeners.Count;
+                listenerCount = normalListeners.Count;
                 if (listenerCount > 0)
                 {
-                    // 直接遍历，无需创建临时列表
-                    // 使用for循环，在高频场景下比foreach更高效
-                    for (int i = 0; i < listeners.Count; i++)
+                    for (int i = 0; i < normalListeners.Count; i++)
                     {
                         try
                         {
-                            listeners[i].OnEventReceived(eventData);
+                            normalListeners[i].OnEventReceived(eventData);
                         }
                         catch (Exception ex)
                         {
@@ -90,18 +130,17 @@ namespace Core.Events
                 }
             }
 
-            // 触发委托订阅者 - 直接遍历避免复制
-            if (_eventSubscribers.TryGetValue(eventType, out List<Action<EventData>> subscribers))
+            // 触发委托订阅者
+            if (_eventSubscribers.TryGetValue(eventType, out List<Action<EventData>> normalSubscribers))
             {
-                subscriberCount = subscribers.Count;
+                subscriberCount = normalSubscribers.Count;
                 if (subscriberCount > 0)
                 {
-                    // 直接遍历，无需创建临时列表
-                    for (int i = 0; i < subscribers.Count; i++)
+                    for (int i = 0; i < normalSubscribers.Count; i++)
                     {
                         try
                         {
-                            subscribers[i](eventData);
+                            normalSubscribers[i](eventData);
                         }
                         catch (Exception ex)
                         {

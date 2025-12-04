@@ -12,6 +12,7 @@ namespace Tests.Core.Events
         public string LastUnitId { get; private set; }
         public Vector3 LastDeathPosition { get; private set; }
         public string LastKillerId { get; private set; }
+        public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
         protected override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
@@ -20,7 +21,11 @@ namespace Tests.Core.Events
             LastDeathPosition = eventData.DeathPosition;
             LastKillerId = eventData.KillerId;
             
-            Debug.Log($"[Test] Unit {eventData.UnitId} died at {eventData.DeathPosition}");
+            // 只在启用日志时输出
+            if (EnableLogging)
+            {
+                Debug.Log($"[Test] Unit {eventData.UnitId} died at {eventData.DeathPosition}");
+            }
         }
 
         public void Reset()
@@ -29,6 +34,32 @@ namespace Tests.Core.Events
             LastUnitId = null;
             LastDeathPosition = Vector3.zero;
             LastKillerId = null;
+        }
+    }
+
+    /// <summary>
+    /// 高性能测试监听器（无日志输出）
+    /// 专门用于性能测试
+    /// </summary>
+    public class HighPerformanceTestListener : EventListener<GameEvents.UnitDeathEvent>
+    {
+        public bool EventReceived { get; private set; }
+        public string LastUnitId { get; private set; }
+        public int CallCount { get; private set; }
+
+        protected override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
+        {
+            EventReceived = true;
+            LastUnitId = eventData.UnitId;
+            CallCount++;
+            // 无Debug.Log输出，最大化性能
+        }
+
+        public void Reset()
+        {
+            EventReceived = false;
+            LastUnitId = null;
+            CallCount = 0;
         }
     }
     
@@ -40,6 +71,7 @@ namespace Tests.Core.Events
         public bool EventReceived { get; private set; }
         public int LastWaveNumber { get; private set; }
         public int LastEnemyCount { get; private set; }
+        public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
         protected override void OnEventReceived(GameEvents.WaveStartEvent eventData)
         {
@@ -47,7 +79,11 @@ namespace Tests.Core.Events
             LastWaveNumber = eventData.WaveNumber;
             LastEnemyCount = eventData.EnemyCount;
             
-            Debug.Log($"[Test] Wave {eventData.WaveNumber} started with {eventData.EnemyCount} enemies");
+            // 只在启用日志时输出
+            if (EnableLogging)
+            {
+                Debug.Log($"[Test] Wave {eventData.WaveNumber} started with {eventData.EnemyCount} enemies");
+            }
         }
 
         public void Reset()
@@ -66,6 +102,7 @@ namespace Tests.Core.Events
         public bool EventReceived { get; private set; }
         public int LastNewLevel { get; private set; }
         public int LastExperienceGained { get; private set; }
+        public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
         protected override void OnEventReceived(GameEvents.PlayerLevelUpEvent eventData)
         {
@@ -73,7 +110,11 @@ namespace Tests.Core.Events
             LastNewLevel = eventData.NewLevel;
             LastExperienceGained = eventData.ExperienceGained;
             
-            Debug.Log($"[Test] Player leveled up to {eventData.NewLevel}! Gained {eventData.ExperienceGained} experience");
+            // 只在启用日志时输出
+            if (EnableLogging)
+            {
+                Debug.Log($"[Test] Player leveled up to {eventData.NewLevel}! Gained {eventData.ExperienceGained} experience");
+            }
         }
 
         public void Reset()
