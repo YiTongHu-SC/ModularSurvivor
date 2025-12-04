@@ -1,30 +1,25 @@
-﻿using UnityEngine;
+﻿using Core.Abstructs;
+using UnityEngine;
 
 namespace Core.Units
 {
     /// <summary>
     /// 管理器单例，负责单位的整体管理
     /// </summary>
-    public class UnitManager : MonoBehaviour
+    public class UnitManager : BaseInstance<UnitManager>
     {
-        public static UnitManager Instance { get; private set; }
         public UnitFactory Factory { get; private set; }
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance != null && Instance != this)
+            base.Awake();
+            if (Instance == this)
             {
-                Destroy(this.gameObject);
-                return;
+                Initialize();
             }
-
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-
-            Initialize();
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Factory = new UnitFactory();
         }

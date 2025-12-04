@@ -1,0 +1,87 @@
+﻿namespace Core.Events
+{
+    /// <summary>
+    /// 游戏事件类型定义
+    /// </summary>
+    public static class GameEvents
+    {
+        /// <summary>
+        /// 单位死亡事件
+        /// </summary>
+        public class UnitDeathEvent : EventData
+        {
+            public string UnitId { get; }
+            public UnityEngine.Vector3 DeathPosition { get; }
+            public string KillerId { get; }
+            
+            public UnitDeathEvent(string unitId, UnityEngine.Vector3 deathPosition, string killerId = null)
+            {
+                UnitId = unitId;
+                DeathPosition = deathPosition;
+                KillerId = killerId;
+            }
+        }
+        
+        /// <summary>
+        /// 波次开始事件
+        /// </summary>
+        public class WaveStartEvent : EventData
+        {
+            public int WaveNumber { get; }
+            public int EnemyCount { get; }
+            
+            public WaveStartEvent(int waveNumber, int enemyCount)
+            {
+                WaveNumber = waveNumber;
+                EnemyCount = enemyCount;
+            }
+        }
+        
+        /// <summary>
+        /// 波次结束事件
+        /// </summary>
+        public class WaveEndEvent : EventData
+        {
+            public int WaveNumber { get; }
+            public bool IsSuccess { get; }
+            public float Duration { get; }
+            
+            public WaveEndEvent(int waveNumber, bool isSuccess, float duration)
+            {
+                WaveNumber = waveNumber;
+                IsSuccess = isSuccess;
+                Duration = duration;
+            }
+        }
+        
+        /// <summary>
+        /// 玩家升级事件
+        /// </summary>
+        public class PlayerLevelUpEvent : EventData
+        {
+            public int NewLevel { get; }
+            public int ExperienceGained { get; }
+            
+            public PlayerLevelUpEvent(int newLevel, int experienceGained)
+            {
+                NewLevel = newLevel;
+                ExperienceGained = experienceGained;
+            }
+        }
+        
+        /// <summary>
+        /// UI刷新事件
+        /// </summary>
+        public class UIRefreshEvent : EventData
+        {
+            public string UIName { get; }
+            public object Data { get; }
+            
+            public UIRefreshEvent(string uiName, object data = null)
+            {
+                UIName = uiName;
+                Data = data;
+            }
+        }
+    }
+}
