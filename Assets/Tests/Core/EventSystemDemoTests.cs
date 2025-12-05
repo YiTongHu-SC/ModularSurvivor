@@ -14,7 +14,7 @@ namespace Tests.Core.Events
         public bool EventReceived { get; private set; }
         public string LastUnitId { get; private set; }
 
-        protected override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
+        public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
             LastUnitId = eventData.UnitId;
@@ -36,7 +36,7 @@ namespace Tests.Core.Events
         public bool EventReceived { get; private set; }
         public int LastWaveNumber { get; private set; }
 
-        protected override void OnEventReceived(GameEvents.WaveStartEvent eventData)
+        public override void OnEventReceived(GameEvents.WaveStartEvent eventData)
         {
             EventReceived = true;
             LastWaveNumber = eventData.WaveNumber;

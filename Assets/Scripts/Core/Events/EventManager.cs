@@ -13,20 +13,21 @@ namespace Core.Events
     public class EventManager : BaseInstance<EventManager>
     {
         // 事件监听器字典，按事件类型分组
-        private readonly Dictionary<Type, List<IEventListener>> _eventListeners = new();
+        private readonly Dictionary<Type, List<IEventListener<EventData>>> _eventListeners = new();
 
         // 事件监听器字典，按监听器实例分组（用于快速注销）
-        private readonly Dictionary<IEventListener, List<Type>> _listenerEvents = new();
+        private readonly Dictionary<IEventListener<EventData>, List<Type>> _listenerEvents = new();
 
         // 委托订阅字典，按事件类型分组
         private readonly Dictionary<Type, List<Action<EventData>>> _eventSubscribers = new();
 
         // 委托订阅管理，按拥有者分组（用于批量清理）
-        private readonly Dictionary<object, List<(Type eventType, Action<EventData> callback)>> _subscriberOwners = new();
+        private readonly Dictionary<object, List<(Type eventType, Action<EventData> callback)>> _subscriberOwners =
+            new();
 
         // 性能开关：是否启用详细日志（生产环境可关闭）
         private bool _enableVerboseLogging = false;
-        
+
         // 超高性能模式：连异常日志都关闭（仅限性能测试）
         private bool _enableHighPerformanceMode = false;
 
@@ -56,6 +57,7 @@ namespace Core.Events
             {
                 _enableVerboseLogging = false; // 高性能模式下自动关闭详细日志
             }
+
             Debug.Log($"EventManager: High performance mode {(enabled ? "enabled" : "disabled")}.");
         }
 
@@ -87,7 +89,8 @@ namespace Core.Events
             if (_enableHighPerformanceMode)
             {
                 // 触发监听器对象 - 无异常处理和日志
-                if (_eventListeners.TryGetValue(eventType, out List<IEventListener> listeners) && listeners.Count > 0)
+                if (_eventListeners.TryGetValue(eventType, out List<IEventListener<EventData>> listeners) &&
+                    listeners.Count > 0)
                 {
                     for (int i = 0; i < listeners.Count; i++)
                     {
@@ -96,13 +99,15 @@ namespace Core.Events
                 }
 
                 // 触发委托订阅者 - 无异常处理和日志
-                if (_eventSubscribers.TryGetValue(eventType, out List<Action<EventData>> subscribers) && subscribers.Count > 0)
+                if (_eventSubscribers.TryGetValue(eventType, out List<Action<EventData>> subscribers) &&
+                    subscribers.Count > 0)
                 {
                     for (int i = 0; i < subscribers.Count; i++)
                     {
                         subscribers[i](eventData);
                     }
                 }
+
                 return; // 早期退出，避免后续的计数和日志逻辑
             }
 
@@ -111,7 +116,7 @@ namespace Core.Events
             int subscriberCount = 0;
 
             // 触发监听器对象
-            if (_eventListeners.TryGetValue(eventType, out List<IEventListener> normalListeners))
+            if (_eventListeners.TryGetValue(eventType, out List<IEventListener<EventData>> normalListeners))
             {
                 listenerCount = normalListeners.Count;
                 if (listenerCount > 0)
@@ -153,7 +158,8 @@ namespace Core.Events
             // 只在启用详细日志时输出
             if (_enableVerboseLogging && (listenerCount > 0 || subscriberCount > 0))
             {
-                Debug.Log($"EventManager: Published {eventType.Name} to {listenerCount} listeners and {subscriberCount} subscribers.");
+                Debug.Log(
+                    $"EventManager: Published {eventType.Name} to {listenerCount} listeners and {subscriberCount} subscribers.");
             }
         }
 
@@ -161,7 +167,7 @@ namespace Core.Events
         /// 订阅事件
         /// </summary>
         /// <param name="listener">事件监听器</param>
-        public void Subscribe(IEventListener listener)
+        public void Subscribe<T>(IEventListener<T> listener) where T : EventData
         {
             if (listener == null)
             {
@@ -170,30 +176,37 @@ namespace Core.Events
                 return;
             }
 
-            Type eventType = listener.GetEventType();
-            
+            Type eventType = typeof(T);
+
+            // 确保监听器同时实现非泛型接口
+            if (!(listener is IEventListener<EventData> nonGenericListener))
+            {
+                Debug.LogError("EventManager: Listener must implement IEventListener interface.");
+                return;
+            }
+
             // 添加到事件类型字典
             if (!_eventListeners.ContainsKey(eventType))
             {
-                _eventListeners[eventType] = new List<IEventListener>();
+                _eventListeners[eventType] = new List<IEventListener<EventData>>();
             }
-            
-            if (!_eventListeners[eventType].Contains(listener))
+
+            if (!_eventListeners[eventType].Contains(nonGenericListener))
             {
-                _eventListeners[eventType].Add(listener);
+                _eventListeners[eventType].Add(nonGenericListener);
             }
-            
+
             // 添加到监听器字典
-            if (!_listenerEvents.ContainsKey(listener))
+            if (!_listenerEvents.ContainsKey(nonGenericListener))
             {
-                _listenerEvents[listener] = new List<Type>();
+                _listenerEvents[nonGenericListener] = new List<Type>();
             }
-            
-            if (!_listenerEvents[listener].Contains(eventType))
+
+            if (!_listenerEvents[nonGenericListener].Contains(eventType))
             {
-                _listenerEvents[listener].Add(eventType);
+                _listenerEvents[nonGenericListener].Add(eventType);
             }
-            
+
             if (_enableVerboseLogging)
                 Debug.Log($"EventManager: Subscribed listener to {eventType.Name}.");
         }
@@ -202,7 +215,7 @@ namespace Core.Events
         /// 取消订阅事件
         /// </summary>
         /// <param name="listener">事件监听器</param>
-        public void Unsubscribe(IEventListener listener)
+        public void Unsubscribe(IEventListener<EventData> listener)
         {
             if (listener == null)
             {
@@ -218,7 +231,7 @@ namespace Core.Events
                     if (_eventListeners.ContainsKey(eventType))
                     {
                         _eventListeners[eventType].Remove(listener);
-                        
+
                         // 如果没有监听器了，移除事件类型
                         if (_eventListeners[eventType].Count == 0)
                         {
@@ -226,9 +239,9 @@ namespace Core.Events
                         }
                     }
                 }
-                
+
                 _listenerEvents.Remove(listener);
-                
+
                 if (_enableVerboseLogging)
                     Debug.Log($"EventManager: Unsubscribed listener from {eventTypes.Count} event types.");
             }
@@ -239,7 +252,7 @@ namespace Core.Events
         /// </summary>
         /// <param name="listener">事件监听器</param>
         /// <param name="eventType">事件类型</param>
-        public void Unsubscribe(IEventListener listener, Type eventType)
+        public void Unsubscribe<T>(IEventListener<T> listener, Type eventType) where T : EventData
         {
             if (listener == null || eventType == null)
             {
@@ -247,9 +260,10 @@ namespace Core.Events
                 return;
             }
 
+            var castedListener = listener as IEventListener<EventData>;
             if (_eventListeners.ContainsKey(eventType))
             {
-                _eventListeners[eventType].Remove(listener);
+                _eventListeners[eventType].Remove(castedListener);
 
                 if (_eventListeners[eventType].Count == 0)
                 {
@@ -257,13 +271,13 @@ namespace Core.Events
                 }
             }
 
-            if (_listenerEvents.ContainsKey(listener))
+            if (_listenerEvents.ContainsKey(castedListener))
             {
-                _listenerEvents[listener].Remove(eventType);
+                _listenerEvents[castedListener].Remove(eventType);
 
-                if (_listenerEvents[listener].Count == 0)
+                if (_listenerEvents[castedListener].Count == 0)
                 {
-                    _listenerEvents.Remove(listener);
+                    _listenerEvents.Remove(castedListener);
                 }
             }
 
@@ -382,7 +396,7 @@ namespace Core.Events
                         if (_eventSubscribers.ContainsKey(eventType))
                         {
                             _eventSubscribers[eventType].Remove(subscription.callback);
-                            
+
                             if (_eventSubscribers[eventType].Count == 0)
                             {
                                 _eventSubscribers.Remove(eventType);
@@ -400,11 +414,13 @@ namespace Core.Events
                     _subscriberOwners.Remove(owner);
                 }
 
-                Debug.Log($"EventManager: Unsubscribed delegate from {eventType.Name} for owner {owner.GetType().Name}.");
+                Debug.Log(
+                    $"EventManager: Unsubscribed delegate from {eventType.Name} for owner {owner.GetType().Name}.");
             }
             else
             {
-                Debug.LogWarning($"EventManager: Cannot unsubscribe delegate for {eventType.Name} without owner reference. Use UnsubscribeAll(owner) instead.");
+                Debug.LogWarning(
+                    $"EventManager: Cannot unsubscribe delegate for {eventType.Name} without owner reference. Use UnsubscribeAll(owner) instead.");
             }
         }
 
@@ -427,7 +443,7 @@ namespace Core.Events
                     if (_eventSubscribers.ContainsKey(eventType))
                     {
                         _eventSubscribers[eventType].Remove(callback);
-                        
+
                         if (_eventSubscribers[eventType].Count == 0)
                         {
                             _eventSubscribers.Remove(eventType);
@@ -436,7 +452,8 @@ namespace Core.Events
                 }
 
                 _subscriberOwners.Remove(owner);
-                Debug.Log($"EventManager: Unsubscribed all delegates for owner {owner.GetType().Name} ({subscriptions.Count} subscriptions).");
+                Debug.Log(
+                    $"EventManager: Unsubscribed all delegates for owner {owner.GetType().Name} ({subscriptions.Count} subscriptions).");
             }
         }
 

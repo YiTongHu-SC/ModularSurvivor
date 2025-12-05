@@ -4,6 +4,8 @@ namespace Core.Units
 {
     public class UnitData
     {
+        public int ID;
+
         /// <summary>
         /// 单位位置坐标
         /// </summary>
@@ -19,5 +21,10 @@ namespace Core.Units
             Position = position;
             Rotation = rotation;
         }
+
+        /// <summary>
+        /// 移动速度
+        /// </summary>
+        public float MoveSpeed;
     }
 }

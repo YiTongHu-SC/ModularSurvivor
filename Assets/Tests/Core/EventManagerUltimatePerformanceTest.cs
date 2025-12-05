@@ -12,8 +12,8 @@ namespace Tests.Core.Events
     public class MinimalTestListener : EventListener<GameEvents.UnitDeathEvent>
     {
         public int CallCount;
-        
-        protected override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
+
+        public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             CallCount++;
             // 绝对无任何其他操作，最大化性能

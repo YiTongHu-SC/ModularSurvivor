@@ -14,13 +14,13 @@ namespace Tests.Core.Events
         public string LastKillerId { get; private set; }
         public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
-        protected override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
+        public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
             LastUnitId = eventData.UnitId;
             LastDeathPosition = eventData.DeathPosition;
             LastKillerId = eventData.KillerId;
-            
+
             // 只在启用日志时输出
             if (EnableLogging)
             {
@@ -47,7 +47,7 @@ namespace Tests.Core.Events
         public string LastUnitId { get; private set; }
         public int CallCount { get; private set; }
 
-        protected override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
+        public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
             LastUnitId = eventData.UnitId;
@@ -62,7 +62,7 @@ namespace Tests.Core.Events
             CallCount = 0;
         }
     }
-    
+
     /// <summary>
     /// 测试用的波次开始事件监听器
     /// </summary>
@@ -73,12 +73,12 @@ namespace Tests.Core.Events
         public int LastEnemyCount { get; private set; }
         public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
-        protected override void OnEventReceived(GameEvents.WaveStartEvent eventData)
+        public override void OnEventReceived(GameEvents.WaveStartEvent eventData)
         {
             EventReceived = true;
             LastWaveNumber = eventData.WaveNumber;
             LastEnemyCount = eventData.EnemyCount;
-            
+
             // 只在启用日志时输出
             if (EnableLogging)
             {
@@ -93,7 +93,7 @@ namespace Tests.Core.Events
             LastEnemyCount = 0;
         }
     }
-    
+
     /// <summary>
     /// 测试用的玩家升级事件监听器
     /// </summary>
@@ -104,16 +104,17 @@ namespace Tests.Core.Events
         public int LastExperienceGained { get; private set; }
         public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
-        protected override void OnEventReceived(GameEvents.PlayerLevelUpEvent eventData)
+        public override void OnEventReceived(GameEvents.PlayerLevelUpEvent eventData)
         {
             EventReceived = true;
             LastNewLevel = eventData.NewLevel;
             LastExperienceGained = eventData.ExperienceGained;
-            
+
             // 只在启用日志时输出
             if (EnableLogging)
             {
-                Debug.Log($"[Test] Player leveled up to {eventData.NewLevel}! Gained {eventData.ExperienceGained} experience");
+                Debug.Log(
+                    $"[Test] Player leveled up to {eventData.NewLevel}! Gained {eventData.ExperienceGained} experience");
             }
         }
 

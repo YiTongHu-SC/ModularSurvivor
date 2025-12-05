@@ -22,7 +22,7 @@ namespace Tests.Core.Events
             // 创建EventManager
             eventManagerObject = new GameObject("EventManager");
             var eventManager = eventManagerObject.AddComponent<EventManager>();
-            
+
             // 创建监听器实例
             unitDeathListener = new TestUnitDeathListener();
             waveListener = new TestWaveStartListener();
@@ -32,9 +32,9 @@ namespace Tests.Core.Events
             EventManager.Instance.Subscribe(unitDeathListener);
             EventManager.Instance.Subscribe(waveListener);
             EventManager.Instance.Subscribe(playerLevelUpListener);
-            
+
             Debug.Log("Event listeners registered for PlayMode demo.");
-            
+
             yield return null;
         }
 
@@ -44,16 +44,16 @@ namespace Tests.Core.Events
             // 注销监听器
             if (EventManager.Instance != null)
             {
-                EventManager.Instance.Unsubscribe(unitDeathListener);
-                EventManager.Instance.Unsubscribe(waveListener);
-                EventManager.Instance.Unsubscribe(playerLevelUpListener);
+                EventManager.Instance.Unsubscribe(unitDeathListener, typeof(GameEvents.UnitDeathEvent));
+                EventManager.Instance.Unsubscribe(waveListener, typeof(GameEvents.WaveStartEvent));
+                EventManager.Instance.Unsubscribe(playerLevelUpListener, typeof(GameEvents.PlayerLevelUpEvent));
             }
-            
+
             if (eventManagerObject != null)
             {
                 Object.DestroyImmediate(eventManagerObject);
             }
-            
+
             yield return null;
         }
 
@@ -61,21 +61,21 @@ namespace Tests.Core.Events
         public IEnumerator EventDemo_UnitDeathEvent_ShouldWork()
         {
             Debug.Log("=== Testing Unit Death Event ===");
-            
+
             var deathEvent = new GameEvents.UnitDeathEvent(
-                "Enemy_001", 
-                new Vector3(10, 0, 5), 
+                "Enemy_001",
+                new Vector3(10, 0, 5),
                 "Player"
             );
-            
+
             EventManager.Instance.PublishEvent(deathEvent);
-            
+
             yield return new WaitForSeconds(0.1f);
-            
+
             // 验证事件处理
             UnityEngine.Assertions.Assert.IsTrue(unitDeathListener.EventReceived, "Unit death event was not received");
             UnityEngine.Assertions.Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
-            
+
             Debug.Log("Unit Death Event test completed successfully!");
             yield return null;
         }
@@ -84,16 +84,16 @@ namespace Tests.Core.Events
         public IEnumerator EventDemo_WaveStartEvent_ShouldWork()
         {
             Debug.Log("=== Testing Wave Start Event ===");
-            
+
             var waveEvent = new GameEvents.WaveStartEvent(3, 15);
             EventManager.Instance.PublishEvent(waveEvent);
-            
+
             yield return new WaitForSeconds(0.1f);
-            
+
             // 验证事件处理
             UnityEngine.Assertions.Assert.IsTrue(waveListener.EventReceived, "Wave start event was not received");
             UnityEngine.Assertions.Assert.AreEqual(3, waveListener.LastWaveNumber);
-            
+
             Debug.Log("Wave Start Event test completed successfully!");
             yield return null;
         }
@@ -102,16 +102,17 @@ namespace Tests.Core.Events
         public IEnumerator EventDemo_PlayerLevelUpEvent_ShouldWork()
         {
             Debug.Log("=== Testing Player Level Up Event ===");
-            
+
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(5, 1000);
             EventManager.Instance.PublishEvent(levelUpEvent);
-            
+
             yield return new WaitForSeconds(0.1f);
-            
+
             // 验证事件处理
-            UnityEngine.Assertions.Assert.IsTrue(playerLevelUpListener.EventReceived, "Player level up event was not received");
+            UnityEngine.Assertions.Assert.IsTrue(playerLevelUpListener.EventReceived,
+                "Player level up event was not received");
             UnityEngine.Assertions.Assert.AreEqual(5, playerLevelUpListener.LastNewLevel);
-            
+
             Debug.Log("Player Level Up Event test completed successfully!");
             yield return null;
         }
@@ -120,12 +121,12 @@ namespace Tests.Core.Events
         public IEnumerator EventDemo_UIRefreshEvent_ShouldWork()
         {
             Debug.Log("=== Testing UI Refresh Event ===");
-            
+
             var uiEvent = new GameEvents.UIRefreshEvent("MainUI", new { Health = 80, Mana = 60 });
             EventManager.Instance.PublishEvent(uiEvent);
-            
+
             yield return new WaitForSeconds(0.1f);
-            
+
             Debug.Log("UI Refresh Event published (no specific listener in this demo)");
             yield return null;
         }
@@ -134,33 +135,33 @@ namespace Tests.Core.Events
         public IEnumerator EventDemo_FullScenario_ShouldWork()
         {
             Debug.Log("=== Running Full Event Scenario Demo ===");
-            
+
             // 模拟游戏场景：波次开始 -> 敌人死亡 -> 玩家升级
-            
+
             // 1. 波次开始
             Debug.Log("1. Starting wave...");
             var waveEvent = new GameEvents.WaveStartEvent(1, 5);
             EventManager.Instance.PublishEvent(waveEvent);
             yield return new WaitForSeconds(0.5f);
-            
+
             // 2. 敌人死亡
             Debug.Log("2. Enemy dies...");
             var deathEvent = new GameEvents.UnitDeathEvent("Enemy_001", Vector3.zero, "Player");
             EventManager.Instance.PublishEvent(deathEvent);
             yield return new WaitForSeconds(0.5f);
-            
+
             // 3. 玩家升级
             Debug.Log("3. Player levels up...");
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(2, 500);
             EventManager.Instance.PublishEvent(levelUpEvent);
             yield return new WaitForSeconds(0.5f);
-            
+
             // 4. 波次结束
             Debug.Log("4. Wave ends...");
             var waveEndEvent = new GameEvents.WaveEndEvent(1, true, 120.5f);
             EventManager.Instance.PublishEvent(waveEndEvent);
             yield return new WaitForSeconds(0.5f);
-            
+
             Debug.Log("=== Full Event Scenario Demo Completed ===");
             yield return null;
         }
