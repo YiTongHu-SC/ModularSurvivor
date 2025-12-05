@@ -1,4 +1,4 @@
-﻿﻿using Core.Abstructs;
+﻿using Core.Abstructs;
 using UnityEngine;
 
 namespace Combat.Systems
@@ -15,7 +15,7 @@ namespace Combat.Systems
             BuffSystem.Initialize();
             // DamageSystem.Initialize();
         }
-        
+
         private void Update()
         {
             // 更新所有战斗系统

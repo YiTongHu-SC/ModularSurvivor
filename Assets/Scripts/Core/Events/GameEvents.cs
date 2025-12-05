@@ -1,4 +1,4 @@
-﻿﻿using Core.Units;
+﻿using Core.Units;
 
 namespace Core.Events
 {
@@ -105,13 +105,11 @@ namespace Core.Events
         {
             public int UnitId { get; }
             public int BuffId { get; }
-            public string BuffName { get; }
 
-            public BuffAppliedEvent(int unitId, int buffId, string buffName)
+            public BuffAppliedEvent(int buffId, int unitId)
             {
                 UnitId = unitId;
                 BuffId = buffId;
-                BuffName = buffName;
             }
         }
 

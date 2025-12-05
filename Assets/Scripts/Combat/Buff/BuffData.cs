@@ -11,7 +11,7 @@
         public float Duration { get; set; }
         public float Value { get; set; }
         public bool CanStack { get; set; }
-        
+
         public BuffData(int id, string name, BuffType type, float duration, float value, bool canStack = false)
         {
             ID = id;
@@ -22,7 +22,7 @@
             CanStack = canStack;
         }
     }
-    
+
     /// <summary>
     /// Buff类型枚举
     /// </summary>
@@ -30,14 +30,19 @@
     {
         /// <summary>增加移动速度</summary>
         SpeedBoost,
+
         /// <summary>减少移动速度</summary>
         SpeedReduction,
+
         /// <summary>增加攻击力</summary>
         AttackBoost,
+
         /// <summary>减少攻击力</summary>
         AttackReduction,
+
         /// <summary>持续伤害</summary>
         Poison,
+
         /// <summary>持续治疗</summary>
         Regeneration
     }
