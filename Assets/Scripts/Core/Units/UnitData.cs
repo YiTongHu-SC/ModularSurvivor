@@ -26,5 +26,7 @@ namespace Core.Units
         /// 移动速度
         /// </summary>
         public float MoveSpeed;
+
+        public Vector2 MoveDirection;
     }
 }
