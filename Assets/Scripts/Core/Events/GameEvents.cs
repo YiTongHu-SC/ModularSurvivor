@@ -1,4 +1,4 @@
-﻿using Core.Units;
+﻿﻿using Core.Units;
 
 namespace Core.Events
 {
@@ -95,6 +95,40 @@ namespace Core.Events
             {
                 UIName = uiName;
                 Data = data;
+            }
+        }
+
+        /// <summary>
+        /// Buff应用事件
+        /// </summary>
+        public class BuffAppliedEvent : EventData
+        {
+            public int UnitId { get; }
+            public int BuffId { get; }
+            public string BuffName { get; }
+
+            public BuffAppliedEvent(int unitId, int buffId, string buffName)
+            {
+                UnitId = unitId;
+                BuffId = buffId;
+                BuffName = buffName;
+            }
+        }
+
+        /// <summary>
+        /// Buff移除事件
+        /// </summary>
+        public class BuffRemovedEvent : EventData
+        {
+            public int UnitId { get; }
+            public int BuffId { get; }
+            public string BuffName { get; }
+
+            public BuffRemovedEvent(int unitId, int buffId, string buffName)
+            {
+                UnitId = unitId;
+                BuffId = buffId;
+                BuffName = buffName;
             }
         }
     }

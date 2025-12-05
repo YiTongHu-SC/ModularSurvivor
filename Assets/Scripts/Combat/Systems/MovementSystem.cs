@@ -10,6 +10,11 @@ namespace Combat.Systems
         private static Dictionary<int, UnitData> MovingUnits => UnitManager.Instance.Units;
         private Vector2 playerPosition;
 
+        public void Initialize()
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <summary>
         /// 更新单位位置
         /// </summary>

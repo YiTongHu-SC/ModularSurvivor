@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 
 namespace Core.Units
 {
@@ -28,5 +28,25 @@ namespace Core.Units
         public float MoveSpeed;
 
         public Vector2 MoveDirection;
+        
+        /// <summary>
+        /// 基础攻击力
+        /// </summary>
+        public float AttackPower = 10f;
+        
+        /// <summary>
+        /// 最大生命值
+        /// </summary>
+        public float MaxHealth = 100f;
+        
+        /// <summary>
+        /// 当前生命值
+        /// </summary>
+        public float CurrentHealth = 100f;
+        
+        /// <summary>
+        /// 是否存活
+        /// </summary>
+        public bool IsAlive => CurrentHealth > 0;
     }
 }
