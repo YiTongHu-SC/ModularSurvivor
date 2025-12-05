@@ -1,6 +1,4 @@
-﻿using System;
-using Core.Events;
-using Core.Units;
+﻿using Core.Units;
 
 namespace Combat.Actors
 {
@@ -10,10 +8,6 @@ namespace Combat.Actors
         public override void Initialize(UnitData data)
         {
             base.Initialize(data);
-        }
-
-        public override void OnEventReceived(EventData eventData)
-        {
         }
     }
 }

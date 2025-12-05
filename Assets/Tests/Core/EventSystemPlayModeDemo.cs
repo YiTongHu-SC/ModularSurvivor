@@ -44,9 +44,9 @@ namespace Tests.Core.Events
             // 注销监听器
             if (EventManager.Instance != null)
             {
-                EventManager.Instance.Unsubscribe(unitDeathListener, typeof(GameEvents.UnitDeathEvent));
-                EventManager.Instance.Unsubscribe(waveListener, typeof(GameEvents.WaveStartEvent));
-                EventManager.Instance.Unsubscribe(playerLevelUpListener, typeof(GameEvents.PlayerLevelUpEvent));
+                EventManager.Instance.Unsubscribe(unitDeathListener);
+                EventManager.Instance.Unsubscribe(waveListener);
+                EventManager.Instance.Unsubscribe(playerLevelUpListener);
             }
 
             if (eventManagerObject != null)

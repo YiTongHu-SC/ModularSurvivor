@@ -73,8 +73,9 @@ namespace Tests.Core.Events
             var listener = new TestUnitDeathListener();
 
             // 尝试注销未注册的监听器
-            Assert.DoesNotThrow(() => eventManager.Unsubscribe(listener, typeof(GameEvents.UnitDeathEvent)));
-            Assert.DoesNotThrow(() => eventManager.Unsubscribe(null));
+            Assert.DoesNotThrow(() => eventManager.Unsubscribe<GameEvents.UnitDeathEvent>(listener));
+            listener = null;
+            Assert.DoesNotThrow(() => eventManager.Unsubscribe(listener));
         }
 
         [UnityTest]

@@ -178,12 +178,9 @@ namespace Core.Events
 
             Type eventType = typeof(T);
 
-            // 确保监听器同时实现非泛型接口
-            if (!(listener is IEventListener<EventData> nonGenericListener))
-            {
-                Debug.LogError("EventManager: Listener must implement IEventListener interface.");
-                return;
-            }
+            // 创建适配器包装器来处理类型转换
+            IEventListener<EventData> adaptedListener = new EventListenerAdapter<T>(listener);
+
 
             // 添加到事件类型字典
             if (!_eventListeners.ContainsKey(eventType))
@@ -191,20 +188,20 @@ namespace Core.Events
                 _eventListeners[eventType] = new List<IEventListener<EventData>>();
             }
 
-            if (!_eventListeners[eventType].Contains(nonGenericListener))
+            if (!_eventListeners[eventType].Contains(adaptedListener))
             {
-                _eventListeners[eventType].Add(nonGenericListener);
+                _eventListeners[eventType].Add(adaptedListener);
             }
 
             // 添加到监听器字典
-            if (!_listenerEvents.ContainsKey(nonGenericListener))
+            if (!_listenerEvents.ContainsKey(adaptedListener))
             {
-                _listenerEvents[nonGenericListener] = new List<Type>();
+                _listenerEvents[adaptedListener] = new List<Type>();
             }
 
-            if (!_listenerEvents[nonGenericListener].Contains(eventType))
+            if (!_listenerEvents[adaptedListener].Contains(eventType))
             {
-                _listenerEvents[nonGenericListener].Add(eventType);
+                _listenerEvents[adaptedListener].Add(eventType);
             }
 
             if (_enableVerboseLogging)
@@ -215,7 +212,7 @@ namespace Core.Events
         /// 取消订阅事件
         /// </summary>
         /// <param name="listener">事件监听器</param>
-        public void Unsubscribe(IEventListener<EventData> listener)
+        public void Unsubscribe<T>(IEventListener<T> listener) where T : EventData
         {
             if (listener == null)
             {
@@ -224,13 +221,16 @@ namespace Core.Events
                 return;
             }
 
-            if (_listenerEvents.TryGetValue(listener, out List<Type> eventTypes))
+            // 创建适配器包装器来处理类型转换
+            IEventListener<EventData> adaptedListener = new EventListenerAdapter<T>(listener);
+
+            if (_listenerEvents.TryGetValue(adaptedListener, out List<Type> eventTypes))
             {
                 foreach (var eventType in eventTypes)
                 {
                     if (_eventListeners.ContainsKey(eventType))
                     {
-                        _eventListeners[eventType].Remove(listener);
+                        _eventListeners[eventType].Remove(adaptedListener);
 
                         // 如果没有监听器了，移除事件类型
                         if (_eventListeners[eventType].Count == 0)
@@ -240,48 +240,11 @@ namespace Core.Events
                     }
                 }
 
-                _listenerEvents.Remove(listener);
+                _listenerEvents.Remove(adaptedListener);
 
                 if (_enableVerboseLogging)
                     Debug.Log($"EventManager: Unsubscribed listener from {eventTypes.Count} event types.");
             }
-        }
-
-        /// <summary>
-        /// 取消订阅特定类型的事件
-        /// </summary>
-        /// <param name="listener">事件监听器</param>
-        /// <param name="eventType">事件类型</param>
-        public void Unsubscribe<T>(IEventListener<T> listener, Type eventType) where T : EventData
-        {
-            if (listener == null || eventType == null)
-            {
-                Debug.LogWarning("EventManager: Trying to unsubscribe with null parameters.");
-                return;
-            }
-
-            var castedListener = listener as IEventListener<EventData>;
-            if (_eventListeners.ContainsKey(eventType))
-            {
-                _eventListeners[eventType].Remove(castedListener);
-
-                if (_eventListeners[eventType].Count == 0)
-                {
-                    _eventListeners.Remove(eventType);
-                }
-            }
-
-            if (_listenerEvents.ContainsKey(castedListener))
-            {
-                _listenerEvents[castedListener].Remove(eventType);
-
-                if (_listenerEvents[castedListener].Count == 0)
-                {
-                    _listenerEvents.Remove(castedListener);
-                }
-            }
-
-            Debug.Log($"EventManager: Unsubscribed listener from {eventType.Name}.");
         }
 
         /// <summary>
@@ -474,6 +437,40 @@ namespace Core.Events
         protected void OnDestroy()
         {
             ClearAllListeners();
+        }
+
+        /// <summary>
+        /// 事件监听器适配器，用于处理泛型类型转换
+        /// </summary>
+        /// <typeparam name="T">具体事件类型</typeparam>
+        private class EventListenerAdapter<T> : IEventListener<EventData> where T : EventData
+        {
+            private readonly IEventListener<T> _originalListener;
+
+            public EventListenerAdapter(IEventListener<T> originalListener)
+            {
+                _originalListener = originalListener;
+            }
+
+            public void OnEventReceived(EventData eventData)
+            {
+                if (eventData is T specificEventData)
+                {
+                    _originalListener.OnEventReceived(specificEventData);
+                }
+            }
+
+            // 重写 Equals 和 GetHashCode 以支持正确的比较
+            public override bool Equals(object obj)
+            {
+                return obj is EventListenerAdapter<T> adapter &&
+                       ReferenceEquals(_originalListener, adapter._originalListener);
+            }
+
+            public override int GetHashCode()
+            {
+                return _originalListener?.GetHashCode() ?? 0;
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Core.Units
     /// </summary>
     public abstract class Unit : MonoBehaviour,
         IPoolable,
+        IEventListener<GameEvents.UnitDeathEvent>,
         IEventListener<GameEvents.UnitMovementEvent>
     {
         public int ID;
@@ -30,18 +31,21 @@ namespace Core.Units
 
         public virtual void OnSpawn()
         {
-            EventManager.Instance.Subscribe(this);
+            EventManager.Instance.Subscribe<GameEvents.UnitDeathEvent>(this);
+            EventManager.Instance.Subscribe<GameEvents.UnitMovementEvent>(this);
         }
 
         public virtual void OnDespawn()
         {
-            EventManager.Instance.Unsubscribe(this, typeof(GameEvents.UnitMovementEvent));
-            UnitManager.Instance.UnitSystem.UnregisterUnit(ID);
+            EventManager.Instance.Unsubscribe<GameEvents.UnitDeathEvent>(this);
+            EventManager.Instance.Unsubscribe<GameEvents.UnitMovementEvent>(this);
         }
 
-        public abstract void OnEventReceived(EventData eventData);
+        public virtual void OnEventReceived(GameEvents.UnitMovementEvent eventData)
+        {
+        }
 
-        public void OnEventReceived(GameEvents.UnitMovementEvent eventData)
+        public virtual void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
         }
     }

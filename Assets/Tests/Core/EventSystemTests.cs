@@ -83,7 +83,7 @@ namespace Tests.Core.Events
             Assert.AreEqual(1, eventManager.GetListenerCount(typeof(GameEvents.UnitDeathEvent)));
 
             // 注销监听器
-            eventManager.Unsubscribe(testListener, typeof(GameEvents.UnitDeathEvent));
+            eventManager.Unsubscribe(testListener);
 
             // 验证监听器已移除
             Assert.AreEqual(0, eventManager.GetListenerCount(typeof(GameEvents.UnitDeathEvent)));
