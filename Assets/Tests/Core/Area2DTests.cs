@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Core.Coordinates;
+using Utils.Core;
 
 namespace Tests.Core
 {

@@ -25,17 +25,6 @@
     - 距离转换 (ToWorldDistance, ToLogicDistance)
     - 方向转换 (ToWorldDirection, ToLogicDirection)
 
-#### 3. MathUtils2D.cs
-- **功能**: 2D数学工具集
-- **特性**:
-    - 距离和方向计算
-    - 角度计算 (Angle, AngleBetween)
-    - 点旋转 (RotatePoint, RotatePointAround)
-    - 线段相关计算 (DistanceToLineSegment, ProjectPointOnLineSegment)
-    - 插值功能 (Lerp, Slerp)
-    - 几何判断 (IsPointInTriangle)
-    - 向量限制 (Clamp)
-
 #### 4. Area2D.cs
 - **功能**: 2D区域定义和检测系统
 - **包含**:

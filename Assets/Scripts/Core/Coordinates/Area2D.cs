@@ -1,4 +1,6 @@
-﻿namespace Core.Coordinates
+﻿using Utils.Core;
+
+namespace Core.Coordinates
 {
     /// <summary>
     /// 2D区域定义和检测

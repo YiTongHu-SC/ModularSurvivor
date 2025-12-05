@@ -2,6 +2,7 @@
 using UnityEngine;
 using Core.Coordinates;
 using System.Collections.Generic;
+using Utils.Core;
 
 namespace Tests.Core
 {

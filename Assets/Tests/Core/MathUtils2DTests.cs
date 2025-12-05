@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Core.Coordinates;
+using Utils.Core;
 
 namespace Tests.Core
 {
@@ -90,7 +91,7 @@ namespace Tests.Core
             Assert.AreEqual(0.0f, up.x, 0.001f, "90° X should be 0");
             Assert.AreEqual(1.0f, up.y, 0.001f, "90° should point up");
             Assert.AreEqual(-1.0f, left.x, 0.001f, "180° should point left");
-            Assert.AreEqual(0.0f, down.y, 0.001f, "270° Y should be 0 (approximately)");
+            Assert.AreEqual(0.0f, down.x, 0.001f, "270° Y should be 0 (approximately)");
         }
 
         [Test]
