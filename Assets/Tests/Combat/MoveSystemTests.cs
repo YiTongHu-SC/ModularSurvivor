@@ -20,12 +20,12 @@ namespace Tests.Combat
         [SetUp]
         public void Setup()
         {
-            var eventManagerGO = new GameObject("EventManager");
-            _eventManager = eventManagerGO.AddComponent<EventManager>();
+            var eventManagerGo = new GameObject("EventManager");
+            _eventManager = eventManagerGo.AddComponent<EventManager>();
             _eventManager.Initialize();
             // 初始化测试所需的资源和状态
-            var unitManagerGO = new GameObject("UnitManager");
-            _unitManager = unitManagerGO.AddComponent<UnitManager>();
+            var unitManagerGo = new GameObject("UnitManager");
+            _unitManager = unitManagerGo.AddComponent<UnitManager>();
             // 确保 UnitManager 的 Awake 方法被调用以初始化单例
             _unitManager.Initialize();
             var combatManager = new GameObject("CombatManager");
@@ -38,6 +38,8 @@ namespace Tests.Combat
         {
             // 清理测试所使用的资源和状态
             Object.DestroyImmediate(_combatManager.gameObject);
+            Object.DestroyImmediate(_unitManager.gameObject);
+            Object.DestroyImmediate(_eventManager.gameObject);
         }
 
         [Test]

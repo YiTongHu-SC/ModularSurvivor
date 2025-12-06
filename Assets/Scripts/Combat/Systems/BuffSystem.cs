@@ -58,8 +58,7 @@ namespace Combat.Systems
             }
 
             // 应用Buff效果
-            ApplyBuffEffect(unitId, newBuff);
-
+            newBuff.ApplyEffect();
             // 发布事件
             EventManager.Instance.PublishEvent(new GameEvents.BuffAppliedEvent(newBuff.Data.ID, newBuff.TargetUnitId));
 
@@ -119,7 +118,7 @@ namespace Combat.Systems
                     else
                     {
                         // 处理持续效果（如毒伤、回血）
-                        ProcessContinuousEffect(unitId, buff, deltaTime);
+                        buff.UpdateEffect(deltaTime);
                     }
                 }
             }
@@ -130,31 +129,6 @@ namespace Combat.Systems
                 RemoveBuffEffect(unitId, buff);
                 EventManager.Instance.PublishEvent(
                     new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
-            }
-        }
-
-        /// <summary>
-        /// 应用Buff效果到单位属性
-        /// </summary>
-        private void ApplyBuffEffect(int unitId, Combat.Buff.Buff buff)
-        {
-            var unitData = UnitManager.Instance.Units[unitId];
-
-            switch (buff.Data.Type)
-            {
-                case BuffType.SpeedBoost:
-                    unitData.MoveSpeed *= buff.GetEffectValue();
-                    break;
-                case BuffType.SpeedReduction:
-                    unitData.MoveSpeed *= buff.GetEffectValue();
-                    break;
-                case BuffType.AttackBoost:
-                    unitData.AttackPower *= buff.GetEffectValue();
-                    break;
-                case BuffType.AttackReduction:
-                    unitData.AttackPower *= buff.GetEffectValue();
-                    break;
-                // DOT/HOT类型的Buff不需要在这里处理，由ProcessContinuousEffect处理
             }
         }
 
@@ -183,37 +157,37 @@ namespace Combat.Systems
             }
         }
 
-        /// <summary>
-        /// 处理持续效果（DOT/HOT等）
-        /// </summary>
-        private void ProcessContinuousEffect(int unitId, Combat.Buff.Buff buff, float deltaTime)
-        {
-            var unitData = UnitManager.Instance.Units[unitId];
-
-            switch (buff.Data.Type)
-            {
-                case BuffType.Poison:
-                    // 持续伤害
-                    var damage = buff.GetEffectValue() * deltaTime;
-                    unitData.CurrentHealth = Mathf.Max(0, unitData.CurrentHealth - damage);
-                    Debug.Log($"单位 {unitId} 受到毒伤害: {damage}，当前血量: {unitData.CurrentHealth}");
-
-                    // 如果单位死亡，可以发布死亡事件
-                    if (!unitData.IsAlive)
-                    {
-                        // EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(...));
-                        Debug.Log($"单位 {unitId} 因中毒死亡");
-                    }
-
-                    break;
-                case BuffType.Regeneration:
-                    // 持续治疗
-                    var healing = buff.GetEffectValue() * deltaTime;
-                    unitData.CurrentHealth = Mathf.Min(unitData.MaxHealth, unitData.CurrentHealth + healing);
-                    Debug.Log($"单位 {unitId} 恢复生命: {healing}，当前血量: {unitData.CurrentHealth}");
-                    break;
-            }
-        }
+        // /// <summary>
+        // /// 处理持续效果（DOT/HOT等）
+        // /// </summary>
+        // private void ProcessContinuousEffect(int unitId, Combat.Buff.Buff buff, float deltaTime)
+        // {
+        //     var unitData = UnitManager.Instance.Units[unitId];
+        //
+        //     switch (buff.Data.Type)
+        //     {
+        //         case BuffType.Poison:
+        //             // 持续伤害
+        //             var damage = buff.GetEffectValue() * deltaTime;
+        //             unitData.CurrentHealth = Mathf.Max(0, unitData.CurrentHealth - damage);
+        //             Debug.Log($"单位 {unitId} 受到毒伤害: {damage}，当前血量: {unitData.CurrentHealth}");
+        //
+        //             // 如果单位死亡，可以发布死亡事件
+        //             if (!unitData.IsAlive)
+        //             {
+        //                 // EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(...));
+        //                 Debug.Log($"单位 {unitId} 因中毒死亡");
+        //             }
+        //
+        //             break;
+        //         case BuffType.Regeneration:
+        //             // 持续治疗
+        //             var healing = buff.GetEffectValue() * deltaTime;
+        //             unitData.CurrentHealth = Mathf.Min(unitData.MaxHealth, unitData.CurrentHealth + healing);
+        //             Debug.Log($"单位 {unitId} 恢复生命: {healing}，当前血量: {unitData.CurrentHealth}");
+        //             break;
+        //     }
+        // }
 
         /// <summary>
         /// 获取单位的所有活跃Buff
