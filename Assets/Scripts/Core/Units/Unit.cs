@@ -16,7 +16,7 @@ namespace Core.Units
     {
         public bool IsActive => UnitData.IsActive;
         public UnitData UnitData { get; protected set; }
-        public int ID { get; protected set; }
+        public int GUID => UnitData.GUID;
         public UnityEvent OnInitialize { get; set; }
         public UnityEvent<Vector2> OnUpdatePosition { get; set; }
 
@@ -30,7 +30,6 @@ namespace Core.Units
         public virtual void Initialize(UnitData data)
         {
             Debug.Log("Unit Initialize");
-            ID = data.ID;
             UnitData = data;
             UnitData.IsActive = true;
             UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
@@ -55,7 +54,7 @@ namespace Core.Units
             UnitData.IsActive = false;
             EventManager.Instance.Unsubscribe<GameEvents.UnitDeathEvent>(this);
             EventManager.Instance.Unsubscribe<GameEvents.UnitMovementEvent>(this);
-            UnitManager.Instance.UnitSystem.UnregisterUnit(ID);
+            UnitManager.Instance.UnitSystem.UnregisterUnit(GUID);
         }
 
         public virtual void KillSelf()
@@ -67,7 +66,7 @@ namespace Core.Units
         public virtual void OnEventReceived(GameEvents.UnitMovementEvent eventData)
         {
             if (!IsActive) return;
-            if (eventData.UnitId != ID) return;
+            if (eventData.UnitId != GUID) return;
             SetPosition(eventData.UnitData.Position);
         }
 

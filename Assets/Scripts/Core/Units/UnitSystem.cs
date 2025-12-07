@@ -13,7 +13,7 @@ namespace Core.Units
 
         public void RegisterUnit(UnitData data)
         {
-            _units[data.ID] = data;
+            _units[data.GUID] = data;
         }
 
         public void UnregisterUnit(int id)

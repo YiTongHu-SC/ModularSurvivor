@@ -4,7 +4,7 @@ namespace Core.Units
 {
     public class UnitData
     {
-        public int ID;
+        public int GUID { get; set; }
 
         /// <summary>
         /// 单位位置坐标

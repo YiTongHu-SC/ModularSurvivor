@@ -5,9 +5,13 @@ namespace Core.Units
 {
     public class UnitFactory
     {
-        public Unit Spawn(Unit UnitPrefab, UnitData data)
+        private int _uuid = 0;
+
+        public Unit Spawn(Unit unitPrefab, UnitData data)
         {
-            var unit = LeanPool.Spawn(UnitPrefab);
+            _uuid++;
+            data.GUID = _uuid;
+            var unit = LeanPool.Spawn(unitPrefab);
             unit.Initialize(data);
             return unit;
         }

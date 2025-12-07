@@ -16,4 +16,4 @@ MonoBehaviour:
   EnemyCount: 100
   SpawnInterval: 1
   Duration: 100
-  SpawnRadius: 5
+  SpawnRadius: 10

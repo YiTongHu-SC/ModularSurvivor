@@ -8,7 +8,7 @@ namespace Combat.Actors
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             base.OnEventReceived(eventData);
-            if (eventData.UnitId != ID) return;
+            if (eventData.UnitId != GUID) return;
             // 处理角色死亡逻辑
             KillSelf();
         }

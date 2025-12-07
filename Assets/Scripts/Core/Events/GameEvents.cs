@@ -19,7 +19,7 @@ namespace Core.Events
 
             public UnitMovementEvent(UnitData unitData)
             {
-                UnitId = unitData.ID;
+                UnitId = unitData.GUID;
                 UnitData = unitData;
             }
         }
