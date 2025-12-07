@@ -1,9 +1,6 @@
-﻿using System;
-using System.Diagnostics.Tracing;
-using Core.Events;
+﻿using Core.Events;
 using Lean.Pool;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Core.Units
 {
@@ -15,20 +12,17 @@ namespace Core.Units
         IEventListener<GameEvents.UnitDeathEvent>,
         IEventListener<GameEvents.UnitMovementEvent>
     {
-        public int ID;
-        public UnitData UnitData;
         public bool IsActive => UnitData.IsActive;
+        public UnitData UnitData { get; protected set; }
+        public int ID { get; protected set; }
 
         public virtual void Initialize(UnitData data)
         {
             ID = data.ID;
             UnitData = data;
             UnitData.IsActive = true;
+            SetPosition(data.Position);
             UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
-        }
-
-        public void Reset()
-        {
         }
 
         public virtual void OnSpawn()
@@ -39,9 +33,10 @@ namespace Core.Units
 
         public virtual void OnDespawn()
         {
+            UnitData.IsActive = false;
             EventManager.Instance.Unsubscribe<GameEvents.UnitDeathEvent>(this);
             EventManager.Instance.Unsubscribe<GameEvents.UnitMovementEvent>(this);
-            UnitData.IsActive = false;
+            UnitManager.Instance.UnitSystem.UnregisterUnit(ID);
         }
 
         public virtual void KillSelf()
@@ -56,6 +51,12 @@ namespace Core.Units
 
         public virtual void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
+        }
+
+        public virtual void SetPosition(Vector2 position)
+        {
+            UnitData.Position = position;
+            transform.position = position;
         }
     }
 }

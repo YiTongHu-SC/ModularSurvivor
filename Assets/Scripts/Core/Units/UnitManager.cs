@@ -14,19 +14,15 @@ namespace Core.Units
 
         public Dictionary<int, UnitData> Units => UnitSystem.Units;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            if (Instance == this)
-            {
-                Initialize();
-            }
-        }
-
         public override void Initialize()
         {
+            base.Initialize();
             UnitSystem = new UnitSystem();
             Factory = new UnitFactory();
+        }
+
+        public void Tick(float deltaTime)
+        {
         }
     }
 }

@@ -16,11 +16,11 @@ namespace Combat.Systems
             // DamageSystem.Initialize();
         }
 
-        private void Update()
+        public void Tick(float deltaTime)
         {
             // 更新所有战斗系统
-            BuffSystem.UpdateBuffs(Time.deltaTime);
-            MovementSystem.UpdateMovement(Time.deltaTime);
+            BuffSystem.UpdateBuffs(deltaTime);
+            MovementSystem.UpdateMovement(deltaTime);
         }
     }
 }

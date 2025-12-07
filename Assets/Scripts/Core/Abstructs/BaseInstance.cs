@@ -16,8 +16,12 @@ namespace Core.Abstructs
 
             Instance = this as T;
             DontDestroyOnLoad(this.gameObject);
+            Debug.Log($"Instance of {typeof(T)} Awake");
         }
 
-        public abstract void Initialize();
+        public virtual void Initialize()
+        {
+            Debug.Log($"Instance of {typeof(T)} Initialized");
+        }
     }
 }

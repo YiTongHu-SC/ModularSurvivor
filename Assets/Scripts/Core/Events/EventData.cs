@@ -10,11 +10,6 @@ namespace Core.Events
         /// <summary>
         /// 事件发生时间
         /// </summary>
-        public DateTime Timestamp { get; private set; }
-        
-        protected EventData()
-        {
-            Timestamp = DateTime.Now;
-        }
+        public DateTime Timestamp { get; private set; } = DateTime.Now;
     }
 }

@@ -1,3 +1,4 @@
 {
-	"name": "GameBase"
+	"name": "GameBase",
+	"references":[ "GUID:c3ac250e149fb514cb3233e9dc4f2b7d", "GUID:0b2a44ce8e613324897d7b6ba8c5068d" ]
 }

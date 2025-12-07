@@ -33,7 +33,7 @@ namespace Core.Events
 
         public override void Initialize()
         {
-            Debug.Log("EventManager initialized.");
+            base.Initialize();
         }
 
         /// <summary>
@@ -59,15 +59,6 @@ namespace Core.Events
             }
 
             Debug.Log($"EventManager: High performance mode {(enabled ? "enabled" : "disabled")}.");
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-            if (Instance == this)
-            {
-                Initialize();
-            }
         }
 
         /// <summary>
