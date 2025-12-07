@@ -395,6 +395,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestActor
       objectReference: {fileID: 0}
+    - target: {fileID: 5344722144099400332, guid: e47206c13ae5f9c4d85db67544f5537e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5901564648867316264, guid: e47206c13ae5f9c4d85db67544f5537e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

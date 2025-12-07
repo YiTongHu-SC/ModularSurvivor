@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Utils.Core;
 
 namespace Core.Coordinates
 {
@@ -18,7 +17,7 @@ namespace Core.Coordinates
         /// </summary>
         /// <param name="position2D">2D逻辑坐标</param>
         /// <returns>3D世界坐标</returns>
-        public static Vector3 ToWorldPosition(Vector2D position2D)
+        public static Vector3 ToWorldPosition(Vector2 position2D)
         {
             return new Vector3(position2D.x, YOffset, position2D.y);
         }
@@ -28,9 +27,9 @@ namespace Core.Coordinates
         /// </summary>
         /// <param name="worldPosition">3D世界坐标</param>
         /// <returns>2D逻辑坐标</returns>
-        public static Vector2D ToLogicPosition(Vector3 worldPosition)
+        public static Vector2 ToLogicPosition(Vector3 worldPosition)
         {
-            return new Vector2D(worldPosition.x, worldPosition.z);
+            return new Vector2(worldPosition.x, worldPosition.z);
         }
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace Core.Coordinates
         /// </summary>
         /// <param name="direction2D">2D逻辑方向</param>
         /// <returns>3D世界方向</returns>
-        public static Vector3 ToWorldDirection(Vector2D direction2D)
+        public static Vector3 ToWorldDirection(Vector2 direction2D)
         {
             return new Vector3(direction2D.x, 0, direction2D.y).normalized;
         }
@@ -68,9 +67,9 @@ namespace Core.Coordinates
         /// </summary>
         /// <param name="worldDirection">3D世界方向</param>
         /// <returns>2D逻辑方向</returns>
-        public static Vector2D ToLogicDirection(Vector3 worldDirection)
+        public static Vector2 ToLogicDirection(Vector3 worldDirection)
         {
-            return new Vector2D(worldDirection.x, worldDirection.z).Normalized;
+            return new Vector2(worldDirection.x, worldDirection.z).normalized;
         }
 
         /// <summary>

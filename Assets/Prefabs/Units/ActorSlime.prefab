@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1857361766822337955}
   - component: {fileID: 6269420373531811641}
+  - component: {fileID: 7336832604694511034}
   m_Layer: 0
   m_Name: ActorSlime
   m_TagString: Untagged
@@ -45,6 +46,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916191a6e9b34c01be27f11b515c0e37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Combat::Combat.Actors.Actor
+--- !u!114 &7336832604694511034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279139668653319931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6c95dc6fc3405a92a8552e995080ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Combat::Combat.Views.UnitView
 --- !u!1001 &710654024808385802
 PrefabInstance:
   m_ObjectHideFlags: 0

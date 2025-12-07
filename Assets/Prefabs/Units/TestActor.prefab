@@ -121,6 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2937444334403595645}
   - component: {fileID: 4904366842568524844}
+  - component: {fileID: 9129169514612555685}
   m_Layer: 0
   m_Name: TestActor
   m_TagString: Untagged
@@ -156,3 +157,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916191a6e9b34c01be27f11b515c0e37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.Actors.Actor
+--- !u!114 &9129169514612555685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5344722144099400332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6c95dc6fc3405a92a8552e995080ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Combat::Combat.Views.UnitView
