@@ -12,7 +12,7 @@ namespace Tests.Core.Events
     public class DemoUnitDeathListener : EventListener<GameEvents.UnitDeathEvent>
     {
         public bool EventReceived { get; private set; }
-        public string LastUnitId { get; private set; }
+        public int LastUnitId { get; private set; }
 
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
@@ -24,7 +24,7 @@ namespace Tests.Core.Events
         public void Reset()
         {
             EventReceived = false;
-            LastUnitId = null;
+            LastUnitId = -1;
         }
     }
 
@@ -177,7 +177,7 @@ namespace Tests.Core.Events
             EventManager.Instance.Subscribe<GameEvents.WaveEndEvent>(eventData => { waveEndCalled = true; }, this);
 
             // 1. 单位死亡事件 - 只有监听器对象处理
-            var deathEvent = new GameEvents.UnitDeathEvent("Enemy_001", Vector3.zero, "Player");
+            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero, 2);
             EventManager.Instance.PublishEvent(deathEvent);
             Assert.IsTrue(unitDeathListener.EventReceived);
             Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
@@ -263,7 +263,7 @@ namespace Tests.Core.Events
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("2. 敌人死亡...");
-                EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent("Enemy_001", Vector3.zero, "Player"));
+                EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(1, Vector3.zero, 2));
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("3. 玩家升级...");

@@ -1,13 +1,16 @@
-﻿using Core.Units;
+﻿using Core.Events;
+using Core.Units;
 
 namespace Combat.Actors
 {
     public class Actor : Unit
     {
-        // public ActorConfig Config;
-        public override void Initialize(UnitData data)
+        public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
-            base.Initialize(data);
+            base.OnEventReceived(eventData);
+            if (eventData.UnitId != ID) return;
+            // 处理角色死亡逻辑
+            KillSelf();
         }
     }
 }

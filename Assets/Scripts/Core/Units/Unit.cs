@@ -17,11 +17,13 @@ namespace Core.Units
     {
         public int ID;
         public UnitData UnitData;
+        public bool IsActive => UnitData.IsActive;
 
         public virtual void Initialize(UnitData data)
         {
             ID = data.ID;
             UnitData = data;
+            UnitData.IsActive = true;
             UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
         }
 
@@ -39,6 +41,13 @@ namespace Core.Units
         {
             EventManager.Instance.Unsubscribe<GameEvents.UnitDeathEvent>(this);
             EventManager.Instance.Unsubscribe<GameEvents.UnitMovementEvent>(this);
+            UnitData.IsActive = false;
+        }
+
+        public virtual void KillSelf()
+        {
+            if (!IsActive) return;
+            UnitManager.Instance.Factory.Despawn(this);
         }
 
         public virtual void OnEventReceived(GameEvents.UnitMovementEvent eventData)

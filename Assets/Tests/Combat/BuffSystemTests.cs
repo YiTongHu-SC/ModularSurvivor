@@ -86,6 +86,41 @@ namespace Tests.Combat
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator TestBuffExpiration()
+        {
+            yield return null;
+            Assert.IsNotNull(_combatManager.BuffSystem);
+            var testUnit = new UnitData(new Vector2(0, 0), 0)
+            {
+                ID = 2,
+            };
+            testUnit.MoveSpeed = 10f;
+            var actorGo = CreateGameObject();
+            var actor = _unitManager.Factory.Spawn(actorGo, testUnit);
+            var delayDuration = 1f;
+            var buffData = new BuffData(0,
+                "DelayDeath",
+                BuffType.DelayDeath,
+                delayDuration); // 1秒后过期,过期时死亡
+            // 应用Buff
+            var result = _combatManager.BuffSystem.ApplyBuff(buffData.BuffType, buffData, testUnit.ID);
+            Assert.IsTrue(result, "Buff apply should succeed.");
+            // 等待Buff过期
+            float elapsed = 0f;
+            while (elapsed < delayDuration)
+            {
+                _combatManager.BuffSystem.UpdateBuffs(DeltaTime);
+                elapsed += DeltaTime;
+                yield return null;
+            }
+
+            // 最后一次更新以确保Buff过期
+            _combatManager.BuffSystem.UpdateBuffs(DeltaTime);
+            // 验证单位已死亡
+            Assert.IsFalse(testUnit.IsActive, "Unit should be dead after DelayDeath buff expires");
+        }
+
         private Actor CreateGameObject()
         {
             // 创建测试用的简单预制体

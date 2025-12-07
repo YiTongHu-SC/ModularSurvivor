@@ -44,7 +44,7 @@ namespace Tests.Core.Events
             eventManager.Subscribe(listener3);
 
             // 发布事件
-            var deathEvent = new GameEvents.UnitDeathEvent("TestUnit", Vector3.zero);
+            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero);
             eventManager.PublishEvent(deathEvent);
 
             // 验证所有监听器都收到了事件
@@ -99,7 +99,7 @@ namespace Tests.Core.Events
 
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -146,7 +146,7 @@ namespace Tests.Core.Events
 
             for (int i = 0; i < 200; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 

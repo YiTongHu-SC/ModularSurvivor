@@ -10,6 +10,7 @@ namespace Combat.Buff
             = new()
             {
                 { BuffType.SpeedBoost, (data, targetId) => new BuffSpeedBoost(data, targetId) },
+                { BuffType.DelayDeath, (data, targetId) => new BuffDelayDeath(data, targetId) },
             };
 
         public static Buff CreateBuff(BuffType id, BuffData data, int targetUnitId)

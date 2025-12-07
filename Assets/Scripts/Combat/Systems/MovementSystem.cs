@@ -12,7 +12,6 @@ namespace Combat.Systems
 
         public void Initialize()
         {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace Tests.Core.Events
         {
             // 超小负载：10个监听器，10个事件
             eventManager.SetHighPerformanceMode(true);
-            
+
             var listeners = new MinimalTestListener[10];
             for (int i = 0; i < listeners.Length; i++)
             {
@@ -59,23 +59,23 @@ namespace Tests.Core.Events
             }
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            
+
             for (int i = 0; i < 10; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
-            
+
             stopwatch.Stop();
-            
+
             // 100个事件投递应该非常快
             Assert.Less(stopwatch.ElapsedMilliseconds, 10, $"Ultra small load took: {stopwatch.ElapsedMilliseconds}ms");
-            
+
             foreach (var listener in listeners)
             {
                 Assert.AreEqual(10, listener.CallCount);
             }
-            
+
             Debug.Log($"Ultra small (100 deliveries): {stopwatch.ElapsedMilliseconds}ms");
             eventManager.SetHighPerformanceMode(false);
         }
@@ -85,7 +85,7 @@ namespace Tests.Core.Events
         {
             // 小负载：50个监听器，50个事件
             eventManager.SetHighPerformanceMode(true);
-            
+
             var listeners = new MinimalTestListener[50];
             for (int i = 0; i < listeners.Length; i++)
             {
@@ -94,23 +94,23 @@ namespace Tests.Core.Events
             }
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            
+
             for (int i = 0; i < 50; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
-            
+
             stopwatch.Stop();
-            
+
             // 2500个事件投递应该很快
             Assert.Less(stopwatch.ElapsedMilliseconds, 25, $"Small load took: {stopwatch.ElapsedMilliseconds}ms");
-            
+
             foreach (var listener in listeners)
             {
                 Assert.AreEqual(50, listener.CallCount);
             }
-            
+
             Debug.Log($"Small (2500 deliveries): {stopwatch.ElapsedMilliseconds}ms");
             eventManager.SetHighPerformanceMode(false);
         }
@@ -120,7 +120,7 @@ namespace Tests.Core.Events
         {
             // 标准压力测试：100个监听器，100个事件
             eventManager.SetHighPerformanceMode(true);
-            
+
             var listeners = new MinimalTestListener[100];
             for (int i = 0; i < listeners.Length; i++)
             {
@@ -129,23 +129,23 @@ namespace Tests.Core.Events
             }
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            
+
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
-            
+
             stopwatch.Stop();
-            
+
             // 10000个事件投递应该在50ms内完成
             Assert.Less(stopwatch.ElapsedMilliseconds, 50, $"Standard load took: {stopwatch.ElapsedMilliseconds}ms");
-            
+
             foreach (var listener in listeners)
             {
                 Assert.AreEqual(100, listener.CallCount);
             }
-            
+
             Debug.Log($"Standard (10000 deliveries): {stopwatch.ElapsedMilliseconds}ms");
             eventManager.SetHighPerformanceMode(false);
         }
@@ -155,42 +155,43 @@ namespace Tests.Core.Events
         {
             // 完整压力测试：在UnityTest中运行
             eventManager.SetHighPerformanceMode(true);
-            
+
             var listeners = new MinimalTestListener[100];
             for (int i = 0; i < listeners.Length; i++)
             {
                 listeners[i] = new MinimalTestListener();
                 eventManager.Subscribe(listeners[i]);
             }
-            
+
             yield return null; // 等待一帧
-            
+
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            
+
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
-                
+
                 // 每10个事件让出一帧，模拟真实游戏场景
                 if (i % 10 == 0)
                 {
                     yield return null;
                 }
             }
-            
+
             stopwatch.Stop();
-            
+
             yield return null; // 最后等待一帧
-            
+
             // 在Unity协程环境下的性能要求
-            Assert.Less(stopwatch.ElapsedMilliseconds, 100, $"Unity coroutine stress test took: {stopwatch.ElapsedMilliseconds}ms");
-            
+            Assert.Less(stopwatch.ElapsedMilliseconds, 100,
+                $"Unity coroutine stress test took: {stopwatch.ElapsedMilliseconds}ms");
+
             foreach (var listener in listeners)
             {
                 Assert.AreEqual(100, listener.CallCount);
             }
-            
+
             Debug.Log($"Unity coroutine stress test (10000 deliveries): {stopwatch.ElapsedMilliseconds}ms");
             eventManager.SetHighPerformanceMode(false);
         }

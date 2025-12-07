@@ -24,11 +24,11 @@ namespace Core.Events
         /// </summary>
         public class UnitDeathEvent : EventData
         {
-            public string UnitId { get; }
+            public int UnitId { get; }
+            public int KillerId { get; }
             public UnityEngine.Vector3 DeathPosition { get; }
-            public string KillerId { get; }
 
-            public UnitDeathEvent(string unitId, UnityEngine.Vector3 deathPosition, string killerId = null)
+            public UnitDeathEvent(int unitId, UnityEngine.Vector3 deathPosition, int killerId = -1)
             {
                 UnitId = unitId;
                 DeathPosition = deathPosition;

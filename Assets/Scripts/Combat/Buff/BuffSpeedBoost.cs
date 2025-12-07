@@ -4,8 +4,6 @@ namespace Combat.Buff
 {
     public class BuffSpeedBoost : Buff
     {
-        private UnitData TargetUnitData => UnitManager.Instance.Units[TargetUnitId];
-
         public BuffSpeedBoost(BuffData data, int targetUnitId) : base(data, targetUnitId)
         {
         }

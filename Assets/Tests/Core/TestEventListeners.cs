@@ -9,9 +9,9 @@ namespace Tests.Core.Events
     public class TestUnitDeathListener : EventListener<GameEvents.UnitDeathEvent>
     {
         public bool EventReceived { get; private set; }
-        public string LastUnitId { get; private set; }
+        public int LastUnitId { get; private set; }
         public Vector3 LastDeathPosition { get; private set; }
-        public string LastKillerId { get; private set; }
+        public int LastKillerId { get; private set; }
         public bool EnableLogging { get; set; } = true; // 可控制的日志开关
 
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
@@ -31,9 +31,9 @@ namespace Tests.Core.Events
         public void Reset()
         {
             EventReceived = false;
-            LastUnitId = null;
+            LastUnitId = -1;
             LastDeathPosition = Vector3.zero;
-            LastKillerId = null;
+            LastKillerId = -1;
         }
     }
 
@@ -44,7 +44,7 @@ namespace Tests.Core.Events
     public class HighPerformanceTestListener : EventListener<GameEvents.UnitDeathEvent>
     {
         public bool EventReceived { get; private set; }
-        public string LastUnitId { get; private set; }
+        public int LastUnitId { get; private set; } = -1;
         public int CallCount { get; private set; }
 
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
@@ -58,7 +58,7 @@ namespace Tests.Core.Events
         public void Reset()
         {
             EventReceived = false;
-            LastUnitId = null;
+            LastUnitId = -1;
             CallCount = 0;
         }
     }

@@ -63,9 +63,9 @@ namespace Tests.Core.Events
             Debug.Log("=== Testing Unit Death Event ===");
 
             var deathEvent = new GameEvents.UnitDeathEvent(
-                "Enemy_001",
+                1,
                 new Vector3(10, 0, 5),
-                "Player"
+                2
             );
 
             EventManager.Instance.PublishEvent(deathEvent);
@@ -74,7 +74,7 @@ namespace Tests.Core.Events
 
             // 验证事件处理
             UnityEngine.Assertions.Assert.IsTrue(unitDeathListener.EventReceived, "Unit death event was not received");
-            UnityEngine.Assertions.Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
+            UnityEngine.Assertions.Assert.AreEqual(1, unitDeathListener.LastUnitId);
 
             Debug.Log("Unit Death Event test completed successfully!");
             yield return null;
@@ -146,7 +146,7 @@ namespace Tests.Core.Events
 
             // 2. 敌人死亡
             Debug.Log("2. Enemy dies...");
-            var deathEvent = new GameEvents.UnitDeathEvent("Enemy_001", Vector3.zero, "Player");
+            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero, 2);
             EventManager.Instance.PublishEvent(deathEvent);
             yield return new WaitForSeconds(0.5f);
 

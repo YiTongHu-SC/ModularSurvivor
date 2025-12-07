@@ -1,17 +1,20 @@
-﻿namespace Combat.Buff
+﻿using Core.Units;
+
+namespace Combat.Buff
 {
     /// <summary>
     /// Buff实例类，管理单个Buff的状态和生命周期
     /// </summary>
     public abstract class Buff
     {
+        public UnitData TargetUnitData => UnitManager.Instance.Units[TargetUnitId];
         public BuffData Data { get; private set; }
         public int TargetUnitId { get; private set; }
         public float RemainingTime { get; private set; }
         public int StackCount { get; private set; }
         public bool IsActive { get; set; }
 
-        public Buff(BuffData data, int targetUnitId)
+        protected Buff(BuffData data, int targetUnitId)
         {
             Data = data;
             TargetUnitId = targetUnitId;
@@ -63,12 +66,20 @@
         }
 
         /// <summary>
-        /// 应用Buff效果
+        /// 应用Buff效果到单位属性,
+        /// DOT/HOT类型的Buff不需要在这里处理，由UpdateEffect处理
         /// </summary>
         public abstract void ApplyEffect();
 
+        /// <summary>
+        /// 移除Buff效果,
+        /// </summary>
         public abstract void RemoveEffect();
 
+        /// <summary>
+        /// 更新Buff效果（每帧调用）DOT/HOT类的Buff
+        /// </summary>
+        /// <param name="deltaTime"></param>
         public abstract void UpdateEffect(float deltaTime);
     }
 }

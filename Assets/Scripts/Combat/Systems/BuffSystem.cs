@@ -45,16 +45,16 @@ namespace Combat.Systems
             var unitBuffs = _unitBuffs[unitId];
 
             // 尝试叠加现有Buff
-            var existingBuff = unitBuffs.FirstOrDefault(b => b.Data.Type == buffType && b.IsActive);
+            var existingBuff = unitBuffs.FirstOrDefault(b => b.Data.BuffType == buffType && b.IsActive);
             if (existingBuff != null && existingBuff.TryStack(newBuff))
             {
-                Debug.Log($"Buff叠加成功: {existingBuff.Data.Type} (层数: {existingBuff.StackCount})");
+                Debug.Log($"Buff叠加成功: {existingBuff.Data.BuffType} (层数: {existingBuff.StackCount})");
             }
             else
             {
                 // 添加新Buff
                 unitBuffs.Add(newBuff);
-                Debug.Log($"应用新Buff: {newBuff.Data.Type} 到单位 {unitId}");
+                Debug.Log($"应用新Buff: {newBuff.Data.BuffType} 到单位 {unitId}");
             }
 
             // 应用Buff效果
@@ -81,7 +81,7 @@ namespace Combat.Systems
                 return false;
 
             // 移除Buff效果
-            RemoveBuffEffect(unitId, buffToRemove);
+            buffToRemove.RemoveEffect();
 
             // 标记为非活跃
             buffToRemove.IsActive = false;
@@ -126,34 +126,9 @@ namespace Combat.Systems
             // 移除过期Buff的效果
             foreach (var (unitId, buff) in expiredBuffs)
             {
-                RemoveBuffEffect(unitId, buff);
+                buff.RemoveEffect();
                 EventManager.Instance.PublishEvent(
                     new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
-            }
-        }
-
-        /// <summary>
-        /// 移除Buff效果
-        /// </summary>
-        private void RemoveBuffEffect(int unitId, Combat.Buff.Buff buff)
-        {
-            var unitData = UnitManager.Instance.Units[unitId];
-
-            switch (buff.Data.Type)
-            {
-                case BuffType.SpeedBoost:
-                    unitData.MoveSpeed /= buff.GetEffectValue();
-                    break;
-                case BuffType.SpeedReduction:
-                    unitData.MoveSpeed /= buff.GetEffectValue();
-                    break;
-                case BuffType.AttackBoost:
-                    unitData.AttackPower /= buff.GetEffectValue();
-                    break;
-                case BuffType.AttackReduction:
-                    unitData.AttackPower /= buff.GetEffectValue();
-                    break;
-                // DOT/HOT类型的Buff不需要恢复，因为它们的效果是瞬时的
             }
         }
 
@@ -216,7 +191,7 @@ namespace Combat.Systems
             // 移除所有Buff效果
             foreach (var buff in buffs.Where(b => b.IsActive))
             {
-                RemoveBuffEffect(unitId, buff);
+                buff.RemoveEffect();
                 EventManager.Instance.PublishEvent(
                     new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
             }

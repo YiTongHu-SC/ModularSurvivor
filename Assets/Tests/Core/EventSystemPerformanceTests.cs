@@ -50,7 +50,7 @@ namespace Tests.Core.Events
 
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -81,7 +81,7 @@ namespace Tests.Core.Events
 
             for (int i = 0; i < 200; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -112,7 +112,7 @@ namespace Tests.Core.Events
 
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -150,7 +150,7 @@ namespace Tests.Core.Events
             var stopwatch1 = Stopwatch.StartNew();
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -172,7 +172,7 @@ namespace Tests.Core.Events
             var stopwatch2 = Stopwatch.StartNew();
             for (int i = 0; i < 100; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -216,7 +216,7 @@ namespace Tests.Core.Events
             var stopwatch1 = Stopwatch.StartNew();
             for (int i = 0; i < eventCount; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -239,7 +239,7 @@ namespace Tests.Core.Events
             var stopwatch2 = Stopwatch.StartNew();
             for (int i = 0; i < eventCount; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -284,7 +284,7 @@ namespace Tests.Core.Events
             var stopwatch1 = Stopwatch.StartNew();
             for (int i = 0; i < eventCount; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 
@@ -306,7 +306,7 @@ namespace Tests.Core.Events
             var stopwatch2 = Stopwatch.StartNew();
             for (int i = 0; i < eventCount; i++)
             {
-                var deathEvent = new GameEvents.UnitDeathEvent($"Unit_{i}", Vector3.zero);
+                var deathEvent = new GameEvents.UnitDeathEvent(i, Vector3.zero);
                 eventManager.PublishEvent(deathEvent);
             }
 

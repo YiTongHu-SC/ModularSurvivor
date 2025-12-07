@@ -54,7 +54,7 @@ namespace Tests.Core
             eventManager.Subscribe<GameEvents.UnitDeathEvent>(multiListener);
 
             // Act
-            var deathEvent = new GameEvents.UnitDeathEvent("Unit123", Vector3.zero);
+            var deathEvent = new GameEvents.UnitDeathEvent(123, Vector3.zero);
             var waveEvent = new GameEvents.WaveStartEvent(1, 1);
             eventManager.PublishEvent(deathEvent);
             eventManager.PublishEvent(waveEvent);
@@ -74,7 +74,7 @@ namespace Tests.Core
             eventManager.Subscribe<GameEvents.WaveStartEvent>(multiListener);
 
             // Act
-            var deathEvent = new GameEvents.UnitDeathEvent("Unit123", Vector3.zero);
+            var deathEvent = new GameEvents.UnitDeathEvent(123, Vector3.zero);
             var waveEvent = new GameEvents.WaveStartEvent(1, 1);
             eventManager.PublishEvent(deathEvent);
             eventManager.PublishEvent(waveEvent);
