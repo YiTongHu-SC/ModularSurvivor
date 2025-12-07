@@ -1,4 +1,5 @@
-﻿using Core.Coordinates;
+﻿using System;
+using Core.Coordinates;
 using Core.Units;
 using UnityEngine;
 
@@ -6,16 +7,23 @@ namespace Combat.Views
 {
     public class UnitView : MonoBehaviour
     {
-        Unit _unit;
+        private Unit _unit;
 
-        private void Awake()
+        private void OnEnable()
         {
-            Debug.Log("UnitView Awake");
-            _unit = GetComponent<Unit>();
-            if (_unit != null)
+            if (_unit == null)
             {
-                _unit.OnUpdatePosition.AddListener(UpdatePosition);
+                _unit = GetComponent<Unit>();
             }
+
+            Debug.Log("UnitView AddListeners");
+            _unit.OnUpdatePosition.AddListener(UpdatePosition);
+        }
+
+        private void OnDisable()
+        {
+            Debug.Log("UnitView RemoveListeners");
+            _unit.OnUpdatePosition.RemoveListener(UpdatePosition);
         }
 
         private void UpdatePosition(Vector2 position)

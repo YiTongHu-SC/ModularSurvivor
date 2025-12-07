@@ -35,6 +35,7 @@ namespace Waves.Spawners
                 Mathf.Sin(radian) * _spawnRadius);
             var actorData = GetActorDataById(Config.EnemyID);
             var unitData = new UnitData(spawnPosition, 0); // 根据需要初始化UnitData
+            unitData.MoveSpeed = 1;
             Spawn(actorData, unitData);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }

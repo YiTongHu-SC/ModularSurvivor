@@ -14,12 +14,12 @@ namespace Core.Events
         
         public class UnitMovementEvent : EventData
         {
-            public int UnitId { get; }
+            public int GUID { get; }
             public UnitData UnitData { get; set; }
 
             public UnitMovementEvent(UnitData unitData)
             {
-                UnitId = unitData.GUID;
+                GUID = unitData.GUID;
                 UnitData = unitData;
             }
         }

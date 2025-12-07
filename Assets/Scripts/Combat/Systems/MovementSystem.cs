@@ -12,6 +12,7 @@ namespace Combat.Systems
 
         public void Initialize()
         {
+            playerPosition = Vector2.zero;
         }
 
         /// <summary>
@@ -22,9 +23,9 @@ namespace Combat.Systems
         {
             foreach (var unit in MovingUnits.Values)
             {
+                unit.MoveDirection = (playerPosition - unit.Position).normalized;
                 unit.Position += unit.MoveSpeed * deltaTime * unit.MoveDirection;
                 // // 通知View层更新
-                // EventBus.Publish(new UnitMovedEvent(unit.id, unit.position));
                 EventManager.Instance.PublishEvent(new GameEvents.UnitMovementEvent(unit));
             }
         }

@@ -17,14 +17,46 @@ namespace Core.Units
         public bool IsActive => UnitData.IsActive;
         public UnitData UnitData { get; protected set; }
         public int GUID => UnitData.GUID;
-        public UnityEvent OnInitialize { get; set; }
-        public UnityEvent<Vector2> OnUpdatePosition { get; set; }
+        public bool Initialized { get; private set; }
+        public Transform ModelTransform { get; set; }
+
+        private UnityEvent _onInitialize;
+
+        // 事件
+        public UnityEvent OnInitialize
+        {
+            get
+            {
+                if (_onInitialize == null)
+                {
+                    _onInitialize = new UnityEvent();
+                }
+
+                return _onInitialize;
+            }
+        }
+
+        private UnityEvent<Vector2> _onUpdatePosition;
+
+        public UnityEvent<Vector2> OnUpdatePosition
+        {
+            get
+            {
+                if (_onUpdatePosition == null)
+                {
+                    _onUpdatePosition = new UnityEvent<Vector2>();
+                }
+
+                return _onUpdatePosition;
+            }
+        }
 
         private void Awake()
         {
             Debug.Log("Unit Awake");
-            OnInitialize = new UnityEvent();
-            OnUpdatePosition = new UnityEvent<Vector2>();
+            ModelTransform = transform.GetChild(0);
+            ModelTransform.gameObject.SetActive(false);
+            ModelTransform.gameObject.SetActive(true);
         }
 
         public virtual void Initialize(UnitData data)
@@ -33,10 +65,12 @@ namespace Core.Units
             UnitData = data;
             UnitData.IsActive = true;
             UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
+            Initialized = true;
         }
 
         private void Start()
         {
+            if (!Initialized) return;
             Debug.Log("Unit Start");
             OnInitialize?.Invoke();
             OnUpdatePosition?.Invoke(UnitData.Position);
@@ -45,6 +79,7 @@ namespace Core.Units
         public virtual void OnSpawn()
         {
             Debug.Log("Unit Spawned");
+            Initialized = false;
             EventManager.Instance.Subscribe<GameEvents.UnitDeathEvent>(this);
             EventManager.Instance.Subscribe<GameEvents.UnitMovementEvent>(this);
         }
@@ -66,7 +101,7 @@ namespace Core.Units
         public virtual void OnEventReceived(GameEvents.UnitMovementEvent eventData)
         {
             if (!IsActive) return;
-            if (eventData.UnitId != GUID) return;
+            if (eventData.GUID != GUID) return;
             SetPosition(eventData.UnitData.Position);
         }
 
