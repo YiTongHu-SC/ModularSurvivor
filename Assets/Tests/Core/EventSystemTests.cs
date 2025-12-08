@@ -64,7 +64,7 @@ namespace Tests.Core.Events
             eventManager.Subscribe(testListener);
 
             // 发布事件
-            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero, 2);
+            var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
             eventManager.PublishEvent(deathEvent);
 
             // 验证事件被接收
@@ -117,11 +117,11 @@ namespace Tests.Core.Events
             eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData =>
             {
                 callbackInvoked = true;
-                receivedUnitId = eventData.UnitId;
+                receivedUnitId = eventData.GUID;
             }, this);
 
             // 发布事件
-            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero, 2);
+            var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
             eventManager.PublishEvent(deathEvent);
 
             // 验证事件被接收
@@ -169,7 +169,7 @@ namespace Tests.Core.Events
             Assert.AreEqual(2, eventManager.GetListenerCount(typeof(GameEvents.UnitDeathEvent)));
 
             // 发布事件
-            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero);
+            var deathEvent = new GameEvents.UnitDeathEvent(1);
             eventManager.PublishEvent(deathEvent);
 
             // 验证两种方式都收到事件
@@ -200,7 +200,7 @@ namespace Tests.Core.Events
             yield return null; // 等待一帧
 
             // 发布不同类型的事件
-            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero);
+            var deathEvent = new GameEvents.UnitDeathEvent(1);
             var waveEvent = new GameEvents.WaveStartEvent(1, 5);
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(3, 500);
 

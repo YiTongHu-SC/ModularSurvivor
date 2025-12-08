@@ -41,60 +41,6 @@ namespace Tests.Core
         }
 
         [Test]
-        public void MathUtils2D_Angle_ShouldCalculateCorrectly()
-        {
-            // Arrange
-            Vector2D rightVector = new Vector2D(1, 0);
-            Vector2D upVector = new Vector2D(0, 1);
-            Vector2D diagonalVector = new Vector2D(1, 1);
-            
-            // Act
-            float rightAngle = MathUtils2D.Angle(rightVector);
-            float upAngle = MathUtils2D.Angle(upVector);
-            float diagonalAngle = MathUtils2D.Angle(diagonalVector);
-            
-            // Assert
-            Assert.AreEqual(0.0f, rightAngle, 0.001f, "Right vector should be 0 degrees");
-            Assert.AreEqual(90.0f, upAngle, 0.001f, "Up vector should be 90 degrees");
-            Assert.AreEqual(45.0f, diagonalAngle, 0.001f, "Diagonal vector should be 45 degrees");
-        }
-
-        [Test]
-        public void MathUtils2D_AngleBetween_ShouldCalculateCorrectly()
-        {
-            // Arrange
-            Vector2D v1 = new Vector2D(1, 0);
-            Vector2D v2 = new Vector2D(0, 1);
-            Vector2D v3 = new Vector2D(1, 1);
-            
-            // Act
-            float angle90 = MathUtils2D.AngleBetween(v1, v2);
-            float angle45 = MathUtils2D.AngleBetween(v1, v3);
-            
-            // Assert
-            Assert.AreEqual(90.0f, angle90, 0.001f, "Angle between right and up should be 90 degrees");
-            Assert.AreEqual(45.0f, angle45, 0.001f, "Angle between right and diagonal should be 45 degrees");
-        }
-
-        [Test]
-        public void MathUtils2D_AngleToDirection_ShouldCalculateCorrectly()
-        {
-            // Arrange & Act
-            Vector2D right = MathUtils2D.AngleToDirection(0);
-            Vector2D up = MathUtils2D.AngleToDirection(90);
-            Vector2D left = MathUtils2D.AngleToDirection(180);
-            Vector2D down = MathUtils2D.AngleToDirection(270);
-            
-            // Assert
-            Assert.AreEqual(1.0f, right.x, 0.001f, "0° should point right");
-            Assert.AreEqual(0.0f, right.y, 0.001f, "0° Y should be 0");
-            Assert.AreEqual(0.0f, up.x, 0.001f, "90° X should be 0");
-            Assert.AreEqual(1.0f, up.y, 0.001f, "90° should point up");
-            Assert.AreEqual(-1.0f, left.x, 0.001f, "180° should point left");
-            Assert.AreEqual(0.0f, down.x, 0.001f, "270° Y should be 0 (approximately)");
-        }
-
-        [Test]
         public void MathUtils2D_RotatePoint_ShouldRotateCorrectly()
         {
             // Arrange
@@ -178,24 +124,6 @@ namespace Tests.Core
             // Assert
             Assert.AreEqual(3.0f, clamped.x, 0.001f, "X should be clamped to max");
             Assert.AreEqual(-1.0f, clamped.y, 0.001f, "Y should be clamped to min");
-        }
-
-        [Test]
-        public void MathUtils2D_Lerp_ShouldInterpolateCorrectly()
-        {
-            // Arrange
-            Vector2D start = new Vector2D(0, 0);
-            Vector2D end = new Vector2D(10, 20);
-            
-            // Act
-            Vector2D quarter = MathUtils2D.Lerp(start, end, 0.25f);
-            Vector2D half = MathUtils2D.Lerp(start, end, 0.5f);
-            Vector2D threequarter = MathUtils2D.Lerp(start, end, 0.75f);
-            
-            // Assert
-            Assert.AreEqual(new Vector2D(2.5f, 5), quarter, "Quarter interpolation should be correct");
-            Assert.AreEqual(new Vector2D(5, 10), half, "Half interpolation should be correct");
-            Assert.AreEqual(new Vector2D(7.5f, 15), threequarter, "Three quarter interpolation should be correct");
         }
     }
 }

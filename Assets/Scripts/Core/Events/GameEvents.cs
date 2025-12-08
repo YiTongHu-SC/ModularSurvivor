@@ -7,11 +7,10 @@ namespace Core.Events
     /// </summary>
     public static class GameEvents
     {
-        
         public class GameInitializedEvent : EventData
         {
         }
-        
+
         public class UnitMovementEvent : EventData
         {
             public int GUID { get; }
@@ -29,14 +28,12 @@ namespace Core.Events
         /// </summary>
         public class UnitDeathEvent : EventData
         {
-            public int UnitId { get; }
+            public int GUID { get; }
             public int KillerId { get; }
-            public UnityEngine.Vector3 DeathPosition { get; }
 
-            public UnitDeathEvent(int unitId, UnityEngine.Vector3 deathPosition, int killerId = -1)
+            public UnitDeathEvent(int guid, int killerId = -1)
             {
-                UnitId = unitId;
-                DeathPosition = deathPosition;
+                GUID = guid;
                 KillerId = killerId;
             }
         }
@@ -132,6 +129,21 @@ namespace Core.Events
                 UnitId = unitId;
                 BuffId = buffId;
                 BuffName = buffName;
+            }
+        }
+
+        /// <summary>
+        /// 能力移除事件
+        /// </summary>
+        public class AbilityRemovedEvent : EventData
+        {
+            public int UnitId { get; }
+            public int AbilityId { get; }
+
+            public AbilityRemovedEvent(int unitId, int abilityId)
+            {
+                UnitId = unitId;
+                AbilityId = abilityId;
             }
         }
     }

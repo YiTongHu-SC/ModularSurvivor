@@ -34,6 +34,11 @@ namespace Core.Units
         /// </summary>
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// 当前血量
+        /// </summary>
+        public int Health { get; set; }
+
         public string MovementStrategy;
     }
 }

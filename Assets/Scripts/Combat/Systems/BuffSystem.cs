@@ -13,7 +13,7 @@ namespace Combat.Systems
     public class BuffSystem
     {
         // 按单位ID存储Buff列表
-        private readonly Dictionary<int, List<Combat.Buff.Buff>> _unitBuffs = new();
+        private readonly Dictionary<int, List<BaseBuff>> _unitBuffs = new();
 
         public void Initialize()
         {
@@ -38,7 +38,7 @@ namespace Combat.Systems
             // 确保单位有Buff列表
             if (!_unitBuffs.ContainsKey(unitId))
             {
-                _unitBuffs[unitId] = new List<Combat.Buff.Buff>();
+                _unitBuffs[unitId] = new List<BaseBuff>();
             }
 
             var newBuff = BuffFactory.CreateBuff(buffType, buffData, unitId);
@@ -98,7 +98,7 @@ namespace Combat.Systems
         /// <param name="deltaTime">时间增量</param>
         public void UpdateBuffs(float deltaTime)
         {
-            var expiredBuffs = new List<(int unitId, Combat.Buff.Buff buff)>();
+            var expiredBuffs = new List<(int unitId, Combat.Buff.BaseBuff buff)>();
 
             foreach (var kvp in _unitBuffs)
             {
@@ -169,14 +169,14 @@ namespace Combat.Systems
         /// </summary>
         /// <param name="unitId">单位ID</param>
         /// <returns>Buff列表</returns>
-        public List<Combat.Buff.Buff> GetUnitBuffs(int unitId)
+        public List<Combat.Buff.BaseBuff> GetUnitBuffs(int unitId)
         {
             if (_unitBuffs.TryGetValue(unitId, out var buffs))
             {
                 return buffs.Where(b => b.IsActive).ToList();
             }
 
-            return new List<Combat.Buff.Buff>();
+            return new List<Combat.Buff.BaseBuff>();
         }
 
         /// <summary>

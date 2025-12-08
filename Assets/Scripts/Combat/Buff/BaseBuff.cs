@@ -5,7 +5,7 @@ namespace Combat.Buff
     /// <summary>
     /// Buff实例类，管理单个Buff的状态和生命周期
     /// </summary>
-    public abstract class Buff
+    public abstract class BaseBuff
     {
         public UnitData TargetUnitData => UnitManager.Instance.Units[TargetUnitId];
         public BuffData Data { get; private set; }
@@ -14,7 +14,7 @@ namespace Combat.Buff
         public int StackCount { get; private set; }
         public bool IsActive { get; set; }
 
-        protected Buff(BuffData data, int targetUnitId)
+        protected BaseBuff(BuffData data, int targetUnitId)
         {
             Data = data;
             TargetUnitId = targetUnitId;
@@ -45,11 +45,11 @@ namespace Combat.Buff
         /// <summary>
         /// 尝试叠加Buff
         /// </summary>
-        /// <param name="newBuff">新的Buff</param>
+        /// <param name="newBaseBuff">新的Buff</param>
         /// <returns>是否成功叠加</returns>
-        public virtual bool TryStack(Buff newBuff)
+        public virtual bool TryStack(BaseBuff newBaseBuff)
         {
-            if (!Data.CanStack || Data.ID != newBuff.Data.ID) return false;
+            if (!Data.CanStack || Data.ID != newBaseBuff.Data.ID) return false;
 
             StackCount++;
             // 刷新持续时间

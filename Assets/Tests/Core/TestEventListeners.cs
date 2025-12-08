@@ -17,14 +17,13 @@ namespace Tests.Core.Events
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
-            LastUnitId = eventData.UnitId;
-            LastDeathPosition = eventData.DeathPosition;
+            LastUnitId = eventData.GUID;
             LastKillerId = eventData.KillerId;
 
             // 只在启用日志时输出
             if (EnableLogging)
             {
-                Debug.Log($"[Test] Unit {eventData.UnitId} died at {eventData.DeathPosition}");
+                Debug.Log($"[Test] Unit {eventData.GUID} died");
             }
         }
 
@@ -50,7 +49,7 @@ namespace Tests.Core.Events
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
-            LastUnitId = eventData.UnitId;
+            LastUnitId = eventData.GUID;
             CallCount++;
             // 无Debug.Log输出，最大化性能
         }

@@ -64,7 +64,6 @@ namespace Tests.Core.Events
 
             var deathEvent = new GameEvents.UnitDeathEvent(
                 1,
-                new Vector3(10, 0, 5),
                 2
             );
 
@@ -146,7 +145,7 @@ namespace Tests.Core.Events
 
             // 2. 敌人死亡
             Debug.Log("2. Enemy dies...");
-            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero, 2);
+            var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
             EventManager.Instance.PublishEvent(deathEvent);
             yield return new WaitForSeconds(0.5f);
 

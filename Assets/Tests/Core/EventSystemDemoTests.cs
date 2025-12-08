@@ -17,8 +17,8 @@ namespace Tests.Core.Events
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
-            LastUnitId = eventData.UnitId;
-            Debug.Log($"[监听器对象] Unit {eventData.UnitId} died at {eventData.DeathPosition}");
+            LastUnitId = eventData.GUID;
+            Debug.Log($"[监听器对象] Unit {eventData.GUID} died");
         }
 
         public void Reset()
@@ -177,7 +177,7 @@ namespace Tests.Core.Events
             EventManager.Instance.Subscribe<GameEvents.WaveEndEvent>(eventData => { waveEndCalled = true; }, this);
 
             // 1. 单位死亡事件 - 只有监听器对象处理
-            var deathEvent = new GameEvents.UnitDeathEvent(1, Vector3.zero, 2);
+            var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
             EventManager.Instance.PublishEvent(deathEvent);
             Assert.IsTrue(unitDeathListener.EventReceived);
             Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
@@ -263,7 +263,7 @@ namespace Tests.Core.Events
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("2. 敌人死亡...");
-                EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(1, Vector3.zero, 2));
+                EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(1, 2));
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("3. 玩家升级...");

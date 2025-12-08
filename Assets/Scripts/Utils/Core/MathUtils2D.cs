@@ -22,34 +22,7 @@ namespace Utils.Core
         {
             return (to - from).normalized;
         }
-
-        /// <summary>
-        /// 计算向量的角度（以度为单位）
-        /// </summary>
-        public static float Angle(Vector2 vector)
-        {
-            return Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
-        }
-
-        /// <summary>
-        /// 计算两个向量之间的角度（以度为单位）
-        /// </summary>
-        public static float AngleBetween(Vector2 from, Vector2 to)
-        {
-            float dot = Vector2.Dot(from.normalized, to.normalized);
-            dot = Mathf.Clamp(dot, -1.0f, 1.0f);
-            return Mathf.Acos(dot) * Mathf.Rad2Deg;
-        }
-
-        /// <summary>
-        /// 根据角度创建方向向量
-        /// </summary>
-        public static Vector2 AngleToDirection(float angleInDegrees)
-        {
-            float angleInRadians = angleInDegrees * Mathf.Deg2Rad;
-            return new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
-        }
-
+        
         /// <summary>
         /// 将点绕原点旋转指定角度
         /// </summary>
@@ -105,14 +78,6 @@ namespace Utils.Core
 
             float t = Mathf.Clamp01(Vector2.Dot(pointToStart, line) / lineLength);
             return lineStart + t * line;
-        }
-
-        /// <summary>
-        /// 线性插值
-        /// </summary>
-        public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
-        {
-            return Vector2.Lerp(a, b, t);
         }
 
         /// <summary>
