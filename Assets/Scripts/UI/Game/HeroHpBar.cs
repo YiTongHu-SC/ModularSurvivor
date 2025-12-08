@@ -1,22 +1,12 @@
-﻿using System;
-using Core.Events;
-using Core.Units;
+﻿using Core.Units;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Game
 {
-    public class HeroHpBar : MonoBehaviour, IEventListener<GameEvents.HeroCreated>
+    public class HeroHpBar : MonoBehaviour
     {
         public Image BarImage;
-        private int targetHeroId = -1;
-        private UnitData HeroData { get; set; }
-
-        public void OnEventReceived(GameEvents.HeroCreated eventData)
-        {
-            targetHeroId = eventData.UnitGuid;
-            HeroData = UnitManager.Instance.Units[targetHeroId];
-        }
 
         private void Update()
         {
@@ -25,8 +15,9 @@ namespace UI.Game
 
         private float GetHeroHpFraction()
         {
-            if (HeroData == null) return 1;
-            return Mathf.Clamp(HeroData.Health / HeroData.MaxHealth, 0f, 1f);
+            if (UnitManager.Instance.HeroUnitData == null) return 1;
+            return Mathf.Clamp(UnitManager.Instance.HeroUnitData.Health / UnitManager.Instance.HeroUnitData.MaxHealth,
+                0f, 1f);
         }
     }
 }
