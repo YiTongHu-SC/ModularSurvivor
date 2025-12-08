@@ -7,12 +7,12 @@ namespace Core.Units
         public int GUID { get; set; }
 
         /// <summary>
-        /// 单位位置坐标
+        /// 单位位置坐标，x-z平面
         /// </summary>
         public Vector2 Position;
 
         /// <summary>
-        /// 单位面向方向，0度为正上方，顺时针旋转
+        /// 单位面向方向，0度为z方向，顺时针旋转
         /// </summary>
         public float Rotation;
 

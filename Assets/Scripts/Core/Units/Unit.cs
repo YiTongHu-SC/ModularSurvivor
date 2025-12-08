@@ -36,18 +36,18 @@ namespace Core.Units
             }
         }
 
-        private UnityEvent<Vector2> _onUpdatePosition;
+        private UnityEvent<Vector2, float> _onUpdateShow;
 
-        public UnityEvent<Vector2> OnUpdatePosition
+        public UnityEvent<Vector2, float> OnUpdateView
         {
             get
             {
-                if (_onUpdatePosition == null)
+                if (_onUpdateShow == null)
                 {
-                    _onUpdatePosition = new UnityEvent<Vector2>();
+                    _onUpdateShow = new UnityEvent<Vector2, float>();
                 }
 
-                return _onUpdatePosition;
+                return _onUpdateShow;
             }
         }
 
@@ -73,7 +73,7 @@ namespace Core.Units
             if (!Initialized) return;
             Debug.Log("Unit Start");
             OnInitialize?.Invoke();
-            OnUpdatePosition?.Invoke(UnitData.Position);
+            OnUpdateView?.Invoke(UnitData.Position, UnitData.Rotation);
         }
 
         public virtual void OnSpawn()
@@ -102,17 +102,11 @@ namespace Core.Units
         {
             if (!IsActive) return;
             if (eventData.GUID != GUID) return;
-            SetPosition(eventData.UnitData.Position);
+            OnUpdateView?.Invoke(UnitData.Position, UnitData.Rotation);
         }
 
         public virtual void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
-        }
-
-        public virtual void SetPosition(Vector2 position)
-        {
-            UnitData.Position = position;
-            OnUpdatePosition?.Invoke(UnitData.Position);
         }
     }
 }
