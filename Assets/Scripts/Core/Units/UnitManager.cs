@@ -14,6 +14,19 @@ namespace Core.Units
         public UnitSystem UnitSystem { get; private set; }
         public UnitOverlapSystem OverlapSystem { get; private set; }
         public Dictionary<int, UnitData> Units => UnitSystem.Units;
+        public UnitData HeroUnitData { get; private set; }
+
+        public void SetHeroUnit(int unitId)
+        {
+            if (Units.ContainsKey(unitId))
+            {
+                HeroUnitData = Units[unitId];
+            }
+            else
+            {
+                Debug.LogWarning($"Unit with ID {unitId} does not exist.");
+            }
+        }
 
         public override void Initialize()
         {

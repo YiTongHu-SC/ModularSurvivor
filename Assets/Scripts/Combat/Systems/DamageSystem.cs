@@ -5,7 +5,7 @@ namespace Combat.Systems
 {
     public class DamageSystem
     {
-        public static bool TryApplyDamage(UnitData target, float damageAmount, UnitData source = null)
+        public bool TryApplyDamage(UnitData target, float damageAmount, UnitData source = null)
         {
             if (target == null || damageAmount <= 0)
                 return false;

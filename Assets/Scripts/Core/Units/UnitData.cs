@@ -4,9 +4,17 @@ using Utils.Core;
 
 namespace Core.Units
 {
+    public enum GroupType
+    {
+        Ally,
+        Enemy,
+    }
+
     public class UnitData
     {
         public int GUID { get; set; }
+        public GroupType Group = GroupType.Ally;
+        public float MaxHealth { get; set; }
 
         /// <summary>
         /// 单位位置坐标，x-z平面
@@ -66,6 +74,12 @@ namespace Core.Units
                         actualPosition.y + CollisionData.Size.y * 0.5f)),
                 _ => throw new System.ArgumentException("Unsupported collision area type")
             };
+        }
+
+        public void SetHealth(float value)
+        {
+            MaxHealth = value;
+            Health = MaxHealth;
         }
     }
 }

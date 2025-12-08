@@ -107,6 +107,9 @@ namespace Core.Units
 
         public virtual void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
+            if (eventData.GUID != GUID) return;
+            // 处理角色死亡逻辑
+            KillSelf();
         }
     }
 }

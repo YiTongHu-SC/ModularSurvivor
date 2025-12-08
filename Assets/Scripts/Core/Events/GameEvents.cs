@@ -158,5 +158,15 @@ namespace Core.Events
                 UnitBGuid = unitBGuid;
             }
         }
+
+        public class HeroCreated : EventData
+        {
+            public int UnitGuid { get; }
+
+            public HeroCreated(int heroDataGuid)
+            {
+                UnitGuid = heroDataGuid;
+            }
+        }
     }
 }

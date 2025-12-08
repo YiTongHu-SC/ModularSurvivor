@@ -1,4 +1,5 @@
 ﻿using Combat.Actors;
+using Core.Events;
 using Core.Units;
 using UnityEngine;
 
@@ -14,7 +15,11 @@ namespace GameLoop.GameDebug
             if (HeroPrefab != null)
             {
                 var heroData = new UnitData(SpawnPosition, 0);
+                heroData.Group = GroupType.Ally;
+                heroData.SetHealth(100);
                 UnitManager.Instance.Factory.Spawn(HeroPrefab, heroData);
+                EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
+                UnitManager.Instance.SetHeroUnit(heroData.GUID);
             }
             else
             {

@@ -48,8 +48,9 @@ namespace Combat.Ability
             {
                 int otherUnitId = eventData.UnitBGuid;
                 var otherUnit = UnitManager.Instance.Units[otherUnitId];
+                if (otherUnit.Group == TargetUnitData.Group) return; // 忽略友军
                 // 这里可以添加命中逻辑，例如造成伤害或应用效果
-                DamageSystem.TryApplyDamage(otherUnit, AbilityData.DamageAmount, TargetUnitData);
+                CombatManager.Instance.DamageSystem.TryApplyDamage(otherUnit, AbilityData.DamageAmount, TargetUnitData);
                 _hasHit = true; // 只命中一次后失效
             }
         }

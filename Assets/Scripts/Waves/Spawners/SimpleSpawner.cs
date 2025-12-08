@@ -1,4 +1,7 @@
-﻿using Combat.Data;
+﻿using Combat.Ability;
+using Combat.Buff;
+using Combat.Data;
+using Combat.Systems;
 using Core.Units;
 using UnityEngine;
 using Waves.Data;
@@ -37,7 +40,27 @@ namespace Waves.Spawners
             var unitData = new UnitData(spawnPosition, 0); // 根据需要初始化UnitData
             unitData.MoveSpeed = 1;
             unitData.MovementStrategy = "StraightChase";
+            unitData.Group = GroupType.Enemy;
+            // set unit collision data
+            unitData.CollisionData = new UnitCollisionData
+            {
+                AreaType = CollisionAreaType.Circle,
+                Radius = 1
+            };
+
+            // Spawn unit
             Spawn(actorData, unitData);
+            // apply ability
+            var abilityData = new HitOnceOnCollisionData
+            {
+                DamageAmount = 10,
+                HitCooldown = 0.2f
+            };
+            CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.HitOnceOnCollision, abilityData,
+                unitData.GUID);
+            // apply Buff
+            var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, 5f);
+            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.GUID);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }
 
