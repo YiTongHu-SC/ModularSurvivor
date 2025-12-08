@@ -33,5 +33,7 @@ namespace Core.Units
         /// 是否存活
         /// </summary>
         public bool IsActive { get; set; }
+
+        public string MovementStrategy;
     }
 }

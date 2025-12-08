@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Combat.Movement;
 using Core.Events;
 using Core.Units;
 using UnityEngine;
@@ -8,11 +9,13 @@ namespace Combat.Systems
     public class MovementSystem
     {
         private static Dictionary<int, UnitData> MovingUnits => UnitManager.Instance.Units;
+        private readonly Dictionary<string, IMovementStrategy> _movementStrategies = new();
         private Vector2 playerPosition;
 
         public void Initialize()
         {
             playerPosition = Vector2.zero;
+            _movementStrategies.Add("StraightChase", new StraightChaseStrategy());
         }
 
         /// <summary>
@@ -23,10 +26,12 @@ namespace Combat.Systems
         {
             foreach (var unit in MovingUnits.Values)
             {
-                unit.MoveDirection = (playerPosition - unit.Position).normalized;
-                unit.Position += unit.MoveSpeed * deltaTime * unit.MoveDirection;
                 // // 通知View层更新
-                EventManager.Instance.PublishEvent(new GameEvents.UnitMovementEvent(unit));
+                if (_movementStrategies.ContainsKey(unit.MovementStrategy))
+                {
+                    _movementStrategies[unit.MovementStrategy].CalculateMovement(unit, deltaTime);
+                    EventManager.Instance.PublishEvent(new GameEvents.UnitMovementEvent(unit));
+                }
             }
         }
     }

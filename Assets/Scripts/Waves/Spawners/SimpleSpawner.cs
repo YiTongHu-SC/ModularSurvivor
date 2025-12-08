@@ -36,6 +36,7 @@ namespace Waves.Spawners
             var actorData = GetActorDataById(Config.EnemyID);
             var unitData = new UnitData(spawnPosition, 0); // 根据需要初始化UnitData
             unitData.MoveSpeed = 1;
+            unitData.MovementStrategy = "StraightChase";
             Spawn(actorData, unitData);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }
