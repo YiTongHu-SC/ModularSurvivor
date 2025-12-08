@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Core.Coordinates;
+using UnityEngine;
+using Utils.Core;
 
 namespace Core.Units
 {
@@ -16,10 +18,11 @@ namespace Core.Units
         /// </summary>
         public float Rotation;
 
-        public UnitData(Vector2 position, float rotation)
+        public UnitData(Vector2 position, float rotation, UnitCollisionData collisionData = default)
         {
             Position = position;
             Rotation = rotation;
+            CollisionData = collisionData;
         }
 
         /// <summary>
@@ -37,8 +40,32 @@ namespace Core.Units
         /// <summary>
         /// 当前血量
         /// </summary>
-        public int Health { get; set; }
+        public float Health { get; set; }
 
-        public string MovementStrategy;
+        public string MovementStrategy = "";
+
+        //碰撞检测数据
+        public UnitCollisionData CollisionData;
+
+        /// <summary>
+        /// 获取单位的碰撞区域
+        /// </summary>
+        public Area2D GetCollisionArea()
+        {
+            Vector2 actualPosition = Position + CollisionData.Offset;
+
+            return CollisionData.AreaType switch
+            {
+                CollisionAreaType.Circle => new CircleArea2D(
+                    new Vector2D(actualPosition.x, actualPosition.y),
+                    CollisionData.Radius),
+                CollisionAreaType.Rectangle => new RectArea2D(
+                    new Vector2D(actualPosition.x - CollisionData.Size.x * 0.5f,
+                        actualPosition.y - CollisionData.Size.y * 0.5f),
+                    new Vector2D(actualPosition.x + CollisionData.Size.x * 0.5f,
+                        actualPosition.y + CollisionData.Size.y * 0.5f)),
+                _ => throw new System.ArgumentException("Unsupported collision area type")
+            };
+        }
     }
 }

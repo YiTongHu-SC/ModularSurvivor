@@ -10,11 +10,9 @@ namespace Combat.Systems
     {
         private static Dictionary<int, UnitData> MovingUnits => UnitManager.Instance.Units;
         private readonly Dictionary<string, IMovementStrategy> _movementStrategies = new();
-        private Vector2 playerPosition;
 
         public void Initialize()
         {
-            playerPosition = Vector2.zero;
             _movementStrategies.Add("StraightChase", new StraightChaseStrategy());
         }
 
@@ -27,9 +25,9 @@ namespace Combat.Systems
             foreach (var unit in MovingUnits.Values)
             {
                 // // 通知View层更新
-                if (_movementStrategies.ContainsKey(unit.MovementStrategy))
+                if (_movementStrategies.TryGetValue(unit.MovementStrategy, out var strategy))
                 {
-                    _movementStrategies[unit.MovementStrategy].CalculateMovement(unit, deltaTime);
+                    strategy.CalculateMovement(unit, deltaTime);
                     EventManager.Instance.PublishEvent(new GameEvents.UnitMovementEvent(unit));
                 }
             }

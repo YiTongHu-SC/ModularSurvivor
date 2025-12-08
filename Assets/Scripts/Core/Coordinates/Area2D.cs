@@ -81,9 +81,9 @@ namespace Core.Coordinates
             }
             else if (other is RectArea2D rect)
             {
-                return rect.Intersects(this);
+                return IntersectsRect(rect);
             }
-            
+
             return false;
         }
 
@@ -145,7 +145,7 @@ namespace Core.Coordinates
             {
                 return circle.IntersectsRect(this);
             }
-            
+
             return false;
         }
 
@@ -196,7 +196,7 @@ namespace Core.Coordinates
             // 简化实现：检查边界框相交
             Bounds2D bounds = GetBounds();
             Bounds2D otherBounds = other.GetBounds();
-            
+
             if (!bounds.Intersects(otherBounds)) return false;
 
             // 更精确的检测可以在需要时实现

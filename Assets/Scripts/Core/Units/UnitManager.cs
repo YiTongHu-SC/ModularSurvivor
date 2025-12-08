@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Combat.Systems;
 using Core.Abstructs;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Core.Units
     {
         public UnitFactory Factory { get; private set; }
         public UnitSystem UnitSystem { get; private set; }
-
+        public UnitOverlapSystem OverlapSystem { get; private set; }
         public Dictionary<int, UnitData> Units => UnitSystem.Units;
 
         public override void Initialize()
@@ -19,10 +20,12 @@ namespace Core.Units
             base.Initialize();
             UnitSystem = new UnitSystem();
             Factory = new UnitFactory();
+            OverlapSystem = new UnitOverlapSystem(Units);
         }
 
         public void Tick(float deltaTime)
         {
+            OverlapSystem.TickCheckOverlap(deltaTime);
         }
     }
 }

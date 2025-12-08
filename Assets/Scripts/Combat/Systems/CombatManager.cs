@@ -14,6 +14,7 @@ namespace Combat.Systems
         {
             MovementSystem.Initialize();
             BuffSystem.Initialize();
+            AbilitySystem.Initialize();
         }
 
         public void Tick(float deltaTime)

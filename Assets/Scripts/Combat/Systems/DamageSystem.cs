@@ -5,10 +5,10 @@ namespace Combat.Systems
 {
     public class DamageSystem
     {
-        public void ApplyDamage(UnitData target, int damageAmount, UnitData source = null)
+        public static bool TryApplyDamage(UnitData target, float damageAmount, UnitData source = null)
         {
             if (target == null || damageAmount <= 0)
-                return;
+                return false;
 
             target.Health -= damageAmount;
 
@@ -19,6 +19,8 @@ namespace Combat.Systems
                 var sourceGUID = source?.GUID ?? -1;
                 EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(target.GUID, sourceGUID));
             }
+
+            return true;
         }
     }
 }

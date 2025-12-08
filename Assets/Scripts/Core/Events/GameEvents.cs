@@ -146,5 +146,17 @@ namespace Core.Events
                 AbilityId = abilityId;
             }
         }
+
+        public class OverlapEvent : EventData
+        {
+            public int UnitAGuid { get; }
+            public int UnitBGuid { get; }
+
+            public OverlapEvent(int unitAGuid, int unitBGuid)
+            {
+                UnitAGuid = unitAGuid;
+                UnitBGuid = unitBGuid;
+            }
+        }
     }
 }
