@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Coordinates;
+﻿using Core.Coordinates;
 using Core.Units;
 using UnityEngine;
 
