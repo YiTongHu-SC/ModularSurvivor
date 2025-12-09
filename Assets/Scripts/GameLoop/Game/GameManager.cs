@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Combat.Systems;
 using Core.Abstructs;
 using Core.Events;
+using Core.Timer;
 using Core.Units;
 using UnityEngine;
 using UnityEngine.Events;
@@ -34,11 +34,13 @@ namespace GameLoop.Game
         IEnumerator DelayedGameInitialization()
         {
             new GameObject("EventManager").AddComponent<EventManager>();
+            new GameObject("TimeManager").AddComponent<TimeManager>();
             new GameObject("UnitManager").AddComponent<UnitManager>();
             new GameObject("CombatManager").AddComponent<CombatManager>();
             new GameObject("WaveManager").AddComponent<WaveManager>();
             yield return null; // 等待一帧，确保所有单例都已初始化
             EventManager.Instance.Initialize();
+            TimeManager.Instance.Initialize();
             UnitManager.Instance.Initialize();
             CombatManager.Instance.Initialize();
             WaveManager.Instance.Initialize();
@@ -55,6 +57,7 @@ namespace GameLoop.Game
             WaveManager.Instance.Tick(deltaTime);
             CombatManager.Instance.Tick(deltaTime);
             UnitManager.Instance.Tick(deltaTime);
+            TimeManager.Instance.Tick(deltaTime);
         }
     }
 }

@@ -13,6 +13,10 @@ namespace Combat.Ability
                     AbilityType.HitOnceOnCollision,
                     (data, targetId) => new AbilityHitOnceOnCollision(data as HitOnceOnCollisionData, targetId)
                 },
+                {
+                    AbilityType.LaserStrike,
+                    (data, targetId) => new AbilityLaserStrike(data as LaserStrikeData, targetId)
+                }
             };
 
         public static BaseAbility CreateAbility(AbilityType abilityType, AbilityData abilityData, int unitId)

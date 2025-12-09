@@ -8,6 +8,7 @@
 
     public enum AbilityType
     {
-        HitOnceOnCollision,
+        HitOnceOnCollision, // 碰撞时造成一次伤害
+        LaserStrike // 激光打击
     }
 }

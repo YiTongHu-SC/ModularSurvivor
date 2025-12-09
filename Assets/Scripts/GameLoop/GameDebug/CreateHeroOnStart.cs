@@ -1,4 +1,6 @@
-﻿using Combat.Actors;
+﻿using Combat.Ability;
+using Combat.Actors;
+using Combat.Systems;
 using Core.Events;
 using Core.Units;
 using UnityEngine;
@@ -20,6 +22,18 @@ namespace GameLoop.GameDebug
                 UnitManager.Instance.Factory.Spawn(HeroPrefab, heroData);
                 EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
                 UnitManager.Instance.SetHeroUnit(heroData.GUID);
+                var abilityData = new LaserStrikeData
+                {
+                    DamageAmount = 25,
+                    HitDuration = 0.2f,
+                    HitCooldown = 1f,
+                    collisionData = new UnitCollisionData()
+                    {
+                        AreaType = CollisionAreaType.Circle,
+                        Radius = 5f
+                    }
+                };
+                CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.LaserStrike, abilityData, heroData.GUID);
             }
             else
             {

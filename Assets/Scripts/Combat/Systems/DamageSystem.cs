@@ -1,5 +1,6 @@
 ﻿using Core.Events;
 using Core.Units;
+using UnityEngine;
 
 namespace Combat.Systems
 {
@@ -18,6 +19,7 @@ namespace Combat.Systems
                 target.Health = 0;
                 var sourceGUID = source?.GUID ?? -1;
                 EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(target.GUID, sourceGUID));
+                Debug.Log($"Unit {target.GUID} has killed by unit {sourceGUID}");
             }
 
             return true;

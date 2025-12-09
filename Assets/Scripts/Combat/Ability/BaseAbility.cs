@@ -4,15 +4,15 @@ namespace Combat.Ability
 {
     public abstract class BaseAbility
     {
-        public int TargetUnitId { get; private set; }
-        public UnitData TargetUnitData => UnitManager.Instance.Units[TargetUnitId];
-        public AbilityData Data { get; private set; }
+        public int UnitId { get; private set; }
+        public UnitData UnitData => UnitManager.Instance.Units[UnitId];
+        public AbilityData AbilityData { get; private set; }
         public bool IsActive { get; set; }
 
-        protected BaseAbility(AbilityData data, int targetId)
+        protected BaseAbility(AbilityData abilityData, int id)
         {
-            Data = data;
-            TargetUnitId = targetId;
+            AbilityData = abilityData;
+            UnitId = id;
             IsActive = true;
         }
 

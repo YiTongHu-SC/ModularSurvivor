@@ -12,6 +12,7 @@ namespace Waves.Spawners
     {
         private float _spawnRadius;
         private float _timer;
+        const float DeathDelayTime = 10f;
 
         public SimpleSpawner(WaveConfig config) : base(config)
         {
@@ -38,6 +39,7 @@ namespace Waves.Spawners
                 Mathf.Sin(radian) * _spawnRadius);
             var actorData = GetActorDataById(Config.EnemyID);
             var unitData = new UnitData(spawnPosition, 0); // 根据需要初始化UnitData
+            unitData.SetHealth(10);
             unitData.MoveSpeed = 1;
             unitData.MovementStrategy = "StraightChase";
             unitData.Group = GroupType.Enemy;
@@ -59,7 +61,7 @@ namespace Waves.Spawners
             CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.HitOnceOnCollision, abilityData,
                 unitData.GUID);
             // apply Buff
-            var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, 5f);
+            var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
             CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.GUID);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }

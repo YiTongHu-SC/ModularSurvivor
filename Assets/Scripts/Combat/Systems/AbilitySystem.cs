@@ -39,7 +39,7 @@ namespace Combat.Systems
             // 添加新Buff
             unitAbility.Add(ability);
             ability.ApplyAbility();
-            Debug.Log($"应用能力: {ability.Data.AbilityType} 到单位 {unitId}");
+            Debug.Log($"应用能力: {ability.AbilityData.AbilityType} 到单位 {unitId}");
 
             return true;
         }
@@ -48,12 +48,12 @@ namespace Combat.Systems
         {
             if (!_unitAbilities.TryGetValue(unitId, out var unitBuffs))
                 return false;
-            var abilityRemove = unitBuffs.FirstOrDefault(b => b.Data.ID == abilityId && b.IsActive);
+            var abilityRemove = unitBuffs.FirstOrDefault(b => b.AbilityData.ID == abilityId && b.IsActive);
             if (abilityRemove == null)
                 return false;
             abilityRemove.RemoveAbility();
             abilityRemove.IsActive = false;
-            Debug.Log($"移除能力: {abilityRemove.Data.AbilityType} 从单位 {unitId}");
+            Debug.Log($"移除能力: {abilityRemove.AbilityData.AbilityType} 从单位 {unitId}");
             return true;
         }
 
@@ -84,9 +84,9 @@ namespace Combat.Systems
             {
                 ability.RemoveAbility();
                 _unitAbilities[unitId].Remove(ability);
-                Debug.Log($"能力过期并移除: {ability.Data.AbilityType} 单位 {unitId}");
+                Debug.Log($"能力过期并移除: {ability.AbilityData.AbilityType} 单位 {unitId}");
                 EventManager.Instance.PublishEvent(
-                    new GameEvents.AbilityRemovedEvent(unitId, ability.Data.ID));
+                    new GameEvents.AbilityRemovedEvent(unitId, ability.AbilityData.ID));
             }
         }
     }

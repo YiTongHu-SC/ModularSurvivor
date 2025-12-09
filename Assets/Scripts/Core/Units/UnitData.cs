@@ -12,7 +12,7 @@ namespace Core.Units
 
     public class UnitData
     {
-        public int GUID { get; set; }
+        public int GUID { get; set; } = -1;
         public GroupType Group = GroupType.Ally;
         public float MaxHealth { get; set; }
 
