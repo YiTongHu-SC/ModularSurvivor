@@ -168,5 +168,9 @@ namespace Core.Events
                 UnitGuid = heroDataGuid;
             }
         }
+
+        public class UpdatePreferenceEvent : EventData
+        {
+        }
     }
 }

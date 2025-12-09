@@ -9,12 +9,14 @@ namespace Combat.Systems
         public MovementSystem MovementSystem { get; set; } = new();
         public BuffSystem BuffSystem { get; set; } = new();
         public AbilitySystem AbilitySystem { get; set; } = new();
+        public ViewSystem ViewSystem { get; set; } = new();
 
         public override void Initialize()
         {
             MovementSystem.Initialize();
             BuffSystem.Initialize();
             AbilitySystem.Initialize();
+            ViewSystem.Initialize();
         }
 
         public void Tick(float deltaTime)
