@@ -24,6 +24,7 @@ namespace GameLoop.GameDebug
                 UnitManager.Instance.SetHeroUnit(heroData.GUID);
                 var abilityData = new LaserStrikeData
                 {
+                    PresentationId = 0,
                     DamageAmount = 25,
                     HitDuration = 0.2f,
                     HitCooldown = 1f,

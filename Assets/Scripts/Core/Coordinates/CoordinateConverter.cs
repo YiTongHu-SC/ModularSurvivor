@@ -16,10 +16,11 @@ namespace Core.Coordinates
         /// 将2D逻辑坐标转换为3D世界坐标
         /// </summary>
         /// <param name="position2D">2D逻辑坐标</param>
+        /// <param name="offset">额外偏移</param>
         /// <returns>3D世界坐标</returns>
-        public static Vector3 ToWorldPosition(Vector2 position2D)
+        public static Vector3 ToWorldPosition(Vector2 position2D, Vector3 offset = default)
         {
-            return new Vector3(position2D.x, YOffset, position2D.y);
+            return new Vector3(position2D.x, YOffset, position2D.y) + offset;
         }
 
         /// <summary>

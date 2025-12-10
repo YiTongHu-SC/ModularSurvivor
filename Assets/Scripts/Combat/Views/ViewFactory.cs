@@ -1,38 +1,40 @@
-﻿using Lean.Pool;
+﻿using Core.Units;
+using Lean.Pool;
 using UnityEngine;
 
 namespace Combat.Views
 {
     public class ViewFactory
     {
-        public BaseUnitPresentation CreateUnitPresentation(int presentationId)
+        public BaseUnitPresentation CreateUnitPresentation(int presentationId, ViewBaseData viewData)
         {
             // 加载PresentationData和Prefab
             // TODO: 优化资源加载方式，避免直接使用Resources.Load
-            var data = Resources.Load<PresentationData>($"PresentationData/Presentation_{presentationId}");
-            if (data == null)
+            var presentationConfig =
+                Resources.Load<PresentationConfig>($"EffectConfigs/PresentationConfig");
+            if (presentationConfig == null)
             {
                 Debug.LogError($"PresentationData with ID {presentationId} not found.");
                 return null;
             }
 
-            var prefab = Resources.Load<GameObject>($"Prefabs/UnitPresentations/UnitPresentation_{presentationId}");
-            if (prefab == null)
+            if (!presentationConfig.PresentationPrefab)
             {
                 Debug.LogError($"UnitPresentation prefab with ID {presentationId} not found.");
                 return null;
             }
 
-            var instance = LeanPool.Spawn(prefab);
+            var instance = LeanPool.Spawn(presentationConfig.PresentationPrefab);
             var presentation = instance.GetComponent<BaseUnitPresentation>();
             if (presentation == null)
             {
                 Debug.LogError($"BaseUnitPresentation component not found on prefab with ID {presentationId}.");
-                GameObject.Destroy(instance);
+                Object.Destroy(instance);
                 return null;
             }
 
-            presentation.SetData(data);
+            presentation.SetConfig(presentationConfig);
+            presentation.SetViewData(viewData);
             return presentation;
         }
     }

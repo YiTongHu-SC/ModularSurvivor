@@ -1,5 +1,6 @@
 ﻿using Combat.Views;
 using Core.Events;
+using Core.Units;
 
 namespace Combat.Systems
 {
@@ -15,7 +16,13 @@ namespace Combat.Systems
 
         public void OnEventReceived(GameEvents.UpdatePreferenceEvent eventData)
         {
-            throw new System.NotImplementedException();
+            switch (eventData.ViewData.EventType)
+            {
+                case PresentationEventType.Add:
+                    var view = ViewFactory.CreateUnitPresentation(eventData.PreferenceId, eventData.ViewData);
+                    view.Apply();
+                    break;
+            }
         }
     }
 }

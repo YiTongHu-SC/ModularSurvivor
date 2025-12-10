@@ -1,14 +1,32 @@
-﻿using UnityEngine;
+﻿using Core.Units;
+using Lean.Pool;
+using UnityEngine;
 
 namespace Combat.Views
 {
-    public class BaseUnitPresentation : MonoBehaviour
+    public abstract class BaseUnitPresentation : MonoBehaviour, IPoolable
     {
-        public PresentationData Data { get; private set; }
+        public PresentationConfig Config { get; private set; }
+        public ViewBaseData ViewData { get; private set; }
 
-        public void SetData(PresentationData data)
+        public virtual void SetConfig(PresentationConfig config)
         {
-            Data = data;
+            Config = config;
+        }
+
+        public virtual void SetViewData(ViewBaseData viewData)
+        {
+            ViewData = viewData;
+        }
+
+        public abstract void Apply();
+
+        public virtual void OnSpawn()
+        {
+        }
+
+        public virtual void OnDespawn()
+        {
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Combat.Systems;
+using Combat.Views.UnitViewData;
+using Core.Events;
 using Core.Timer;
 using Core.Units;
 using UnityEngine;
@@ -12,6 +14,8 @@ namespace Combat.Ability
         private readonly UnitData _tempAbilityUnitData;
         private bool _hasHit;
         private bool _isCoolingDown;
+        private OneStrikeViewData _oneStrikeViewData;
+        private GameEvents.UpdatePreferenceEvent _presentationEvent;
 
         public AbilityLaserStrike(LaserStrikeData abilityData, int id) : base(abilityData, id)
         {
@@ -25,6 +29,15 @@ namespace Combat.Ability
             _hasHit = false;
             _isCoolingDown = false;
             _tempAbilityUnitData.IsActive = true;
+            _oneStrikeViewData = new OneStrikeViewData
+            {
+                UnitId = UnitId,
+                TargetId = _targetUnitId,
+                PresentationId = _abilityData.PresentationId,
+                Delay = 0,
+                Duration = _abilityData.HitDuration,
+            };
+            _presentationEvent = new GameEvents.UpdatePreferenceEvent(_abilityData.PresentationId, _oneStrikeViewData);
         }
 
         public override void RemoveAbility()
@@ -77,6 +90,10 @@ namespace Combat.Ability
             if (_targetUnitId == -1) return;
             _hasHit = true;
             _isCoolingDown = true;
+            _oneStrikeViewData.Delay = 0;
+            _oneStrikeViewData.Duration = _abilityData.HitDuration;
+            _oneStrikeViewData.TargetId = _targetUnitId;
+            EventManager.Instance.PublishEvent(_presentationEvent);
             TimeManager.Instance.TimeSystem.CreateTimer(_abilityData.HitDuration, HitTarget);
             TimeManager.Instance.TimeSystem.CreateTimer(_abilityData.HitCooldown, ResetCooldown);
         }
