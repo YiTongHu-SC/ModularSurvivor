@@ -26,12 +26,19 @@ namespace Core.Units
         /// </summary>
         public float Rotation;
 
-        public UnitData(Vector2 position, float rotation, UnitCollisionData collisionData = default)
+        public UnitData(Vector2 position, float rotation, UnitCollisionData collisionData = default,
+            UnitModelView modelView = default)
         {
             Position = position;
             Rotation = rotation;
             CollisionData = collisionData;
+            ModelView = modelView;
         }
+
+        /// <summary>
+        /// 模型数据
+        /// </summary>
+        public UnitModelView ModelView;
 
         /// <summary>
         /// 移动速度

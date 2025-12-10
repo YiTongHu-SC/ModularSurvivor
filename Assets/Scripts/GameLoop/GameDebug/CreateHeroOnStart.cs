@@ -16,8 +16,16 @@ namespace GameLoop.GameDebug
         {
             if (HeroPrefab != null)
             {
-                var heroData = new UnitData(SpawnPosition, 0);
-                heroData.Group = GroupType.Ally;
+                var heroData = new UnitData(SpawnPosition, 0)
+                {
+                    Group = GroupType.Ally,
+                    ModelView = new UnitModelView()
+                    {
+                        Height = 1,
+                        CenterOffset = 0.5f,
+                        Radius = 0.5f
+                    }
+                };
                 heroData.SetHealth(100);
                 UnitManager.Instance.Factory.Spawn(HeroPrefab, heroData);
                 EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
@@ -32,7 +40,7 @@ namespace GameLoop.GameDebug
                     {
                         AreaType = CollisionAreaType.Circle,
                         Radius = 5f
-                    }
+                    },
                 };
                 CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.LaserStrike, abilityData, heroData.GUID);
             }

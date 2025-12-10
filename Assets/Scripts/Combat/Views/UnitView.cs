@@ -1,4 +1,5 @@
-﻿using Core.Coordinates;
+﻿using Combat.Views.UnitViewData;
+using Core.Coordinates;
 using Core.Units;
 using UnityEngine;
 

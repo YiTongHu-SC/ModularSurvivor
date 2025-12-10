@@ -82,8 +82,13 @@ namespace Combat.Views.UnitViews
                 return;
             }
 
-            var originPosition = CoordinateConverter.ToWorldPosition(unit.Position, Vector3.up);
-            var targetPosition = CoordinateConverter.ToWorldPosition(target.Position, Vector3.up);
+            var originPosition =
+                CoordinateConverter.ToWorldPosition(unit.Position, Vector3.up * unit.ModelView.CenterOffset);
+            var targetPosition =
+                CoordinateConverter.ToWorldPosition(target.Position, Vector3.up * unit.ModelView.CenterOffset);
+            var direction = (targetPosition - originPosition).normalized;
+            originPosition += direction * unit.ModelView.Radius; // 激光起点稍微前移
+            targetPosition -= direction * unit.ModelView.Radius; // 激光终点稍微后移
             LineRenderer.SetPosition(0, originPosition);
             LineRenderer.SetPosition(1, targetPosition);
         }

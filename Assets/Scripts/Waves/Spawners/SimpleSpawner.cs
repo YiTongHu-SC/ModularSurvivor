@@ -32,24 +32,34 @@ namespace Waves.Spawners
 
         private void SpawnEnemy()
         {
+            // TODO: 后面应该通过配置表直接读取敌人数据
             var angle = Random.Range(0f, 360f);
             var radian = angle * Mathf.Deg2Rad;
             var spawnPosition = new Vector2(
                 Mathf.Cos(radian) * _spawnRadius,
                 Mathf.Sin(radian) * _spawnRadius);
             var actorData = GetActorDataById(Config.EnemyID);
-            var unitData = new UnitData(spawnPosition, 0); // 根据需要初始化UnitData
-            unitData.SetHealth(10);
-            unitData.MoveSpeed = 1;
-            unitData.MovementStrategy = "StraightChase";
-            unitData.Group = GroupType.Enemy;
-            // set unit collision data
-            unitData.CollisionData = new UnitCollisionData
+            var unitData = new UnitData(spawnPosition, 0)
             {
-                AreaType = CollisionAreaType.Circle,
-                Radius = 1
+                Group = GroupType.Enemy,
+                MaxHealth = 10,
+                MoveSpeed = 1,
+                MoveDirection = default,
+                IsActive = false,
+                Health = 0,
+                MovementStrategy = "StraightChase",
+                ModelView = new UnitModelView()
+                {
+                    Height = 1,
+                    CenterOffset = 0.5f,
+                    Radius = 0.5f
+                },
+                CollisionData = new UnitCollisionData()
+                {
+                    AreaType = CollisionAreaType.Circle,
+                    Radius = 0.5f
+                }
             };
-
             // Spawn unit
             Spawn(actorData, unitData);
             // apply ability
