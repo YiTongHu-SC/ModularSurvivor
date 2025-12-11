@@ -65,6 +65,17 @@ namespace Combat.Systems
             {
                 var unitId = unitAbilities.Key;
                 var unitAbilitiesList = unitAbilities.Value;
+                if (!UnitManager.Instance.CheckUnitAvailability(unitId))
+                {
+                    // 如果单位不可用，标记所有能力为过期
+                    foreach (var ability in unitAbilitiesList)
+                    {
+                        expiredAbilities.Add((unitId, ability));
+                    }
+
+                    continue;
+                }
+
                 for (int i = unitAbilitiesList.Count - 1; i >= 0; i--)
                 {
                     var ability = unitAbilitiesList[i];

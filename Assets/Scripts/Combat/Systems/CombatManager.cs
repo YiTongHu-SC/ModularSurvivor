@@ -15,18 +15,18 @@ namespace Combat.Systems
 
         public override void Initialize()
         {
-            MovementSystem.Initialize();
-            BuffSystem.Initialize();
             AbilitySystem.Initialize();
+            BuffSystem.Initialize();
+            MovementSystem.Initialize();
             ViewSystem.Initialize();
         }
 
         public void Tick(float deltaTime)
         {
             // 更新所有战斗系统
+            AbilitySystem.UpdateAbilities(deltaTime);
             BuffSystem.UpdateBuffs(deltaTime);
             MovementSystem.UpdateMovement(deltaTime);
-            AbilitySystem.UpdateAbilities(deltaTime);
         }
     }
 }

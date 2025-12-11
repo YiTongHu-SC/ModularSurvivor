@@ -28,7 +28,7 @@ namespace GameLoop.GameDebug
                         Radius = 0.5f
                     },
                     MovementStrategy = "SimpleMove",
-                    MoveSpeed = 1f,
+                    MoveSpeed = 2f,
                 };
                 heroData.SetHealth(100);
                 var actor = UnitManager.Instance.Factory.Spawn(actorData.ActorPrefab, heroData);

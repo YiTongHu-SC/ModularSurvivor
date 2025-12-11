@@ -40,5 +40,10 @@ namespace Core.Units
         {
             OverlapSystem.TickCheckOverlap(deltaTime);
         }
+
+        public bool CheckUnitAvailability(int unitId)
+        {
+            return Units.ContainsKey(unitId) && Units[unitId].IsActive;
+        }
     }
 }

@@ -21,7 +21,11 @@ namespace Combat.Ability
                 {
                     AbilityType.PlayerInput,
                     (data, targetId) => new AbilityPlayerInput(data as PlayerInputData, targetId)
-                }
+                },
+                {
+                    AbilityType.ChaseHero,
+                    (data, targetId) => new AbilityChaseHero(data, targetId)
+                },
             };
 
         public static BaseAbility CreateAbility(AbilityType abilityType, AbilityData abilityData, int unitId)

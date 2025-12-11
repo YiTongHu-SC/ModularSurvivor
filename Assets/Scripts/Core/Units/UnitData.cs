@@ -88,5 +88,17 @@ namespace Core.Units
             MaxHealth = value;
             Health = MaxHealth;
         }
+
+        public MovementContext MovementContext = new();
+
+        public MovementContext GetMovementContext()
+        {
+            return MovementContext;
+        }
+    }
+
+    public struct MovementContext
+    {
+        public Vector2 targetPosition;
     }
 }
