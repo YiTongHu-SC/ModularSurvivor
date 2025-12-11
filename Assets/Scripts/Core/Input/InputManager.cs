@@ -13,31 +13,32 @@ namespace Core.Input
     public class InputManager : BaseInstance<InputManager>
     {
         private InputSystem_Actions _inputActions;
-        
+
+        private Camera MainCamera => Camera.main;
+
         // 当前输入状态缓存（用于状态查询）
         private Vector2 _currentMoveInput;
         private Vector2 _currentLookInput;
         private bool _isAttackPressed;
         private bool _isSprintPressed;
         private bool _isCrouchPressed;
-        
+
         // 输入上下文状态
         private InputEvents.InputContext _currentContext = InputEvents.InputContext.Gameplay;
 
         #region Lifecycle
 
-
         public override void Initialize()
         {
             base.Initialize();
-            
+
             // 创建输入动作实例
             _inputActions = new InputSystem_Actions();
-            
+
             // 订阅所有输入动作
             RegisterPlayerInputCallbacks();
             RegisterUIInputCallbacks();
-            
+
             // 默认启用游戏输入
             EnableGameplayInput();
         }
@@ -64,25 +65,25 @@ namespace Core.Input
         {
             _inputActions.Player.Move.performed += OnMovePerformed;
             _inputActions.Player.Move.canceled += OnMoveCanceled;
-            
+
             _inputActions.Player.Look.performed += OnLookPerformed;
             _inputActions.Player.Look.canceled += OnLookCanceled;
-            
+
             _inputActions.Player.Attack.performed += OnAttackPerformed;
             _inputActions.Player.Attack.canceled += OnAttackCanceled;
-            
+
             _inputActions.Player.Sprint.performed += OnSprintPerformed;
             _inputActions.Player.Sprint.canceled += OnSprintCanceled;
-            
+
             _inputActions.Player.Jump.performed += OnJumpPerformed;
-            
+
             _inputActions.Player.Crouch.performed += OnCrouchPerformed;
             _inputActions.Player.Crouch.canceled += OnCrouchCanceled;
-            
+
             _inputActions.Player.Interact.started += OnInteractStarted;
             _inputActions.Player.Interact.performed += OnInteractPerformed;
             _inputActions.Player.Interact.canceled += OnInteractCanceled;
-            
+
             _inputActions.Player.Previous.performed += OnPreviousPerformed;
             _inputActions.Player.Next.performed += OnNextPerformed;
         }
@@ -103,25 +104,25 @@ namespace Core.Input
         {
             _inputActions.Player.Move.performed -= OnMovePerformed;
             _inputActions.Player.Move.canceled -= OnMoveCanceled;
-            
+
             _inputActions.Player.Look.performed -= OnLookPerformed;
             _inputActions.Player.Look.canceled -= OnLookCanceled;
-            
+
             _inputActions.Player.Attack.performed -= OnAttackPerformed;
             _inputActions.Player.Attack.canceled -= OnAttackCanceled;
-            
+
             _inputActions.Player.Sprint.performed -= OnSprintPerformed;
             _inputActions.Player.Sprint.canceled -= OnSprintCanceled;
-            
+
             _inputActions.Player.Jump.performed -= OnJumpPerformed;
-            
+
             _inputActions.Player.Crouch.performed -= OnCrouchPerformed;
             _inputActions.Player.Crouch.canceled -= OnCrouchCanceled;
-            
+
             _inputActions.Player.Interact.started -= OnInteractStarted;
             _inputActions.Player.Interact.performed -= OnInteractPerformed;
             _inputActions.Player.Interact.canceled -= OnInteractCanceled;
-            
+
             _inputActions.Player.Previous.performed -= OnPreviousPerformed;
             _inputActions.Player.Next.performed -= OnNextPerformed;
         }
@@ -138,15 +139,22 @@ namespace Core.Input
 
         #region Input Callbacks - Move & Look
 
+        /// <summary>
+        /// 监听移动输入
+        /// 移动输入始终和相机方向相关
+        /// </summary>
+        /// <param name="context"></param>
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
             Vector2 rawInput = context.ReadValue<Vector2>();
-            _currentMoveInput = rawInput;
             
+            // 转换为相机相对方向
+            _currentMoveInput = GetCameraRelativeInput(rawInput);
+
             // 归一化方向（支持手柄摇杆和键盘输入）
-            Vector2 normalizedDirection = rawInput.magnitude > 1f ? rawInput.normalized : rawInput;
-            
-            // 发布移动输入事件
+            Vector2 normalizedDirection = _currentMoveInput.magnitude > 1f ? _currentMoveInput.normalized : _currentMoveInput;
+
+            // 发布移动输入事件（使用原始输入和相机相对方向）
             EventManager.Instance.PublishEvent(
                 new InputEvents.PlayerMoveInputEvent(rawInput, normalizedDirection)
             );
@@ -155,7 +163,7 @@ namespace Core.Input
         private void OnMoveCanceled(InputAction.CallbackContext context)
         {
             _currentMoveInput = Vector2.zero;
-            
+
             // 发布停止移动事件
             EventManager.Instance.PublishEvent(
                 new InputEvents.PlayerMoveInputEvent(Vector2.zero, Vector2.zero)
@@ -166,7 +174,7 @@ namespace Core.Input
         {
             Vector2 lookDelta = context.ReadValue<Vector2>();
             _currentLookInput = lookDelta;
-            
+
             // 发布视角输入事件
             EventManager.Instance.PublishEvent(
                 new InputEvents.PlayerLookInputEvent(lookDelta)
@@ -261,6 +269,44 @@ namespace Core.Input
 
         #endregion
 
+        #region Camera Relative Input
+
+        /// <summary>
+        /// 将输入转换为相机相对方向
+        /// Right 方向对应相机的 X 轴，Forward 方向对应相机的 Z 轴
+        /// </summary>
+        /// <param name="input">原始 2D 输入 (x: 左右, y: 前后)</param>
+        /// <returns>转换为相机相对的 2D 方向</returns>
+        private Vector2 GetCameraRelativeInput(Vector2 input)
+        {
+            if (MainCamera == null)
+            {
+                // 如果没有相机，返回原始输入
+                Debug.LogWarning("[InputManager] MainCamera is null, using raw input");
+                return input;
+            }
+
+            // 获取相机的前向和右向（忽略 Y 轴，保持在水平面）
+            Vector3 cameraForward = MainCamera.transform.forward;
+            Vector3 cameraRight = MainCamera.transform.right;
+
+            // 将相机方向投影到水平面（Y = 0）
+            cameraForward.y = 0;
+            cameraRight.y = 0;
+
+            // 归一化方向向量
+            cameraForward.Normalize();
+            cameraRight.Normalize();
+
+            // 计算相机相对移动方向
+            Vector3 moveDirection = cameraRight * input.x + cameraForward * input.y;
+
+            // 转换为 2D 向量（使用 X 和 Z 分量）
+            return new Vector2(moveDirection.x, moveDirection.z);
+        }
+
+        #endregion
+
         #region Public Query API - 状态查询接口
 
         /// <summary>
@@ -343,14 +389,14 @@ namespace Core.Input
         public void DisableGameplayInput()
         {
             _inputActions.Player.Disable();
-            
+
             // 清空输入状态
             _currentMoveInput = Vector2.zero;
             _currentLookInput = Vector2.zero;
             _isAttackPressed = false;
             _isSprintPressed = false;
             _isCrouchPressed = false;
-            
+
             Debug.Log("[InputManager] Gameplay input disabled.");
         }
 
@@ -414,4 +460,3 @@ namespace Core.Input
         #endregion
     }
 }
-

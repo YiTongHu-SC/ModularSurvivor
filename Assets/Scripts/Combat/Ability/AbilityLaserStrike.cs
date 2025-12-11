@@ -101,8 +101,11 @@ namespace Combat.Ability
 
         private void HitTarget()
         {
-            var targetUnit = UnitManager.Instance.Units[_targetUnitId];
-            CombatManager.Instance.DamageSystem.TryApplyDamage(targetUnit, _abilityData.DamageAmount, UnitData);
+            if (UnitManager.Instance.Units.TryGetValue(_targetUnitId, out var targetUnit))
+            {
+                CombatManager.Instance.DamageSystem.TryApplyDamage(targetUnit, _abilityData.DamageAmount, UnitData);
+            }
+
             ResetHit();
         }
 
