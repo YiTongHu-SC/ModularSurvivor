@@ -14,7 +14,7 @@ namespace Core.Input
     {
         private InputSystem_Actions _inputActions;
 
-        private Camera MainCamera => Camera.main;
+        public Camera MainCamera { get; private set; }
 
         // 当前输入状态缓存（用于状态查询）
         private Vector2 _currentMoveInput;
@@ -147,12 +147,13 @@ namespace Core.Input
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
             Vector2 rawInput = context.ReadValue<Vector2>();
-            
+
             // 转换为相机相对方向
             _currentMoveInput = GetCameraRelativeInput(rawInput);
 
             // 归一化方向（支持手柄摇杆和键盘输入）
-            Vector2 normalizedDirection = _currentMoveInput.magnitude > 1f ? _currentMoveInput.normalized : _currentMoveInput;
+            Vector2 normalizedDirection =
+                _currentMoveInput.magnitude > 1f ? _currentMoveInput.normalized : _currentMoveInput;
 
             // 发布移动输入事件（使用原始输入和相机相对方向）
             EventManager.Instance.PublishEvent(
@@ -458,5 +459,11 @@ namespace Core.Input
         }
 
         #endregion
+
+        public void SetMainCamera(Camera mainCamera)
+        {
+            MainCamera = mainCamera;
+            Debug.Log("[InputManager] MainCamera set to: " + mainCamera.name);
+        }
     }
 }

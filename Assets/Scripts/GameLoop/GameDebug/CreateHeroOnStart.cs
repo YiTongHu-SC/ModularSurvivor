@@ -1,4 +1,5 @@
 ﻿using Combat.Ability.Data;
+using Combat.Actors;
 using Combat.Data;
 using Combat.Systems;
 using Core.Events;
@@ -30,7 +31,7 @@ namespace GameLoop.GameDebug
                     MoveSpeed = 1f,
                 };
                 heroData.SetHealth(100);
-                UnitManager.Instance.Factory.Spawn(actorData.ActorPrefab, heroData);
+                var actor = UnitManager.Instance.Factory.Spawn(actorData.ActorPrefab, heroData);
                 EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
                 UnitManager.Instance.SetHeroUnit(heroData.GUID);
                 // Give the hero a Laser Strike ability for testing
@@ -55,6 +56,9 @@ namespace GameLoop.GameDebug
                 };
                 CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.PlayerInput, playerInputData,
                     heroData.GUID);
+
+                // set actor as hero
+                CombatManager.Instance.HeroActor = actor as Actor;
             }
             else
             {

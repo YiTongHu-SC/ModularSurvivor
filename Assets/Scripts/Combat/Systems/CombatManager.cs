@@ -1,4 +1,5 @@
-﻿using Core.Abstructs;
+﻿using Combat.Actors;
+using Core.Abstructs;
 using UnityEngine;
 
 namespace Combat.Systems
@@ -10,6 +11,7 @@ namespace Combat.Systems
         public BuffSystem BuffSystem { get; set; } = new();
         public AbilitySystem AbilitySystem { get; set; } = new();
         public ViewSystem ViewSystem { get; set; } = new();
+        public Actor HeroActor { get; set; }
 
         public override void Initialize()
         {
