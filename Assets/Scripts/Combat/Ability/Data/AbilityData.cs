@@ -1,4 +1,4 @@
-﻿namespace Combat.Ability
+﻿namespace Combat.Ability.Data
 {
     public class AbilityData
     {
@@ -9,6 +9,7 @@
     public enum AbilityType
     {
         HitOnceOnCollision, // 碰撞时造成一次伤害
-        LaserStrike // 激光打击
+        LaserStrike, // 激光打击
+        PlayerInput, // 玩家输入控制
     }
 }

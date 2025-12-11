@@ -1,4 +1,5 @@
 ﻿using Combat.Ability;
+using Combat.Ability.Data;
 using Combat.Buff;
 using Combat.Data;
 using Combat.Systems;

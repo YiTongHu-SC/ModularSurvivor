@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Combat.Ability;
+using Combat.Ability.Data;
 using Core.Events;
 using Core.Units;
 using UnityEngine;

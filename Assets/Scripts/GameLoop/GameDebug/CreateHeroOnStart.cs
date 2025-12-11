@@ -1,4 +1,5 @@
 ﻿using Combat.Ability;
+using Combat.Ability.Data;
 using Combat.Actors;
 using Combat.Systems;
 using Core.Events;
@@ -24,13 +25,16 @@ namespace GameLoop.GameDebug
                         Height = 1,
                         CenterOffset = 0.5f,
                         Radius = 0.5f
-                    }
+                    },
+                    MovementStrategy = "SimpleMove",
+                    MoveSpeed = 1f,
                 };
                 heroData.SetHealth(100);
                 UnitManager.Instance.Factory.Spawn(HeroPrefab, heroData);
                 EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
                 UnitManager.Instance.SetHeroUnit(heroData.GUID);
-                var abilityData = new LaserStrikeData
+                // Give the hero a Laser Strike ability for testing
+                var laserStrikeData = new LaserStrikeData
                 {
                     PresentationId = 0,
                     DamageAmount = 25,
@@ -42,7 +46,15 @@ namespace GameLoop.GameDebug
                         Radius = 5f
                     },
                 };
-                CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.LaserStrike, abilityData, heroData.GUID);
+                CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.LaserStrike, laserStrikeData,
+                    heroData.GUID);
+                // move ability
+                var playerInputData = new PlayerInputData
+                {
+                    DeadZone = 0.1f,
+                };
+                CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.PlayerInput, playerInputData,
+                    heroData.GUID);
             }
             else
             {

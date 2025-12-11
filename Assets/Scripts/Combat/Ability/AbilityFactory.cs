@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Combat.Ability.Data;
 
 namespace Combat.Ability
 {
@@ -16,6 +17,10 @@ namespace Combat.Ability
                 {
                     AbilityType.LaserStrike,
                     (data, targetId) => new AbilityLaserStrike(data as LaserStrikeData, targetId)
+                },
+                {
+                    AbilityType.PlayerInput,
+                    (data, targetId) => new AbilityPlayerInput(data as PlayerInputData, targetId)
                 }
             };
 
@@ -23,7 +28,7 @@ namespace Combat.Ability
         {
             if (!_creators.TryGetValue(abilityType, out var creator))
             {
-                throw new ArgumentException($"未找到对应的 Buff 创建器: {unitId}");
+                throw new ArgumentException($"未找到对应的 Ability 创建器: {abilityType} for unit {unitId}");
             }
 
             return creator(abilityData, unitId);

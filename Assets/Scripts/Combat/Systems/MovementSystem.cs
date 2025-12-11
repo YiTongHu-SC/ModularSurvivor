@@ -13,6 +13,7 @@ namespace Combat.Systems
 
         public void Initialize()
         {
+            _movementStrategies.Add("SimpleMove", new SimpleMoveStrategy());
             _movementStrategies.Add("StraightChase", new StraightChaseStrategy());
         }
 

@@ -1,5 +1,6 @@
 ﻿using Core.Units;
 using UnityEngine;
+using Utils.Core;
 
 namespace Combat.Movement
 {
@@ -11,7 +12,7 @@ namespace Combat.Movement
             unit.MoveDirection = (playerPosition - unit.Position).normalized;
             unit.Position += unit.MoveSpeed * deltaTime * unit.MoveDirection;
             // 计算旋转角度，确保单位面向移动方向
-            unit.Rotation = Vector2.SignedAngle(Vector2.up, unit.MoveDirection);
+            unit.Rotation = MathUtils2D.CalculateRotationAngle(unit.MoveDirection);
         }
     }
 }

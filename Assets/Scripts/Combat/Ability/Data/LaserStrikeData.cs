@@ -1,6 +1,6 @@
 ﻿using Core.Units;
 
-namespace Combat.Ability
+namespace Combat.Ability.Data
 {
     public class LaserStrikeData : AbilityData
     {

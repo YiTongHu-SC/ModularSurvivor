@@ -1,4 +1,5 @@
-﻿using Core.Units;
+﻿using Combat.Ability.Data;
+using Core.Units;
 
 namespace Combat.Ability
 {

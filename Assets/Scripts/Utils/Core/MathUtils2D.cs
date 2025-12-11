@@ -22,7 +22,7 @@ namespace Utils.Core
         {
             return (to - from).normalized;
         }
-        
+
         /// <summary>
         /// 将点绕原点旋转指定角度
         /// </summary>
@@ -119,6 +119,16 @@ namespace Utils.Core
                 Mathf.Clamp(value.x, min.x, max.x),
                 Mathf.Clamp(value.y, min.y, max.y)
             );
+        }
+
+        /// <summary>
+        /// 默认0度是y方向
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static float CalculateRotationAngle(Vector2 direction)
+        {
+            return Vector2.SignedAngle(Vector2.up, direction);
         }
     }
 }

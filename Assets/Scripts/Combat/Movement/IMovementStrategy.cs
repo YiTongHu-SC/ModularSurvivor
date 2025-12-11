@@ -14,6 +14,6 @@ namespace Combat.Movement
 
     public interface IMovementStrategy
     {
-        public void CalculateMovement(UnitData unitData, float deltaTime);
+        public void CalculateMovement(UnitData unit, float deltaTime);
     }
 }

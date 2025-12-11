@@ -1,4 +1,4 @@
-﻿namespace Combat.Ability
+﻿namespace Combat.Ability.Data
 {
     public class HitOnceOnCollisionData : AbilityData
     {
