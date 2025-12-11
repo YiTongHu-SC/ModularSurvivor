@@ -1,6 +1,5 @@
-﻿using Combat.Ability;
-using Combat.Ability.Data;
-using Combat.Actors;
+﻿using Combat.Ability.Data;
+using Combat.Data;
 using Combat.Systems;
 using Core.Events;
 using Core.Units;
@@ -10,12 +9,13 @@ namespace GameLoop.GameDebug
 {
     public class CreateHeroOnStart : MonoBehaviour
     {
-        public Actor HeroPrefab;
+        public int HeroID = 100000;
         public Vector3 SpawnPosition = Vector3.zero;
 
         public void CreateHero()
         {
-            if (HeroPrefab != null)
+            var actorData = Resources.Load<ActorData>($"ActorConfigs/Actor_{HeroID}");
+            if (actorData != null && actorData.ActorPrefab != null)
             {
                 var heroData = new UnitData(SpawnPosition, 0)
                 {
@@ -30,7 +30,7 @@ namespace GameLoop.GameDebug
                     MoveSpeed = 1f,
                 };
                 heroData.SetHealth(100);
-                UnitManager.Instance.Factory.Spawn(HeroPrefab, heroData);
+                UnitManager.Instance.Factory.Spawn(actorData.ActorPrefab, heroData);
                 EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
                 UnitManager.Instance.SetHeroUnit(heroData.GUID);
                 // Give the hero a Laser Strike ability for testing
