@@ -2,6 +2,7 @@
 using Combat.Systems;
 using Core.Abstructs;
 using Core.Events;
+using Core.Input;
 using Core.Timer;
 using Core.Units;
 using UnityEngine;
@@ -34,12 +35,14 @@ namespace GameLoop.Game
         IEnumerator DelayedGameInitialization()
         {
             new GameObject("EventManager").AddComponent<EventManager>();
+            new GameObject("InputManager").AddComponent<InputManager>();
             new GameObject("TimeManager").AddComponent<TimeManager>();
             new GameObject("UnitManager").AddComponent<UnitManager>();
             new GameObject("CombatManager").AddComponent<CombatManager>();
             new GameObject("WaveManager").AddComponent<WaveManager>();
             yield return null; // 等待一帧，确保所有单例都已初始化
             EventManager.Instance.Initialize();
+            InputManager.Instance.Initialize();
             TimeManager.Instance.Initialize();
             UnitManager.Instance.Initialize();
             CombatManager.Instance.Initialize();
