@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca115e99aa1415fa552daccdd05ce3a, type: 3}
   m_Name: GameInitConfig
   m_EditorClassIdentifier: GameLoop::GameLoop.Config.GameInitConfig
-  version: 1.0
+  Version: Demo-v1.0
   LoadSceneName: Scenes/SystemScene

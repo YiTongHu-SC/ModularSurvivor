@@ -8,7 +8,7 @@ namespace GameEditor.Tools
     [InitializeOnLoad]
     public class GameLoopEditor : EditorWindow
     {
-        private const string StartScenePath = "Assets/Scenes/GameInit.unity";
+        private const string StartScenePath = "Assets/Scenes/GameInitScene.unity";
         private const string LastScenePathKey = "LastScenePathKey";
 
         static GameLoopEditor()
