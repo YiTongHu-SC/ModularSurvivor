@@ -180,5 +180,15 @@ namespace Core.Events
                 ViewData = view;
             }
         }
+
+        public class GameStartEvent : EventData
+        {
+            public int LevelID { get; }
+
+            public GameStartEvent(int levelId)
+            {
+                LevelID = levelId;
+            }
+        }
     }
 }

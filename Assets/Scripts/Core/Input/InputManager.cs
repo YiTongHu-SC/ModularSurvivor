@@ -465,5 +465,9 @@ namespace Core.Input
             MainCamera = mainCamera;
             Debug.Log("[InputManager] MainCamera set to: " + mainCamera.name);
         }
+
+        public void Tick(float deltaTime)
+        {
+        }
     }
 }
