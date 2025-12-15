@@ -67,7 +67,7 @@ namespace Tests.Core.Events
                 2
             );
 
-            EventManager.Instance.PublishEvent(deathEvent);
+            EventManager.Instance.Publish(deathEvent);
 
             yield return new WaitForSeconds(0.1f);
 
@@ -85,7 +85,7 @@ namespace Tests.Core.Events
             Debug.Log("=== Testing Wave Start Event ===");
 
             var waveEvent = new GameEvents.WaveStartEvent(3, 15);
-            EventManager.Instance.PublishEvent(waveEvent);
+            EventManager.Instance.Publish(waveEvent);
 
             yield return new WaitForSeconds(0.1f);
 
@@ -103,7 +103,7 @@ namespace Tests.Core.Events
             Debug.Log("=== Testing Player Level Up Event ===");
 
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(5, 1000);
-            EventManager.Instance.PublishEvent(levelUpEvent);
+            EventManager.Instance.Publish(levelUpEvent);
 
             yield return new WaitForSeconds(0.1f);
 
@@ -122,7 +122,7 @@ namespace Tests.Core.Events
             Debug.Log("=== Testing UI Refresh Event ===");
 
             var uiEvent = new GameEvents.UIRefreshEvent("MainUI", new { Health = 80, Mana = 60 });
-            EventManager.Instance.PublishEvent(uiEvent);
+            EventManager.Instance.Publish(uiEvent);
 
             yield return new WaitForSeconds(0.1f);
 
@@ -140,25 +140,25 @@ namespace Tests.Core.Events
             // 1. 波次开始
             Debug.Log("1. Starting wave...");
             var waveEvent = new GameEvents.WaveStartEvent(1, 5);
-            EventManager.Instance.PublishEvent(waveEvent);
+            EventManager.Instance.Publish(waveEvent);
             yield return new WaitForSeconds(0.5f);
 
             // 2. 敌人死亡
             Debug.Log("2. Enemy dies...");
             var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
-            EventManager.Instance.PublishEvent(deathEvent);
+            EventManager.Instance.Publish(deathEvent);
             yield return new WaitForSeconds(0.5f);
 
             // 3. 玩家升级
             Debug.Log("3. Player levels up...");
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(2, 500);
-            EventManager.Instance.PublishEvent(levelUpEvent);
+            EventManager.Instance.Publish(levelUpEvent);
             yield return new WaitForSeconds(0.5f);
 
             // 4. 波次结束
             Debug.Log("4. Wave ends...");
             var waveEndEvent = new GameEvents.WaveEndEvent(1, true, 120.5f);
-            EventManager.Instance.PublishEvent(waveEndEvent);
+            EventManager.Instance.Publish(waveEndEvent);
             yield return new WaitForSeconds(0.5f);
 
             Debug.Log("=== Full Event Scenario Demo Completed ===");

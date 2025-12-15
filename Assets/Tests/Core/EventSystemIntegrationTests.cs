@@ -45,7 +45,7 @@ namespace Tests.Core.Events
 
             // 发布事件
             var deathEvent = new GameEvents.UnitDeathEvent(1);
-            eventManager.PublishEvent(deathEvent);
+            eventManager.Publish(deathEvent);
 
             // 验证所有监听器都收到了事件
             Assert.IsTrue(listener1.EventReceived);
@@ -61,7 +61,7 @@ namespace Tests.Core.Events
             eventManager.Subscribe(listener);
 
             // 发布null事件
-            eventManager.PublishEvent(null);
+            eventManager.Publish(null);
 
             // 验证监听器没有收到事件
             Assert.IsFalse(listener.EventReceived);
@@ -100,7 +100,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -147,7 +147,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 200; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();

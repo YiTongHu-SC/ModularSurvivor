@@ -143,9 +143,9 @@ namespace Tests.Core.Events
             Assert.AreEqual(1, EventManager.Instance.GetSubscriberCount(typeof(GameEvents.WaveEndEvent)));
 
             // 测试委托是否被正确调用
-            EventManager.Instance.PublishEvent(new GameEvents.PlayerLevelUpEvent(5, 1000));
-            EventManager.Instance.PublishEvent(new GameEvents.UIRefreshEvent("TestUI", null));
-            EventManager.Instance.PublishEvent(new GameEvents.WaveEndEvent(1, true, 60f));
+            EventManager.Instance.Publish(new GameEvents.PlayerLevelUpEvent(5, 1000));
+            EventManager.Instance.Publish(new GameEvents.UIRefreshEvent("TestUI", null));
+            EventManager.Instance.Publish(new GameEvents.WaveEndEvent(1, true, 60f));
 
             // 验证委托被调用
             Assert.IsTrue(playerLevelUpCalled, "PlayerLevelUp delegate was not called");
@@ -178,29 +178,29 @@ namespace Tests.Core.Events
 
             // 1. 单位死亡事件 - 只有监听器对象处理
             var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
-            EventManager.Instance.PublishEvent(deathEvent);
+            EventManager.Instance.Publish(deathEvent);
             Assert.IsTrue(unitDeathListener.EventReceived);
             Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
 
             // 2. 玩家升级事件 - 只有委托处理
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(5, 1000);
-            EventManager.Instance.PublishEvent(levelUpEvent);
+            EventManager.Instance.Publish(levelUpEvent);
             Assert.IsTrue(levelUpCalled);
 
             // 3. 波次开始事件 - 监听器对象处理
             var waveEvent = new GameEvents.WaveStartEvent(3, 15);
-            EventManager.Instance.PublishEvent(waveEvent);
+            EventManager.Instance.Publish(waveEvent);
             Assert.IsTrue(waveStartListener.EventReceived);
             Assert.AreEqual(3, waveStartListener.LastWaveNumber);
 
             // 4. UI刷新事件 - 只有委托处理
             var uiEvent = new GameEvents.UIRefreshEvent("HealthBar", new { CurrentHP = 80, MaxHP = 100 });
-            EventManager.Instance.PublishEvent(uiEvent);
+            EventManager.Instance.Publish(uiEvent);
             Assert.IsTrue(uiRefreshCalled);
 
             // 5. 波次结束事件 - 只有委托处理
             var waveEndEvent = new GameEvents.WaveEndEvent(3, true, 125.5f);
-            EventManager.Instance.PublishEvent(waveEndEvent);
+            EventManager.Instance.Publish(waveEndEvent);
             Assert.IsTrue(waveEndCalled);
 
             // 显示统计信息
@@ -259,19 +259,19 @@ namespace Tests.Core.Events
             {
                 // 模拟游戏场景
                 Debug.Log("1. 波次开始...");
-                EventManager.Instance.PublishEvent(new GameEvents.WaveStartEvent(1, 5));
+                EventManager.Instance.Publish(new GameEvents.WaveStartEvent(1, 5));
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("2. 敌人死亡...");
-                EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(1, 2));
+                EventManager.Instance.Publish(new GameEvents.UnitDeathEvent(1, 2));
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("3. 玩家升级...");
-                EventManager.Instance.PublishEvent(new GameEvents.PlayerLevelUpEvent(2, 500));
+                EventManager.Instance.Publish(new GameEvents.PlayerLevelUpEvent(2, 500));
                 yield return new WaitForSeconds(0.1f);
 
                 Debug.Log("4. 波次结束...");
-                EventManager.Instance.PublishEvent(new GameEvents.WaveEndEvent(1, true, 120.5f));
+                EventManager.Instance.Publish(new GameEvents.WaveEndEvent(1, true, 120.5f));
                 yield return new WaitForSeconds(0.1f);
             }
 

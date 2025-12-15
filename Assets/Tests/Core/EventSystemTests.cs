@@ -65,7 +65,7 @@ namespace Tests.Core.Events
 
             // 发布事件
             var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
-            eventManager.PublishEvent(deathEvent);
+            eventManager.Publish(deathEvent);
 
             // 验证事件被接收
             Assert.IsTrue(testListener.EventReceived);
@@ -122,7 +122,7 @@ namespace Tests.Core.Events
 
             // 发布事件
             var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
-            eventManager.PublishEvent(deathEvent);
+            eventManager.Publish(deathEvent);
 
             // 验证事件被接收
             Assert.IsTrue(callbackInvoked);
@@ -170,7 +170,7 @@ namespace Tests.Core.Events
 
             // 发布事件
             var deathEvent = new GameEvents.UnitDeathEvent(1);
-            eventManager.PublishEvent(deathEvent);
+            eventManager.Publish(deathEvent);
 
             // 验证两种方式都收到事件
             Assert.IsTrue(testListener.EventReceived);
@@ -204,9 +204,9 @@ namespace Tests.Core.Events
             var waveEvent = new GameEvents.WaveStartEvent(1, 5);
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(3, 500);
 
-            eventManager.PublishEvent(deathEvent);
-            eventManager.PublishEvent(waveEvent);
-            eventManager.PublishEvent(levelUpEvent);
+            eventManager.Publish(deathEvent);
+            eventManager.Publish(waveEvent);
+            eventManager.Publish(levelUpEvent);
 
             yield return null; // 等待一帧
 

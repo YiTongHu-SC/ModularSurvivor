@@ -156,7 +156,7 @@ namespace Core.Input
                 _currentMoveInput.magnitude > 1f ? _currentMoveInput.normalized : _currentMoveInput;
 
             // 发布移动输入事件（使用原始输入和相机相对方向）
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.PlayerMoveInputEvent(rawInput, normalizedDirection)
             );
         }
@@ -166,7 +166,7 @@ namespace Core.Input
             _currentMoveInput = Vector2.zero;
 
             // 发布停止移动事件
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.PlayerMoveInputEvent(Vector2.zero, Vector2.zero)
             );
         }
@@ -177,7 +177,7 @@ namespace Core.Input
             _currentLookInput = lookDelta;
 
             // 发布视角输入事件
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.PlayerLookInputEvent(lookDelta)
             );
         }
@@ -194,42 +194,42 @@ namespace Core.Input
         private void OnAttackPerformed(InputAction.CallbackContext context)
         {
             _isAttackPressed = true;
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerAttackInputEvent(true));
+            EventManager.Instance.Publish(new InputEvents.PlayerAttackInputEvent(true));
         }
 
         private void OnAttackCanceled(InputAction.CallbackContext context)
         {
             _isAttackPressed = false;
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerAttackInputEvent(false));
+            EventManager.Instance.Publish(new InputEvents.PlayerAttackInputEvent(false));
         }
 
         private void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _isSprintPressed = true;
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerSprintInputEvent(true));
+            EventManager.Instance.Publish(new InputEvents.PlayerSprintInputEvent(true));
         }
 
         private void OnSprintCanceled(InputAction.CallbackContext context)
         {
             _isSprintPressed = false;
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerSprintInputEvent(false));
+            EventManager.Instance.Publish(new InputEvents.PlayerSprintInputEvent(false));
         }
 
         private void OnJumpPerformed(InputAction.CallbackContext context)
         {
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerJumpInputEvent());
+            EventManager.Instance.Publish(new InputEvents.PlayerJumpInputEvent());
         }
 
         private void OnCrouchPerformed(InputAction.CallbackContext context)
         {
             _isCrouchPressed = true;
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerCrouchInputEvent(true));
+            EventManager.Instance.Publish(new InputEvents.PlayerCrouchInputEvent(true));
         }
 
         private void OnCrouchCanceled(InputAction.CallbackContext context)
         {
             _isCrouchPressed = false;
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerCrouchInputEvent(false));
+            EventManager.Instance.Publish(new InputEvents.PlayerCrouchInputEvent(false));
         }
 
         #endregion
@@ -238,7 +238,7 @@ namespace Core.Input
 
         private void OnInteractStarted(InputAction.CallbackContext context)
         {
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.PlayerInteractInputEvent(InputEvents.InteractionPhase.Started)
             );
         }
@@ -246,26 +246,26 @@ namespace Core.Input
         private void OnInteractPerformed(InputAction.CallbackContext context)
         {
             float duration = (float)context.duration;
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.PlayerInteractInputEvent(InputEvents.InteractionPhase.Performed, duration)
             );
         }
 
         private void OnInteractCanceled(InputAction.CallbackContext context)
         {
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.PlayerInteractInputEvent(InputEvents.InteractionPhase.Canceled)
             );
         }
 
         private void OnPreviousPerformed(InputAction.CallbackContext context)
         {
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerPreviousInputEvent());
+            EventManager.Instance.Publish(new InputEvents.PlayerPreviousInputEvent());
         }
 
         private void OnNextPerformed(InputAction.CallbackContext context)
         {
-            EventManager.Instance.PublishEvent(new InputEvents.PlayerNextInputEvent());
+            EventManager.Instance.Publish(new InputEvents.PlayerNextInputEvent());
         }
 
         #endregion
@@ -378,7 +378,7 @@ namespace Core.Input
         {
             _inputActions.Player.Enable();
             _currentContext = InputEvents.InputContext.Gameplay;
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.InputContextChangedEvent(InputEvents.InputContext.Gameplay)
             );
             Debug.Log("[InputManager] Gameplay input enabled.");
@@ -408,7 +408,7 @@ namespace Core.Input
         {
             _inputActions.UI.Enable();
             _currentContext = InputEvents.InputContext.UI;
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.InputContextChangedEvent(InputEvents.InputContext.UI)
             );
             Debug.Log("[InputManager] UI input enabled.");
@@ -431,7 +431,7 @@ namespace Core.Input
             DisableGameplayInput();
             EnableUIInput();
             _currentContext = InputEvents.InputContext.Paused;
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.InputContextChangedEvent(InputEvents.InputContext.Paused)
             );
         }
@@ -443,7 +443,7 @@ namespace Core.Input
         {
             _inputActions.Disable();
             _currentContext = InputEvents.InputContext.Disabled;
-            EventManager.Instance.PublishEvent(
+            EventManager.Instance.Publish(
                 new InputEvents.InputContextChangedEvent(InputEvents.InputContext.Disabled)
             );
             Debug.Log("[InputManager] All input disabled.");

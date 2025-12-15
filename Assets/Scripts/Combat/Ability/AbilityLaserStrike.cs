@@ -94,7 +94,7 @@ namespace Combat.Ability
             _oneStrikeViewData.Delay = 0;
             _oneStrikeViewData.Duration = _abilityData.HitDuration;
             _oneStrikeViewData.TargetId = _targetUnitId;
-            EventManager.Instance.PublishEvent(_presentationEvent);
+            EventManager.Instance.Publish(_presentationEvent);
             TimeManager.Instance.TimeSystem.CreateTimer(_abilityData.HitDuration, HitTarget);
             TimeManager.Instance.TimeSystem.CreateTimer(_abilityData.HitCooldown, ResetCooldown);
         }

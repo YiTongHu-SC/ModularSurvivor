@@ -65,7 +65,7 @@ namespace Core.Events
         /// 发布事件
         /// </summary>
         /// <param name="eventData">事件数据</param>
-        public void PublishEvent(EventData eventData)
+        public void Publish(EventData eventData)
         {
             if (eventData == null)
             {

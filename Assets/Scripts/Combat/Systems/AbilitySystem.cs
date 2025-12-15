@@ -97,7 +97,7 @@ namespace Combat.Systems
                 ability.RemoveAbility();
                 _unitAbilities[unitId].Remove(ability);
                 Debug.Log($"能力过期并移除: {ability.AbilityData.AbilityType} 单位 {unitId}");
-                EventManager.Instance.PublishEvent(
+                EventManager.Instance.Publish(
                     new GameEvents.AbilityRemovedEvent(unitId, ability.AbilityData.ID));
             }
         }

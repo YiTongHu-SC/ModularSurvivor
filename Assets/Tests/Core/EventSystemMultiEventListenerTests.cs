@@ -56,8 +56,8 @@ namespace Tests.Core
             // Act
             var deathEvent = new GameEvents.UnitDeathEvent(123);
             var waveEvent = new GameEvents.WaveStartEvent(1, 1);
-            eventManager.PublishEvent(deathEvent);
-            eventManager.PublishEvent(waveEvent);
+            eventManager.Publish(deathEvent);
+            eventManager.Publish(waveEvent);
 
             // Assert
             Assert.IsTrue(multiListener.UnitDeathEventReceived, "Multi-listener should have received UnitDeathEvent");
@@ -76,8 +76,8 @@ namespace Tests.Core
             // Act
             var deathEvent = new GameEvents.UnitDeathEvent(123);
             var waveEvent = new GameEvents.WaveStartEvent(1, 1);
-            eventManager.PublishEvent(deathEvent);
-            eventManager.PublishEvent(waveEvent);
+            eventManager.Publish(deathEvent);
+            eventManager.Publish(waveEvent);
 
             // Assert
             Assert.IsTrue(multiListener.UnitDeathEventReceived, "Multi-listener should have received UnitDeathEvent");

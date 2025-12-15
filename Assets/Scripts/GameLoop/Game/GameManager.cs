@@ -5,6 +5,7 @@ using Core.Events;
 using Core.Input;
 using Core.Timer;
 using Core.Units;
+using UI.Framework;
 using UnityEngine;
 using UnityEngine.Events;
 using Waves.Systems;
@@ -40,6 +41,7 @@ namespace GameLoop.Game
             new GameObject("UnitManager").AddComponent<UnitManager>();
             new GameObject("CombatManager").AddComponent<CombatManager>();
             new GameObject("WaveManager").AddComponent<WaveManager>();
+            new GameObject("MVCManager").AddComponent<MVCManager>();
             yield return null; // 等待一帧，确保所有单例都已初始化
             EventManager.Instance.Initialize();
             InputManager.Instance.Initialize();
@@ -47,9 +49,10 @@ namespace GameLoop.Game
             UnitManager.Instance.Initialize();
             CombatManager.Instance.Initialize();
             WaveManager.Instance.Initialize();
+            MVCManager.Instance.Initialize();
             yield return null;
             _initialized = true;
-            EventManager.Instance.PublishEvent(new GameEvents.GameInitializedEvent());
+            EventManager.Instance.Publish(new GameEvents.GameInitializedEvent());
             OnGameInitialized?.Invoke();
         }
 

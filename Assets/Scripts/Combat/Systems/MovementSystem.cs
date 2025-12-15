@@ -29,7 +29,7 @@ namespace Combat.Systems
                 if (_movementStrategies.TryGetValue(unit.MovementStrategy, out var strategy))
                 {
                     strategy.CalculateMovement(unit, deltaTime,unit.GetMovementContext());
-                    EventManager.Instance.PublishEvent(new GameEvents.UnitMovementEvent(unit));
+                    EventManager.Instance.Publish(new GameEvents.UnitMovementEvent(unit));
                 }
             }
         }

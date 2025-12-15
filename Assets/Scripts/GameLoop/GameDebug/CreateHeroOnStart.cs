@@ -32,7 +32,7 @@ namespace GameLoop.GameDebug
                 };
                 heroData.SetHealth(100);
                 var actor = CombatManager.Instance.ActorFactory.Spawn(actorData.ActorPrefab, heroData);
-                EventManager.Instance.PublishEvent(new GameEvents.HeroCreated(heroData.GUID));
+                EventManager.Instance.Publish(new GameEvents.HeroCreated(heroData.GUID));
                 UnitManager.Instance.SetHeroUnit(heroData.GUID);
                 // Give the hero a Laser Strike ability for testing
                 var laserStrikeData = new LaserStrikeData

@@ -18,7 +18,7 @@ namespace Combat.Systems
                 // Ensure health does not go below zero
                 target.Health = 0;
                 var sourceGUID = source?.GUID ?? -1;
-                EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(target.GUID, sourceGUID));
+                EventManager.Instance.Publish(new GameEvents.UnitDeathEvent(target.GUID, sourceGUID));
                 Debug.Log($"Unit {target.GUID} has killed by unit {sourceGUID}");
             }
 

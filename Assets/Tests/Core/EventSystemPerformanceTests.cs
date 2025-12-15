@@ -51,7 +51,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -82,7 +82,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 200; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -113,7 +113,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -151,7 +151,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch1.Stop();
@@ -173,7 +173,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch2.Stop();
@@ -217,7 +217,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < eventCount; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch1.Stop();
@@ -240,7 +240,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < eventCount; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch2.Stop();
@@ -285,7 +285,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < eventCount; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch1.Stop();
@@ -307,7 +307,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < eventCount; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch2.Stop();

@@ -151,7 +151,7 @@ namespace Combat.Systems
             foreach (var (unitA, unitB) in overlappingPairs)
             {
                 // Debug.Log($"Units {unitA.GUID} and {unitB.GUID} are overlapping.");
-                EventManager.Instance.PublishEvent(new GameEvents.OverlapEvent(unitA.GUID, unitB.GUID));
+                EventManager.Instance.Publish(new GameEvents.OverlapEvent(unitA.GUID, unitB.GUID));
             }
         }
     }

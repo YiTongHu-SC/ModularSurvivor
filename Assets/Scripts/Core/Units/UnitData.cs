@@ -95,6 +95,12 @@ namespace Core.Units
         {
             return MovementContext;
         }
+
+        public void SetHealth(float currentHealth, float maxHealth)
+        {
+            MaxHealth = maxHealth;
+            Health = currentHealth;
+        }
     }
 
     public struct MovementContext

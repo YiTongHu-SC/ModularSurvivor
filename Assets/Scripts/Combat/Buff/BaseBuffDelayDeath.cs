@@ -15,7 +15,7 @@ namespace Combat.Buff
 
         public override void RemoveEffect()
         {
-            EventManager.Instance.PublishEvent(new GameEvents.UnitDeathEvent(TargetUnitId));
+            EventManager.Instance.Publish(new GameEvents.UnitDeathEvent(TargetUnitId));
         }
 
         public override void UpdateEffect(float deltaTime)

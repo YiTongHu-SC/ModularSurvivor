@@ -60,7 +60,7 @@ namespace Combat.Systems
             // 应用Buff效果
             newBuff.ApplyEffect();
             // 发布事件
-            EventManager.Instance.PublishEvent(new GameEvents.BuffAppliedEvent(newBuff.Data.ID, newBuff.TargetUnitId));
+            EventManager.Instance.Publish(new GameEvents.BuffAppliedEvent(newBuff.Data.ID, newBuff.TargetUnitId));
 
             return true;
         }
@@ -87,7 +87,7 @@ namespace Combat.Systems
             buffToRemove.IsActive = false;
 
             // 发布事件
-            EventManager.Instance.PublishEvent(new GameEvents.BuffRemovedEvent(unitId, buffId, buffToRemove.Data.Name));
+            EventManager.Instance.Publish(new GameEvents.BuffRemovedEvent(unitId, buffId, buffToRemove.Data.Name));
 
             return true;
         }
@@ -127,7 +127,7 @@ namespace Combat.Systems
             foreach (var (unitId, buff) in expiredBuffs)
             {
                 buff.RemoveEffect();
-                EventManager.Instance.PublishEvent(
+                EventManager.Instance.Publish(
                     new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
             }
         }
@@ -192,7 +192,7 @@ namespace Combat.Systems
             foreach (var buff in buffs.Where(b => b.IsActive))
             {
                 buff.RemoveEffect();
-                EventManager.Instance.PublishEvent(
+                EventManager.Instance.Publish(
                     new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
             }
 

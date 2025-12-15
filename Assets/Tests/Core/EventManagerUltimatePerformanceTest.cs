@@ -63,7 +63,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 10; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -98,7 +98,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 50; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -133,7 +133,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
             }
 
             stopwatch.Stop();
@@ -170,7 +170,7 @@ namespace Tests.Core.Events
             for (int i = 0; i < 100; i++)
             {
                 var deathEvent = new GameEvents.UnitDeathEvent(i);
-                eventManager.PublishEvent(deathEvent);
+                eventManager.Publish(deathEvent);
 
                 // 每10个事件让出一帧，模拟真实游戏场景
                 if (i % 10 == 0)
