@@ -71,7 +71,7 @@ namespace Tests.Combat
             unitData.MoveSpeed = 5f;
             unitData.MoveDirection = Vector2.right; // 向右移动
             var actorGo = CreateGameObject();
-            var actor = _unitManager.Factory.Spawn(actorGo, unitData);
+            var actor = _combatManager.ActorFactory.Spawn(actorGo, unitData);
             yield return null;
             _combatManager.MovementSystem.UpdateMovement(DeltaTime);
             var expectedPosition = initialPosition + unitData.MoveSpeed * DeltaTime * unitData.MoveDirection;

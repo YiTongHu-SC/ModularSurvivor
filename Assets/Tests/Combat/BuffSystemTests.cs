@@ -72,7 +72,7 @@ namespace Tests.Combat
             };
             testUnit.MoveSpeed = 10f;
             var actorGo = CreateGameObject();
-            var actor = _unitManager.Factory.Spawn(actorGo, testUnit);
+            var actor = _combatManager.ActorFactory.Spawn(actorGo, testUnit);
             var buffData = new BuffData(0,
                 "SpeedBoost",
                 BuffType.SpeedBoost,
@@ -97,7 +97,7 @@ namespace Tests.Combat
             };
             testUnit.MoveSpeed = 10f;
             var actorGo = CreateGameObject();
-            var actor = _unitManager.Factory.Spawn(actorGo, testUnit);
+            var actor = _combatManager.ActorFactory.Spawn(actorGo, testUnit);
             var delayDuration = 1f;
             var buffData = new BuffData(0,
                 "DelayDeath",

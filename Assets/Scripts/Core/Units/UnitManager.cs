@@ -10,7 +10,6 @@ namespace Core.Units
     /// </summary>
     public class UnitManager : BaseInstance<UnitManager>
     {
-        public UnitFactory Factory { get; private set; }
         public UnitSystem UnitSystem { get; private set; }
         public UnitOverlapSystem OverlapSystem { get; private set; }
         public Dictionary<int, UnitData> Units => UnitSystem.Units;
@@ -32,7 +31,6 @@ namespace Core.Units
         {
             base.Initialize();
             UnitSystem = new UnitSystem();
-            Factory = new UnitFactory();
             OverlapSystem = new UnitOverlapSystem(Units);
         }
 

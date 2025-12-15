@@ -12,6 +12,7 @@ namespace Combat.Systems
         public AbilitySystem AbilitySystem { get; set; } = new();
         public ViewSystem ViewSystem { get; set; } = new();
         public Actor HeroActor { get; set; }
+        public ActorFactory ActorFactory { get; set; } = new();
 
         public override void Initialize()
         {
