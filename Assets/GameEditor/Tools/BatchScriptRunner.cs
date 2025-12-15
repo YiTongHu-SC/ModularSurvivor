@@ -1,9 +1,9 @@
-﻿using UnityEditor;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
+using UnityEditor;
 using Debug = UnityEngine.Debug;
 
-namespace Tools.Editor
+namespace GameEditor.Tools
 {
     public static class BatchScriptRunner
     {
