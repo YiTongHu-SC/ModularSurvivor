@@ -15,74 +15,180 @@ namespace StellarCore.FSM
         where TT : Enum
     {
         private readonly Dictionary<TE, FsmState<T, TE, TT>> _statesTable = new Dictionary<TE, FsmState<T, TE, TT>>();
-        private TE _currentStateID;
-        private FsmState<T, TE, TT> _currentState;
-        public TE CurrentStateID => _currentStateID;
-        public FsmState<T, TE, TT> CurrentState => _currentState;
+        public TE CurrentStateID { get; private set; }
 
-        private T _context;
+        private FsmState<T, TE, TT> CurrentState { get; set; }
+
+        public bool IsInitialized => CurrentState != null;
+
+        private readonly T _context;
 
         public StateMachine(T context)
         {
             _context = context;
         }
 
-        public void AddState(FsmState<T, TE, TT> state)
+        public bool AddState(FsmState<T, TE, TT> state)
         {
             if (state == null)
             {
                 Debug.LogError("FSM ERROR: Null reference is not allowed");
+                return false;
             }
 
             if (_statesTable.ContainsKey(state.Id))
             {
                 Debug.LogError("FSM ERROR: Impossible to add state " + state.Id.ToString() +
                                " because state has already been added");
+                return false;
             }
 
             state.Context = _context;
             _statesTable.Add(state.Id, state);
+            return true;
         }
 
-        public void DeleteState(TE id)
+        public bool DeleteState(TE id)
         {
-            if (_statesTable.ContainsKey(id))
-            {
-                _statesTable.Remove(id);
-            }
-            else
+            if (!_statesTable.ContainsKey(id))
             {
                 Debug.LogError("FSM ERROR: Impossible to delete state " + id.ToString() +
                                ". It was not on the dict of states");
+                return false;
             }
-        }
 
-        public void PerformTransition(TT trans)
-        {
-            if (!_currentState.Contains(trans))
+            if (CurrentState != null && CurrentState.Id.Equals(id))
             {
-                return;
+                Debug.LogError("FSM ERROR: Cannot delete current state " + id.ToString() +
+                               ". Please transition to another state first");
+                return false;
             }
 
-            _currentState.Exit();
-            TE nextStateId = _currentState.GetTargetState(trans);
-            var nextState = _statesTable[nextStateId];
-            _currentStateID = nextStateId;
-            _currentState = nextState;
-            nextState.Enter();
+            _statesTable.Remove(id);
+            return true;
         }
 
-        public void SetCurrent(TE id)
+        public bool PerformTransition(TT trans)
         {
-            _currentStateID = id;
-            _currentState = _statesTable[id];
-            _currentState.Enter();
+            if (CurrentState == null)
+            {
+                Debug.LogError("FSM ERROR: Current state is null. Cannot perform transition");
+                return false;
+            }
+
+            if (!CurrentState.Contains(trans))
+            {
+                return false;
+            }
+
+            TE nextStateId = CurrentState.GetTargetState(trans);
+
+            if (!_statesTable.TryGetValue(nextStateId, out var nextState))
+            {
+                Debug.LogError("FSM ERROR: Target state " + nextStateId.ToString() +
+                               " does not exist in state table");
+                return false;
+            }
+
+            try
+            {
+                CurrentState.Exit();
+                CurrentStateID = nextStateId;
+                CurrentState = nextState;
+                nextState.Enter();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("FSM ERROR: Exception during state transition: " + e.Message);
+                return false;
+            }
+        }
+
+        public bool SetCurrent(TE id)
+        {
+            if (!_statesTable.ContainsKey(id))
+            {
+                Debug.LogError("FSM ERROR: State " + id.ToString() + " does not exist in state table");
+                return false;
+            }
+
+            // 如果已经是当前状态，不需要重复设置
+            if (CurrentState != null && CurrentState.Id.Equals(id))
+            {
+                return true;
+            }
+
+            try
+            {
+                CurrentState?.Exit(); // 退出当前状态（如果存在）
+                CurrentStateID = id;
+                CurrentState = _statesTable[id];
+                CurrentState.Enter();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("FSM ERROR: Exception during state initialization: " + e.Message);
+                return false;
+            }
         }
 
         public void Tick(float deltaTime = 0)
         {
-            _currentState.Reason(deltaTime);
-            _currentState.Act(deltaTime);
+            if (CurrentState == null)
+            {
+                Debug.LogWarning("FSM WARNING: Cannot tick - state machine is not initialized");
+                return;
+            }
+
+            CurrentState.Reason(deltaTime);
+            CurrentState.Act(deltaTime);
+        }
+
+        /// <summary>
+        /// 检查状态是否存在
+        /// </summary>
+        public bool HasState(TE stateId)
+        {
+            return _statesTable.ContainsKey(stateId);
+        }
+
+        /// <summary>
+        /// 获取所有状态ID
+        /// </summary>
+        public IEnumerable<TE> GetAllStateIds()
+        {
+            return _statesTable.Keys;
+        }
+
+        /// <summary>
+        /// 强制停止状态机
+        /// </summary>
+        public void Stop()
+        {
+            if (CurrentState != null)
+            {
+                try
+                {
+                    CurrentState.Exit();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("FSM ERROR: Exception during state machine stop: " + e.Message);
+                }
+
+                CurrentState = null;
+            }
+        }
+
+        /// <summary>
+        /// 重置状态机到指定状态
+        /// </summary>
+        public bool Reset(TE initialState)
+        {
+            Stop();
+            return SetCurrent(initialState);
         }
     }
 
@@ -92,7 +198,7 @@ namespace StellarCore.FSM
         where TT : Enum
     {
         private readonly TE _stateId;
-        protected Dictionary<TT, TE> Map = new Dictionary<TT, TE>();
+        private readonly Dictionary<TT, TE> _map = new Dictionary<TT, TE>();
 
         public T Context { get; set; }
 
@@ -103,42 +209,40 @@ namespace StellarCore.FSM
 
         public TE Id => _stateId;
 
-        public void AddTransition(TT trans, TE id)
+        public bool AddTransition(TT trans, TE id)
         {
             // Since this is a Deterministic FSM,
             //   check if the current transition was already inside the map
-            if (Map.ContainsKey(trans))
-            {
-                Debug.LogError("FSMState ERROR: State " + _stateId.ToString() + " already has transition " +
-                               trans.ToString() +
-                               "Impossible to assign to another state");
-                return;
-            }
-
-            Map.Add(trans, id);
+            if (_map.TryAdd(trans, id)) return true;
+            Debug.LogError("FSMState ERROR: State " + _stateId.ToString() + " already has transition " +
+                           trans.ToString() +
+                           "Impossible to assign to another state");
+            return false;
         }
 
-        public void DeleteTransition(TT trans)
+        public bool DeleteTransition(TT trans)
         {
             // Check if the pair is inside the map before deleting
-            if (Map.ContainsKey(trans))
+            if (_map.Remove(trans))
             {
-                Map.Remove(trans);
-                return;
+                return true;
             }
 
             Debug.LogError("FSMState ERROR: Transition " + trans.ToString() + " passed to " + _stateId.ToString() +
                            " was not on the state's transition list");
+            return false;
+        }
+
+        public bool TryGetTargetState(TT trans, out TE targetState)
+        {
+            return _map.TryGetValue(trans, out targetState);
         }
 
         public TE GetTargetState(TT trans)
         {
-            if (!Map.ContainsKey(trans))
-            {
-                Debug.LogError("FSMState ERROR : Transition DO NOT exist : Transition " + trans.ToString());
-            }
-
-            return Map[trans];
+            if (_map.TryGetValue(trans, out var state)) return state;
+            Debug.LogError("FSMState ERROR : Transition DO NOT exist : Transition " + trans.ToString());
+            return default(TE);
         }
 
         public abstract void Enter();
@@ -148,7 +252,7 @@ namespace StellarCore.FSM
 
         public bool Contains(TT trans)
         {
-            return Map.ContainsKey(trans);
+            return _map.ContainsKey(trans);
         }
     }
 }
