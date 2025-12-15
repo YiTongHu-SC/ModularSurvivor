@@ -1,5 +1,4 @@
-﻿using Core.Abstructs;
-using UnityEngine;
+﻿using StellarCore.Singleton;
 
 namespace Waves.Systems
 {

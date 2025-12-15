@@ -4,7 +4,8 @@
     "references": [
         "GUID:174bc9f391f1b7f4292b3824c5019a21",
         "GUID:2e6d03c9d4784294995044135c67669c",
-        "Unity.InputSystem"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:bd03024b338c2224a80b6efacd7692c5"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

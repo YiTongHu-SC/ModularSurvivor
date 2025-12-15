@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using Combat.Systems;
-using Core.Abstructs;
 using Core.Events;
 using Core.Input;
 using Core.Timer;
 using Core.Units;
+using StellarCore.Singleton;
 using UI.Framework;
 using UnityEngine;
 using UnityEngine.Events;

@@ -1,6 +1,5 @@
 ﻿using Combat.Actors;
-using Core.Abstructs;
-using UnityEngine;
+using StellarCore.Singleton;
 
 namespace Combat.Systems
 {

@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Core",
         "Utils",
-        "Combat"
+        "Combat",
+        "StellarCore"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

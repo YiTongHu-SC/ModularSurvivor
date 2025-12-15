@@ -1,5 +1,5 @@
-﻿using Core.Abstructs;
-using Core.Events;
+﻿using Core.Events;
+using StellarCore.Singleton;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

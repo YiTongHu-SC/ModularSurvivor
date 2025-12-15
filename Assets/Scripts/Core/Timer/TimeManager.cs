@@ -1,4 +1,4 @@
-﻿using Core.Abstructs;
+﻿using StellarCore.Singleton;
 
 namespace Core.Timer
 {

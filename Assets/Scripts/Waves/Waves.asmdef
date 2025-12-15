@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Core",
-        "Combat"
+        "Combat",
+        "StellarCore"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

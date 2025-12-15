@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Core.Abstructs
+namespace StellarCore.Singleton
 {
     public abstract class BaseInstance<T> : MonoBehaviour where T : MonoBehaviour
     {

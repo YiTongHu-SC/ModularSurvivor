@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Combat.Systems;
-using Core.Abstructs;
+using StellarCore.Singleton;
 using UnityEngine;
 
 namespace Core.Units

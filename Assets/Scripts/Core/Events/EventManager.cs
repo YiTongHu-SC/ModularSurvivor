@@ -1,6 +1,6 @@
-﻿using Core.Abstructs;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using StellarCore.Singleton;
 using UnityEngine;
 
 namespace Core.Events
