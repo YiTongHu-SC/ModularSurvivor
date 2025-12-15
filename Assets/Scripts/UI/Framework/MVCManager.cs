@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Abstructs;
 using UnityEngine;
 
@@ -23,7 +24,29 @@ namespace UI.Framework
         private readonly Dictionary<Type, List<IDisposable>> _controllersByType =
             new Dictionary<Type, List<IDisposable>>();
 
+        /// <summary>
+        /// UI栈管理器
+        /// </summary>
+        private readonly UIStack _uiStack = new UIStack();
+
+        /// <summary>
+        /// UI控制器实例缓存
+        /// </summary>
+        private readonly Dictionary<Type, IUIController> _uiControllerInstances = new Dictionary<Type, IUIController>();
+
+        /// <summary>
+        /// UI层级根节点映射
+        /// </summary>
+        private readonly Dictionary<UILayer, Transform> _layerRoots = new Dictionary<UILayer, Transform>();
+
         #region Unity生命周期
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Initialize();
+            InitializeUILayers();
+        }
 
         private void Update()
         {
@@ -42,11 +65,47 @@ namespace UI.Framework
         /// <summary>
         /// 初始化管理器
         /// </summary>
-        private void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             if (_enableDebugLogging)
             {
                 Debug.Log("MVCManager: Initialized.");
+            }
+        }
+
+        /// <summary>
+        /// 初始化UI层级
+        /// </summary>
+        private void InitializeUILayers()
+        {
+            // 创建Canvas作为UI根节点
+            var uiRoot = new GameObject("UIRoot");
+            uiRoot.transform.SetParent(transform);
+
+            var canvas = uiRoot.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 0;
+
+            // 为每个UI层级创建根节点
+            foreach (UILayer layer in Enum.GetValues(typeof(UILayer)))
+            {
+                var layerRoot = new GameObject($"Layer_{layer}");
+                layerRoot.transform.SetParent(uiRoot.transform);
+
+                var rectTransform = layerRoot.AddComponent<RectTransform>();
+                rectTransform.anchorMin = Vector2.zero;
+                rectTransform.anchorMax = Vector2.one;
+                rectTransform.sizeDelta = Vector2.zero;
+                rectTransform.anchoredPosition = Vector2.zero;
+
+                canvas.sortingOrder = (int)layer;
+                _layerRoots[layer] = layerRoot.transform;
+
+                if (_enableDebugLogging)
+                {
+                    Debug.Log($"MVCManager: Created UI layer {layer} with sorting order {(int)layer}");
+                }
             }
         }
 
@@ -55,6 +114,9 @@ namespace UI.Framework
         /// </summary>
         private void DisposeAllControllers()
         {
+            // 关闭所有UI
+            CloseAllUI();
+
             foreach (var controller in _controllers)
             {
                 try
@@ -69,6 +131,8 @@ namespace UI.Framework
 
             _controllers.Clear();
             _controllersByType.Clear();
+            _uiControllerInstances.Clear();
+            _uiStack.Clear();
 
             if (_enableDebugLogging)
             {
@@ -276,6 +340,290 @@ namespace UI.Framework
 
         #endregion
 
+        #region UI Management MVP API
+
+        /// <summary>
+        /// 打开指定类型的UI
+        /// </summary>
+        /// <typeparam name="T">UI控制器类型</typeparam>
+        /// <param name="args">打开参数</param>
+        /// <returns>是否成功打开</returns>
+        public bool Open<T>(object args = null) where T : class, IUIController, new()
+        {
+            var uiType = typeof(T);
+
+            try
+            {
+                // 检查是否已经存在实例
+                if (_uiControllerInstances.ContainsKey(uiType))
+                {
+                    var existingController = _uiControllerInstances[uiType];
+                    if (existingController.IsOpen)
+                    {
+                        if (_enableDebugLogging)
+                        {
+                            Debug.LogWarning($"MVCManager: UI {uiType.Name} is already open");
+                        }
+                        return false;
+                    }
+
+                    // 重新打开现有实例
+                    OpenUIController(existingController, args);
+                    return true;
+                }
+
+                // 创建新实例
+                var controller = new T();
+                
+                // 获取UI层级配置
+                var layerAttribute = uiType.GetCustomAttributes(typeof(UILayerAttribute), false);
+                UILayer layer = UILayer.Window;
+                bool blockInput = false;
+                bool allowStack = true;
+                
+                if (layerAttribute.Length > 0)
+                {
+                    var attr = (UILayerAttribute)layerAttribute[0];
+                    layer = attr.Layer;
+                    blockInput = attr.BlockInput;
+                    allowStack = attr.AllowStack;
+                }
+
+                // 检查是否允许堆叠
+                if (!allowStack)
+                {
+                    var existingInLayer = _uiStack.GetElementsInLayer(layer);
+                    if (existingInLayer.Count > 0)
+                    {
+                        if (_enableDebugLogging)
+                        {
+                            Debug.LogWarning($"MVCManager: UI {uiType.Name} cannot stack in layer {layer}");
+                        }
+                        return false;
+                    }
+                }
+
+                // 注册控制器
+                RegisterController(controller);
+                _uiControllerInstances[uiType] = controller;
+
+                // 打开UI
+                OpenUIController(controller, args);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"MVCManager: Error opening UI {uiType.Name} - {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 关闭指定类型的UI
+        /// </summary>
+        /// <typeparam name="T">UI控制器类型</typeparam>
+        /// <returns>是否成功关闭</returns>
+        public bool Close<T>() where T : class, IUIController
+        {
+            var uiType = typeof(T);
+
+            try
+            {
+                if (!_uiControllerInstances.ContainsKey(uiType))
+                {
+                    if (_enableDebugLogging)
+                    {
+                        Debug.LogWarning($"MVCManager: UI {uiType.Name} instance not found");
+                    }
+                    return false;
+                }
+
+                var controller = _uiControllerInstances[uiType];
+                CloseUIController(controller);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"MVCManager: Error closing UI {uiType.Name} - {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 关闭栈顶UI
+        /// </summary>
+        /// <returns>是否成功关闭</returns>
+        public bool CloseTop()
+        {
+            try
+            {
+                var topElement = _uiStack.Top;
+                if (topElement == null)
+                {
+                    if (_enableDebugLogging)
+                    {
+                        Debug.LogWarning("MVCManager: No UI in stack to close");
+                    }
+                    return false;
+                }
+
+                if (topElement.UIInstance is IUIController controller)
+                {
+                    CloseUIController(controller);
+                    return true;
+                }
+
+                if (_enableDebugLogging)
+                {
+                    Debug.LogError($"MVCManager: Top UI {topElement.UIType.Name} is not a valid UI controller");
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"MVCManager: Error closing top UI - {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 关闭所有UI
+        /// </summary>
+        public void CloseAllUI()
+        {
+            var allElements = _uiStack.GetAllElements();
+            
+            foreach (var element in allElements)
+            {
+                if (element.UIInstance is IUIController controller)
+                {
+                    try
+                    {
+                        controller.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"MVCManager: Error closing UI {element.UIType.Name} - {ex.Message}");
+                    }
+                }
+            }
+
+            _uiStack.Clear();
+
+            if (_enableDebugLogging)
+            {
+                Debug.Log("MVCManager: All UI closed");
+            }
+        }
+
+        /// <summary>
+        /// 检查指定UI是否已打开
+        /// </summary>
+        /// <typeparam name="T">UI控制器类型</typeparam>
+        /// <returns>是否已打开</returns>
+        public bool IsUIOpen<T>() where T : class, IUIController
+        {
+            var uiType = typeof(T);
+            return _uiControllerInstances.ContainsKey(uiType) && _uiControllerInstances[uiType].IsOpen;
+        }
+
+        /// <summary>
+        /// 获取当前是否有阻塞输入的UI
+        /// </summary>
+        /// <returns>是否有阻塞输入的UI</returns>
+        public bool HasInputBlocker()
+        {
+            return _uiStack.HasInputBlocker;
+        }
+
+        /// <summary>
+        /// 获取UI栈信息
+        /// </summary>
+        /// <returns>UI栈信息字符串</returns>
+        public string GetUIStackInfo()
+        {
+            var info = $"UI Stack Info (Count: {_uiStack.Count}):\n";
+            var elements = _uiStack.GetAllElements();
+            
+            for (int i = 0; i < elements.Count; i++)
+            {
+                var element = elements[i];
+                var prefix = i == 0 ? "[TOP] " : "      ";
+                info += $"{prefix}{element.UIType.Name} - Layer: {element.Layer}, BlockInput: {element.BlockInput}, OpenTime: {element.OpenTime:HH:mm:ss}\n";
+            }
+
+            return info;
+        }
+
+        #endregion
+
+        #region UI Helper Methods
+
+        /// <summary>
+        /// 内部方法：打开UI控制器
+        /// </summary>
+        private void OpenUIController(IUIController controller, object args)
+        {
+            // 将UI挂到正确的层级
+            AttachToLayer(controller);
+
+            // 推入UI栈
+            var stackElement = new UIStackElement(
+                controller.GetType(),
+                controller,
+                controller.Layer,
+                controller.BlockInput,
+                args
+            );
+            _uiStack.Push(stackElement);
+
+            // 打开UI
+            controller.Open(args);
+
+            if (_enableDebugLogging)
+            {
+                Debug.Log($"MVCManager: Opened UI {controller.GetType().Name} in layer {controller.Layer}");
+            }
+        }
+
+        /// <summary>
+        /// 内部方法：关闭UI控制器
+        /// </summary>
+        private void CloseUIController(IUIController controller)
+        {
+            // 从UI栈移除
+            _uiStack.Remove(controller.GetType());
+
+            // 关闭UI
+            controller.Close();
+
+            if (_enableDebugLogging)
+            {
+                Debug.Log($"MVCManager: Closed UI {controller.GetType().Name}");
+            }
+        }
+
+        /// <summary>
+        /// 将UI挂到正确的层级
+        /// </summary>
+        private void AttachToLayer(IUIController controller)
+        {
+            // 这里可以根据实际需求实现UI prefab的加载和层级挂载
+            // 当前为简化实现，假设UI已经存在
+            if (_layerRoots.ContainsKey(controller.Layer))
+            {
+                var layerRoot = _layerRoots[controller.Layer];
+                // TODO: 实际项目中需要在这里加载和实例化UI prefab
+                if (_enableDebugLogging)
+                {
+                    Debug.Log($"MVCManager: UI {controller.GetType().Name} attached to layer {controller.Layer}");
+                }
+            }
+        }
+
+        #endregion
+
         #region 调试和统计
 
         /// <summary>
@@ -286,12 +634,16 @@ namespace UI.Framework
         {
             var stats = $"MVCManager Statistics:\n";
             stats += $"Total Controllers: {_controllers.Count}\n";
+            stats += $"UI Controllers: {_uiControllerInstances.Count}\n";
+            stats += $"UI Stack Count: {_uiStack.Count}\n";
             stats += $"Controller Types: {_controllersByType.Count}\n";
 
             foreach (var kvp in _controllersByType)
             {
                 stats += $"  {kvp.Key.Name}: {kvp.Value.Count}\n";
             }
+
+            stats += "\n" + GetUIStackInfo();
 
             return stats;
         }
