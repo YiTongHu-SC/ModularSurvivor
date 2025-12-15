@@ -14,6 +14,7 @@ using Waves.Systems;
 
 namespace GameLoop.Game
 {
+    [Serializable]
     public enum GameState
     {
         Bootstrap = 0,
@@ -23,6 +24,7 @@ namespace GameLoop.Game
         Exiting = 4
     }
 
+    [Serializable]
     public enum GameTransition
     {
         FinishBoot,
@@ -36,10 +38,12 @@ namespace GameLoop.Game
     public class GameManager : BaseInstance<GameManager>
     {
         public UnityEvent OnGameInitialized;
+        public GameState ShowGameState;
         private StateMachine<GameManager, GameState, GameTransition> StateMachine { get; set; }
         public GameState CurrentState => StateMachine.CurrentStateID;
         public bool Initialized { get; private set; }
-        public GameLevelStruct CurrentLevelData { get; set; }
+        private LoadSceneStruct CurrentLevelData { get; set; }
+        private LoadSceneType CurrentLoadSceneType { get; set; }
 
         private void Start()
         {
@@ -132,21 +136,53 @@ namespace GameLoop.Game
 
         private void SubscribeEvents()
         {
-            EventManager.Instance.Subscribe<GameEvents.GameStartEvent>(OnGameStart);
+            EventManager.Instance.Subscribe<GameEvents.GameStartEvent>(OnGameStart, this);
+            EventManager.Instance.Subscribe<GameEvents.GameExitEvent>(OnGameExit, this);
         }
 
         private void UnsubscribeEvents()
         {
-            EventManager.Instance.Unsubscribe<GameEvents.GameStartEvent>(OnGameStart);
+            EventManager.Instance.Unsubscribe<GameEvents.GameStartEvent>(OnGameStart, this);
+            EventManager.Instance.Unsubscribe<GameEvents.GameExitEvent>(OnGameExit, this);
         }
 
         private void OnGameStart(GameEvents.GameStartEvent gameStartEvent)
         {
-            CurrentLevelData = new GameLevelStruct()
+            CurrentLevelData = new LoadSceneStruct()
             {
                 LevelID = gameStartEvent.LevelID,
             };
+            CurrentLoadSceneType = LoadSceneType.Game;
             StateMachine.PerformTransition(GameTransition.StartGame);
+        }
+
+        private void OnGameExit(GameEvents.GameExitEvent gameExitEvent)
+        {
+            CurrentLoadSceneType = LoadSceneType.Exit;
+            StateMachine.PerformTransition(GameTransition.ExitGame);
+        }
+
+        /// <summary>
+        /// load main menu process
+        /// </summary>
+        private void LoadingMainProcess()
+        {
+            StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadMain));
+        }
+
+        IEnumerator LoadingProcessCoroutine(GameTransition finishTransition)
+        {
+            // Simulate loading delay
+            yield return new WaitForSeconds(2.0f);
+            StateMachine.PerformTransition(finishTransition);
+        }
+
+        /// <summary>
+        /// load game process
+        /// </summary>
+        private void LoadingGameProcess()
+        {
+            StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadGame));
         }
 
         private void Update()
@@ -155,6 +191,7 @@ namespace GameLoop.Game
             float deltaTime = Time.deltaTime;
             StateMachine.Tick(deltaTime);
             InputManager.Instance.Tick(deltaTime);
+            ShowGameState = CurrentState;
         }
 
         private void FixedUpdate()
@@ -231,6 +268,16 @@ namespace GameLoop.Game
 
             public override void Enter()
             {
+                // Simulate loading process
+                switch (Context.CurrentLoadSceneType)
+                {
+                    case LoadSceneType.MainMenu:
+                        Context.LoadingMainProcess();
+                        break;
+                    case LoadSceneType.Game:
+                        Context.LoadingGameProcess();
+                        break;
+                }
             }
 
             public override void Exit()

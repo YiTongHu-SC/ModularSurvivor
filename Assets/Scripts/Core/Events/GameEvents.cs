@@ -190,5 +190,9 @@ namespace Core.Events
                 LevelID = levelId;
             }
         }
+
+        public class GameExitEvent : EventData
+        {
+        }
     }
 }
