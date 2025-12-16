@@ -1,0 +1,145 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Core.Assets
+{
+    /// <summary>
+    /// 资源作用域，管理一组资源的生命周期
+    /// </summary>
+    public class AssetScope : IDisposable
+    {
+        public string Name { get; }
+        
+        private readonly IAssetProvider _provider;
+        private readonly List<object> _handles;
+        private readonly object _lockObject = new object();
+        private bool _disposed;
+        
+        public int HandleCount 
+        { 
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _handles.Count;
+                }
+            }
+        }
+        public bool IsDisposed => _disposed;
+        
+        internal AssetScope(string name, IAssetProvider provider)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _handles = new List<object>();
+        }
+        
+        /// <summary>
+        /// 在此作用域中获取资源
+        /// </summary>
+        public AssetHandle<T> Acquire<T>(AssetKey key) where T : UnityEngine.Object
+        {
+            ThrowIfDisposed();
+            
+            var handle = _provider.Load<T>(key, Name);
+            
+            lock (_lockObject)
+            {
+                _handles.Add(handle);
+            }
+            
+            return handle;
+        }
+        
+        /// <summary>
+        /// 在此作用域中异步获取资源
+        /// </summary>
+        public async System.Threading.Tasks.Task<AssetHandle<T>> AcquireAsync<T>(AssetKey key) where T : UnityEngine.Object
+        {
+            ThrowIfDisposed();
+            
+            var handle = await _provider.LoadAsync<T>(key, Name);
+            
+            lock (_lockObject)
+            {
+                _handles.Add(handle);
+            }
+            
+            return handle;
+        }
+        
+        /// <summary>
+        /// 批量获取资源
+        /// </summary>
+        public async System.Threading.Tasks.Task<AssetHandle<T>[]> AcquireBatch<T>(AssetKey[] keys, IProgress<float> progress = null) where T : UnityEngine.Object
+        {
+            ThrowIfDisposed();
+            
+            var handles = await _provider.LoadBatchAsync<T>(keys, Name, progress);
+            
+            lock (_lockObject)
+            {
+                foreach (var handle in handles)
+                {
+                    _handles.Add(handle);
+                }
+            }
+            
+            return handles;
+        }
+        
+        /// <summary>
+        /// 实例化预制体
+        /// </summary>
+        public async System.Threading.Tasks.Task<GameObject> InstantiateAsync(AssetKey key, Transform parent = null)
+        {
+            ThrowIfDisposed();
+            return await _provider.InstantiateAsync(key, parent, Name);
+        }
+        
+        /// <summary>
+        /// 释放所有资源
+        /// </summary>
+        public void ReleaseAll()
+        {
+            lock (_lockObject)
+            {
+                foreach (var handle in _handles)
+                {
+                    ReleaseHandle(handle);
+                }
+                _handles.Clear();
+            }
+        }
+        
+        private void ReleaseHandle(object handle)
+        {
+            // 使用反射释放不同类型的句柄
+            var handleType = handle.GetType();
+            if (handleType.IsGenericType && handleType.GetGenericTypeDefinition() == typeof(AssetHandle<>))
+            {
+                var releaseMethod = typeof(IAssetProvider).GetMethod(nameof(IAssetProvider.Release));
+                if (releaseMethod != null)
+                {
+                    var genericMethod = releaseMethod.MakeGenericMethod(handleType.GetGenericArguments());
+                    genericMethod.Invoke(_provider, new[] { handle });
+                }
+            }
+        }
+        
+        public void Dispose()
+        {
+            if (_disposed) return;
+            
+            ReleaseAll();
+            _disposed = true;
+        }
+        
+        private void ThrowIfDisposed()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(AssetScope));
+        }
+    }
+}
