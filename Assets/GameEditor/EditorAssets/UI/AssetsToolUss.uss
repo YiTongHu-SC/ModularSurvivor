@@ -1,0 +1,14 @@
+.root {
+    padding: 10px;
+}
+
+#titleLabel {
+    unity-font-style: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+#resultLabel {
+    margin-top: 8px;
+    color: #66ccff;
+}

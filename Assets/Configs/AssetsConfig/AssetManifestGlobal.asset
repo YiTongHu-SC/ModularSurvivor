@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25c88af8bb9b4b49a6e2d9e505a98851, type: 3}
   m_Name: AssetManifestGlobal
   m_EditorClassIdentifier: Core::Core.Assets.AssetManifest
-  _entries: []
+  _entries:
+  - _key: 
+    _assetType: 0
+    _weight: 0
+    _isRequired: 0
+    _tags: []
   _failureStrategy: 1
