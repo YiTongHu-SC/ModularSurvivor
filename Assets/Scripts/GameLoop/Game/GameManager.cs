@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Combat.Systems;
+using Core.Assets;
 using Core.Events;
 using Core.Input;
 using Core.Timer;
@@ -46,6 +47,8 @@ namespace GameLoop.Game
         public bool Initialized { get; private set; }
         private LoadSceneStruct CurrentLevelData { get; set; }
         private LoadSceneType CurrentLoadSceneType { get; set; }
+        public AssetSystem AssetSystem { get; private set; }
+        public MemoryMaintenanceService MemoryMaintenanceServiceInstance { get; private set; }
 
         private void Start()
         {
@@ -108,7 +111,7 @@ namespace GameLoop.Game
             }
         }
 
-        private void GameInitializeAsync()
+        private void GameBootAsync()
         {
             StartCoroutine(DelayedGameInitialization());
         }
@@ -131,9 +134,42 @@ namespace GameLoop.Game
             WaveManager.Instance.Initialize();
             MVCManager.Instance.Initialize();
             yield return null;
+            // 初始化资源系统
+            if (GlobalConfig)
+            {
+                if (GlobalConfig.AssetCatalog)
+                {
+                    AssetSystem = new AssetSystem(GlobalConfig.AssetCatalog);
+                    if (GlobalConfig.CreateMemoryMaintenanceService)
+                    {
+                        CreateMemoryMaintenanceService();
+                    }
+                }
+                else
+                {
+                    Debug.LogError("GlobalConfig or AssetCatalog is not assigned!");
+                }
+            }
+            else
+            {
+                Debug.LogError("GlobalConfig or AssetCatalog is not assigned!");
+            }
+
+            yield return null;
+
+            // 加载完成
             Initialized = true;
-            EventManager.Instance.Publish(new GameEvents.GameInitializedEvent());
             OnGameInitialized?.Invoke();
+            EventManager.Instance.Publish(new GameEvents.GameInitializedEvent());
+        }
+
+        // ReSharper disable Unity.PerformanceAnalysis
+        private void CreateMemoryMaintenanceService()
+        {
+            var go = new GameObject("MemoryMaintenanceService");
+            DontDestroyOnLoad(go);
+            MemoryMaintenanceServiceInstance = go.AddComponent<MemoryMaintenanceService>();
+            Debug.Log("[MemoryMaintenance] Service created");
         }
 
         private void SubscribeEvents()
@@ -169,14 +205,10 @@ namespace GameLoop.Game
         /// </summary>
         private void LoadingMainProcess()
         {
-            StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadMain));
-        }
-
-        IEnumerator LoadingProcessCoroutine(GameTransition finishTransition)
-        {
-            // Simulate loading delay
-            yield return new WaitForSeconds(2.0f);
-            StateMachine.PerformTransition(finishTransition);
+            StartCoroutine(LoadingProcessCoroutine(
+                GameTransition.FinishLoadMain,
+                GlobalConfig.GlobalManifest,
+                GlobalConfig.GlobalScopeName));
         }
 
         /// <summary>
@@ -184,7 +216,23 @@ namespace GameLoop.Game
         /// </summary>
         private void LoadingGameProcess()
         {
-            StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadGame));
+            StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadGame, GlobalConfig.GlobalManifest));
+        }
+
+        IEnumerator LoadingProcessCoroutine(GameTransition finishTransition, AssetManifest manifest,
+            string scopeName = "Default")
+        {
+            // load assets
+            var loadTask = AssetSystem.Instance.LoadManifestAsync(manifest, scopeName, null);
+            yield return new WaitUntil(() => loadTask.IsCompleted);
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogError($"Failed to load assets: {loadTask.Exception}");
+            }
+
+            // Simulate loading delay
+            yield return new WaitForSeconds(2.0f);
+            StateMachine.PerformTransition(finishTransition);
         }
 
         private void Update()
@@ -218,7 +266,7 @@ namespace GameLoop.Game
 
             public override void Enter()
             {
-                Context.GameInitializeAsync();
+                Context.GameBootAsync();
             }
 
             public override void Exit()
@@ -326,6 +374,9 @@ namespace GameLoop.Game
 
             public override void Enter()
             {
+                // 清理资源和单例
+                Context.AssetSystem?.Dispose();
+                // 取消订阅事件
                 Context.UnsubscribeEvents();
 
                 // 区分Unity编辑器和打包环境的退出处理

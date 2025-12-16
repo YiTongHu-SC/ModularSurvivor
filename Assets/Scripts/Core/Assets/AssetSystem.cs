@@ -15,23 +15,8 @@ namespace Core.Assets
         public const string GlobalScopeName = "Global";
         public const string FrontendScopeName = "Frontend";
         private readonly object _lockObject = new();
-
         private readonly Dictionary<string, AssetScope> _scopes;
         private bool _disposed;
-
-        public AssetSystem(AssetCatalog catalog)
-        {
-            if (catalog == null)
-                throw new ArgumentNullException(nameof(catalog));
-
-            Provider = new ResourcesAssetProvider(catalog);
-            _scopes = new Dictionary<string, AssetScope>();
-
-            // 创建全局作用域
-            CreateScope(GlobalScopeName);
-
-            Instance = this;
-        }
 
         public static AssetSystem Instance { get; private set; }
 
@@ -49,6 +34,20 @@ namespace Core.Assets
         ///     直接通过提供者访问（绕过作用域）
         /// </summary>
         public IAssetProvider Provider { get; }
+
+        public AssetSystem(AssetCatalog catalog)
+        {
+            if (catalog == null)
+                throw new ArgumentNullException(nameof(catalog));
+
+            Provider = new ResourcesAssetProvider(catalog);
+            _scopes = new Dictionary<string, AssetScope>();
+
+            // 创建全局作用域
+            CreateScope(GlobalScopeName);
+
+            Instance = this;
+        }
 
         public void Dispose()
         {
@@ -91,7 +90,7 @@ namespace Core.Assets
 
             lock (_lockObject)
             {
-                return _scopes.TryGetValue(name, out var scope) ? scope : null;
+                return _scopes.GetValueOrDefault(name);
             }
         }
 

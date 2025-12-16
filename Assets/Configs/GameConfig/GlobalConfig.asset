@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f5dc9c623db4a7fa2d09ea838465666, type: 3}
   m_Name: GlobalConfig
   m_EditorClassIdentifier: GameLoop::GameLoop.Config.GlobalConfig
+  LoadGlobalAssetsOnStart: 0
+  CreateMemoryMaintenanceService: 0
+  GlobalScopeName: Global
+  GlobalManifest: {fileID: 11400000, guid: 9362274eaba94b142ac700365d2f3790, type: 2}
+  AssetCatalog: {fileID: 11400000, guid: 8467e15f2c577064d832a16b87e46dcf, type: 2}
