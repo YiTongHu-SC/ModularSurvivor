@@ -11,24 +11,30 @@ namespace Core.Assets
     [CreateAssetMenu(fileName = "AssetCatalog", menuName = "Assets Config/Asset Catalog")]
     public class AssetCatalog : ScriptableObject
     {
-        [SerializeField] private AssetCatalogEntry[] _entries;
+        [SerializeField] private AssetCatalogEntry[] EntriesConfig;
 
         private Dictionary<string, AssetCatalogEntry> _entryMap;
 
-        public AssetCatalogEntry[] Entries => _entries;
+        public AssetCatalogEntry[] Entries => EntriesConfig;
 
         private void OnEnable()
         {
             BuildEntryMap();
         }
 
-        private void BuildEntryMap()
+        public void Clear()
+        {
+            EntriesConfig = null;
+            _entryMap = null;
+        }
+
+        public void BuildEntryMap()
         {
             _entryMap = new Dictionary<string, AssetCatalogEntry>();
 
-            if (_entries == null) return;
+            if (EntriesConfig == null) return;
 
-            foreach (var entry in _entries)
+            foreach (var entry in EntriesConfig)
             {
                 if (string.IsNullOrEmpty(entry.Key))
                 {
@@ -61,6 +67,40 @@ namespace Core.Assets
 
             resourcesPath = null;
             return false;
+        }
+
+        public void SafeResetEntriesMax(int maxEntries)
+        {
+            if (maxEntries < 0)
+            {
+                Debug.LogWarning("Max entries cannot be negative.");
+                return;
+            }
+
+            var oldEntries = EntriesConfig ?? Array.Empty<AssetCatalogEntry>();
+            var newEntries = new AssetCatalogEntry[maxEntries];
+            Array.Copy(oldEntries, newEntries, Math.Min(oldEntries.Length, maxEntries));
+            EntriesConfig = newEntries;
+        }
+
+        public void TrySetEntryAt(int index, AssetCatalogEntry newEntry)
+        {
+            EntriesConfig ??= new AssetCatalogEntry[] { newEntry };
+
+            if (index < 0)
+            {
+                Debug.LogWarning($"Index {index} is out of bounds for EntriesConfig.");
+                return;
+            }
+
+            if (index >= EntriesConfig.Length)
+            {
+                var oldEntries = EntriesConfig;
+                EntriesConfig = new AssetCatalogEntry[index + 1];
+                Array.Copy(oldEntries, EntriesConfig, oldEntries.Length);
+            }
+
+            EntriesConfig[index] = newEntry;
         }
 
         /// <summary>
