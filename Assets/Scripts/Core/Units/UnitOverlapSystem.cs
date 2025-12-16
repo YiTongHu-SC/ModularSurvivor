@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Core.Coordinates;
 using Core.Events;
 using Core.Units;
 using UnityEngine;
@@ -8,8 +8,8 @@ using UnityEngine;
 namespace Combat.Systems
 {
     /// <summary>
-    /// 单位重叠检测系统
-    /// 纯逻辑计算，不依赖MonoBehaviour
+    ///     单位重叠检测系统
+    ///     纯逻辑计算，不依赖MonoBehaviour
     /// </summary>
     public class UnitOverlapSystem
     {
@@ -21,7 +21,7 @@ namespace Combat.Systems
         }
 
         /// <summary>
-        /// 检测两个单位是否重叠
+        ///     检测两个单位是否重叠
         /// </summary>
         public bool IsOverlapping(UnitData unitA, UnitData unitB)
         {
@@ -31,40 +31,36 @@ namespace Combat.Systems
             if (unitA.GUID == unitB.GUID)
                 return false;
 
-            Area2D areaA = unitA.GetCollisionArea();
-            Area2D areaB = unitB.GetCollisionArea();
+            var areaA = unitA.GetCollisionArea();
+            var areaB = unitB.GetCollisionArea();
 
             return areaA.Intersects(areaB);
         }
 
         /// <summary>
-        /// 获取与指定单位重叠的所有单位
+        ///     获取与指定单位重叠的所有单位
         /// </summary>
         public List<UnitData> GetOverlappingUnits(UnitData targetUnit)
         {
             var overlappingUnits = new List<UnitData>();
 
             foreach (var unit in _units.Values)
-            {
                 if (IsOverlapping(targetUnit, unit))
-                {
                     overlappingUnits.Add(unit);
-                }
-            }
 
             return overlappingUnits;
         }
 
         /// <summary>
-        /// 获取与指定单位重叠的特定类型单位
+        ///     获取与指定单位重叠的特定类型单位
         /// </summary>
-        public List<UnitData> GetOverlappingUnits(UnitData targetUnit, System.Func<UnitData, bool> filter)
+        public List<UnitData> GetOverlappingUnits(UnitData targetUnit, Func<UnitData, bool> filter)
         {
             return GetOverlappingUnits(targetUnit).Where(filter).ToList();
         }
 
         /// <summary>
-        /// 检测指定位置是否与任何单位重叠
+        ///     检测指定位置是否与任何单位重叠
         /// </summary>
         public bool IsPositionOccupied(Vector2 position, UnitCollisionData collisionData, int excludeUnitId = -1)
         {
@@ -83,29 +79,23 @@ namespace Combat.Systems
         }
 
         /// <summary>
-        /// 检测所有单位重叠对
+        ///     检测所有单位重叠对
         /// </summary>
         public List<(UnitData unitA, UnitData unitB)> GetAllOverlappingPairs()
         {
             var overlappingPairs = new List<(UnitData, UnitData)>();
             var unitList = _units.Values.Where(u => u.IsActive).ToList();
 
-            for (int i = 0; i < unitList.Count; i++)
-            {
-                for (int j = i + 1; j < unitList.Count; j++)
-                {
-                    if (IsOverlapping(unitList[i], unitList[j]))
-                    {
-                        overlappingPairs.Add((unitList[i], unitList[j]));
-                    }
-                }
-            }
+            for (var i = 0; i < unitList.Count; i++)
+            for (var j = i + 1; j < unitList.Count; j++)
+                if (IsOverlapping(unitList[i], unitList[j]))
+                    overlappingPairs.Add((unitList[i], unitList[j]));
 
             return overlappingPairs;
         }
 
         /// <summary>
-        /// 空间分区优化版本（用于大量单位时）
+        ///     空间分区优化版本（用于大量单位时）
         /// </summary>
         public List<UnitData> GetOverlappingUnitsOptimized(UnitData targetUnit, float gridSize = 10f)
         {
@@ -122,13 +112,10 @@ namespace Combat.Systems
                     continue;
 
                 // 粗略距离检测
-                float distance = Vector2.Distance(unit.Position, targetUnit.Position);
-                float maxCheckDistance = GetMaxCollisionRadius(unit) + GetMaxCollisionRadius(targetUnit);
+                var distance = Vector2.Distance(unit.Position, targetUnit.Position);
+                var maxCheckDistance = GetMaxCollisionRadius(unit) + GetMaxCollisionRadius(targetUnit);
 
-                if (distance <= maxCheckDistance)
-                {
-                    candidateUnits.Add(unit);
-                }
+                if (distance <= maxCheckDistance) candidateUnits.Add(unit);
             }
 
             // 精确碰撞检测
@@ -149,10 +136,8 @@ namespace Combat.Systems
         {
             var overlappingPairs = GetAllOverlappingPairs();
             foreach (var (unitA, unitB) in overlappingPairs)
-            {
                 // Debug.Log($"Units {unitA.GUID} and {unitB.GUID} are overlapping.");
                 EventManager.Instance.Publish(new GameEvents.OverlapEvent(unitA.GUID, unitB.GUID));
-            }
         }
     }
 }

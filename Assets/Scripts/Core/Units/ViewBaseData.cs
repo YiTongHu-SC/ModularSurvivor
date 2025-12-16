@@ -2,10 +2,10 @@
 {
     public class ViewBaseData
     {
-        public int PresentationId;
-        public int UnitId;
-        public int TargetId;
         public PresentationEventType EventType = PresentationEventType.Add;
+        public int PresentationId;
+        public int TargetId;
+        public int UnitId;
     }
 
     public enum PresentationEventType

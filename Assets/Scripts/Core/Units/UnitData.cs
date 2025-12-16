@@ -1,4 +1,5 @@
-﻿using Core.Coordinates;
+﻿using System;
+using Core.Coordinates;
 using UnityEngine;
 using Utils.Core;
 
@@ -7,22 +8,38 @@ namespace Core.Units
     public enum GroupType
     {
         Ally,
-        Enemy,
+        Enemy
     }
 
     public class UnitData
     {
-        public int GUID { get; set; } = -1;
+        //碰撞检测数据
+        public UnitCollisionData CollisionData;
         public GroupType Group = GroupType.Ally;
-        public float MaxHealth { get; set; }
 
         /// <summary>
-        /// 单位位置坐标，x-z平面
+        ///     模型数据
+        /// </summary>
+        public UnitModelView ModelView;
+
+        public Vector2 MoveDirection;
+
+        public MovementContext MovementContext = new();
+
+        public string MovementStrategy = "";
+
+        /// <summary>
+        ///     移动速度
+        /// </summary>
+        public float MoveSpeed;
+
+        /// <summary>
+        ///     单位位置坐标，x-z平面
         /// </summary>
         public Vector2 Position;
 
         /// <summary>
-        /// 单位面向方向，0度为z方向，顺时针旋转
+        ///     单位面向方向，0度为z方向，顺时针旋转
         /// </summary>
         public float Rotation;
 
@@ -35,39 +52,25 @@ namespace Core.Units
             ModelView = modelView;
         }
 
-        /// <summary>
-        /// 模型数据
-        /// </summary>
-        public UnitModelView ModelView;
+        public int GUID { get; set; } = -1;
+        public float MaxHealth { get; set; }
 
         /// <summary>
-        /// 移动速度
-        /// </summary>
-        public float MoveSpeed;
-
-        public Vector2 MoveDirection;
-
-        /// <summary>
-        /// 是否存活
+        ///     是否存活
         /// </summary>
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// 当前血量
+        ///     当前血量
         /// </summary>
         public float Health { get; set; }
 
-        public string MovementStrategy = "";
-
-        //碰撞检测数据
-        public UnitCollisionData CollisionData;
-
         /// <summary>
-        /// 获取单位的碰撞区域
+        ///     获取单位的碰撞区域
         /// </summary>
         public Area2D GetCollisionArea()
         {
-            Vector2 actualPosition = Position + CollisionData.Offset;
+            var actualPosition = Position + CollisionData.Offset;
 
             return CollisionData.AreaType switch
             {
@@ -79,7 +82,7 @@ namespace Core.Units
                         actualPosition.y - CollisionData.Size.y * 0.5f),
                     new Vector2D(actualPosition.x + CollisionData.Size.x * 0.5f,
                         actualPosition.y + CollisionData.Size.y * 0.5f)),
-                _ => throw new System.ArgumentException("Unsupported collision area type")
+                _ => throw new ArgumentException("Unsupported collision area type")
             };
         }
 
@@ -88,8 +91,6 @@ namespace Core.Units
             MaxHealth = value;
             Health = MaxHealth;
         }
-
-        public MovementContext MovementContext = new();
 
         public MovementContext GetMovementContext()
         {

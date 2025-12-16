@@ -5,6 +5,7 @@ using Core.Events;
 using Core.Input;
 using Core.Timer;
 using Core.Units;
+using GameLoop.Config;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UI.Framework;
@@ -37,6 +38,7 @@ namespace GameLoop.Game
 
     public class GameManager : BaseInstance<GameManager>
     {
+        public GlobalConfig GlobalConfig;
         public UnityEvent OnGameInitialized;
         public GameState ShowGameState;
         private StateMachine<GameManager, GameState, GameTransition> StateMachine { get; set; }

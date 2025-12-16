@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Combat.Data
 {
-    [CreateAssetMenu(fileName = "ActorData", menuName = "Actor", order = 0)]
+    [CreateAssetMenu(fileName = "ActorData", menuName = "Combat Config/ActorData", order = 0)]
     public class ActorData : ScriptableObject
     {
         public int ActorId;

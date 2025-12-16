@@ -5,7 +5,7 @@ namespace Waves.Data
     /// <summary>
     /// 单个波次配置数据
     /// </summary>
-    [CreateAssetMenu(fileName = "WaveConfig", menuName = "Wave/WaveConfig", order = 0)]
+    [CreateAssetMenu(fileName = "WaveConfig", menuName = "Wave Config/WaveConfig", order = 0)]
     public class WaveConfig : ScriptableObject
     {
         /// <summary>

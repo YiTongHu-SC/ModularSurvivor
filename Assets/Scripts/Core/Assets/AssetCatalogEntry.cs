@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Core.Assets
 {
     /// <summary>
-    /// 资源目录条目，用于 AssetKey 到实际路径的映射
+    ///     资源目录条目，用于 AssetKey 到实际路径的映射
     /// </summary>
     [Serializable]
     public class AssetCatalogEntry
@@ -13,12 +13,7 @@ namespace Core.Assets
         [SerializeField] private string _resourcesPath;
         [SerializeField] private AssetType _assetType;
         [SerializeField] private string[] _tags;
-        
-        public string Key => _key;
-        public string ResourcesPath => _resourcesPath;
-        public AssetType AssetType => _assetType;
-        public string[] Tags => _tags;
-        
+
         public AssetCatalogEntry(string key, string resourcesPath, AssetType assetType, string[] tags = null)
         {
             _key = key;
@@ -26,10 +21,15 @@ namespace Core.Assets
             _assetType = assetType;
             _tags = tags ?? Array.Empty<string>();
         }
+
+        public string Key => _key;
+        public string ResourcesPath => _resourcesPath;
+        public AssetType AssetType => _assetType;
+        public string[] Tags => _tags;
     }
-    
+
     /// <summary>
-    /// 资源类型枚举
+    ///     资源类型枚举
     /// </summary>
     public enum AssetType
     {

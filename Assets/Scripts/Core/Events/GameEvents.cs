@@ -3,7 +3,7 @@
 namespace Core.Events
 {
     /// <summary>
-    /// 游戏事件类型定义
+    ///     游戏事件类型定义
     /// </summary>
     public static class GameEvents
     {
@@ -13,182 +13,182 @@ namespace Core.Events
 
         public class UnitMovementEvent : EventData
         {
-            public int GUID { get; }
-            public UnitData UnitData { get; set; }
-
             public UnitMovementEvent(UnitData unitData)
             {
                 GUID = unitData.GUID;
                 UnitData = unitData;
             }
+
+            public int GUID { get; }
+            public UnitData UnitData { get; set; }
         }
 
         /// <summary>
-        /// 单位死亡事件
+        ///     单位死亡事件
         /// </summary>
         public class UnitDeathEvent : EventData
         {
-            public int GUID { get; }
-            public int KillerId { get; }
-
             public UnitDeathEvent(int guid, int killerId = -1)
             {
                 GUID = guid;
                 KillerId = killerId;
             }
+
+            public int GUID { get; }
+            public int KillerId { get; }
         }
 
         /// <summary>
-        /// 波次开始事件
+        ///     波次开始事件
         /// </summary>
         public class WaveStartEvent : EventData
         {
-            public int WaveNumber { get; }
-            public int EnemyCount { get; }
-
             public WaveStartEvent(int waveNumber, int enemyCount)
             {
                 WaveNumber = waveNumber;
                 EnemyCount = enemyCount;
             }
+
+            public int WaveNumber { get; }
+            public int EnemyCount { get; }
         }
 
         /// <summary>
-        /// 波次结束事件
+        ///     波次结束事件
         /// </summary>
         public class WaveEndEvent : EventData
         {
-            public int WaveNumber { get; }
-            public bool IsSuccess { get; }
-            public float Duration { get; }
-
             public WaveEndEvent(int waveNumber, bool isSuccess, float duration)
             {
                 WaveNumber = waveNumber;
                 IsSuccess = isSuccess;
                 Duration = duration;
             }
+
+            public int WaveNumber { get; }
+            public bool IsSuccess { get; }
+            public float Duration { get; }
         }
 
         /// <summary>
-        /// 玩家升级事件
+        ///     玩家升级事件
         /// </summary>
         public class PlayerLevelUpEvent : EventData
         {
-            public int NewLevel { get; }
-            public int ExperienceGained { get; }
-
             public PlayerLevelUpEvent(int newLevel, int experienceGained)
             {
                 NewLevel = newLevel;
                 ExperienceGained = experienceGained;
             }
+
+            public int NewLevel { get; }
+            public int ExperienceGained { get; }
         }
 
         /// <summary>
-        /// UI刷新事件
+        ///     UI刷新事件
         /// </summary>
         public class UIRefreshEvent : EventData
         {
-            public string UIName { get; }
-            public object Data { get; }
-
             public UIRefreshEvent(string uiName, object data = null)
             {
                 UIName = uiName;
                 Data = data;
             }
+
+            public string UIName { get; }
+            public object Data { get; }
         }
 
         /// <summary>
-        /// Buff应用事件
+        ///     Buff应用事件
         /// </summary>
         public class BuffAppliedEvent : EventData
         {
-            public int UnitId { get; }
-            public int BuffId { get; }
-
             public BuffAppliedEvent(int buffId, int unitId)
             {
                 UnitId = unitId;
                 BuffId = buffId;
             }
+
+            public int UnitId { get; }
+            public int BuffId { get; }
         }
 
         /// <summary>
-        /// Buff移除事件
+        ///     Buff移除事件
         /// </summary>
         public class BuffRemovedEvent : EventData
         {
-            public int UnitId { get; }
-            public int BuffId { get; }
-            public string BuffName { get; }
-
             public BuffRemovedEvent(int unitId, int buffId, string buffName)
             {
                 UnitId = unitId;
                 BuffId = buffId;
                 BuffName = buffName;
             }
+
+            public int UnitId { get; }
+            public int BuffId { get; }
+            public string BuffName { get; }
         }
 
         /// <summary>
-        /// 能力移除事件
+        ///     能力移除事件
         /// </summary>
         public class AbilityRemovedEvent : EventData
         {
-            public int UnitId { get; }
-            public int AbilityId { get; }
-
             public AbilityRemovedEvent(int unitId, int abilityId)
             {
                 UnitId = unitId;
                 AbilityId = abilityId;
             }
+
+            public int UnitId { get; }
+            public int AbilityId { get; }
         }
 
         public class OverlapEvent : EventData
         {
-            public int UnitAGuid { get; }
-            public int UnitBGuid { get; }
-
             public OverlapEvent(int unitAGuid, int unitBGuid)
             {
                 UnitAGuid = unitAGuid;
                 UnitBGuid = unitBGuid;
             }
+
+            public int UnitAGuid { get; }
+            public int UnitBGuid { get; }
         }
 
         public class HeroCreated : EventData
         {
-            public int UnitGuid { get; }
-
             public HeroCreated(int heroDataGuid)
             {
                 UnitGuid = heroDataGuid;
             }
+
+            public int UnitGuid { get; }
         }
 
         public class UpdatePreferenceEvent : EventData
         {
-            public int PreferenceId { get; }
-            public ViewBaseData ViewData { get; }
-
             public UpdatePreferenceEvent(int preferenceId, ViewBaseData view)
             {
                 PreferenceId = preferenceId;
                 ViewData = view;
             }
+
+            public int PreferenceId { get; }
+            public ViewBaseData ViewData { get; }
         }
 
         public class GameStartEvent : EventData
         {
-            public int LevelID { get; }
-
             public GameStartEvent(int levelId)
             {
                 LevelID = levelId;
             }
+
+            public int LevelID { get; }
         }
 
         public class GameExitEvent : EventData

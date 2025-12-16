@@ -4,9 +4,244 @@
 
 资源加载系统是一个为ModularSurvivor项目设计的，支持从Resources平滑迁移到Addressables的统一资源管理解决方案。该系统解决了资源访问收口、生命周期管理、依赖显式化、可观测性和可扩展性等核心问题。
 
+## 系统架构图
+
+```mermaid
+classDiagram
+    class AssetKey {
+        <<struct>>
+        -string _key
+        +string Key
+        +AssetKey(string)
+        +Equals(AssetKey) bool
+        +GetHashCode() int
+        +ToString() string
+        +operator ==(AssetKey, AssetKey) bool
+        +operator !=(AssetKey, AssetKey) bool
+        +implicit operator AssetKey(string)
+        +implicit operator string(AssetKey)
+    }
+
+    class AssetHandle~T~ {
+        <<class>>
+        +AssetKey Key
+        +T Asset
+        +AssetLoadState State
+        +string ErrorMessage
+        +string ScopeName
+        +bool IsValid
+        +int ReferenceCount
+        -int _referenceCount
+        -object _lockObject
+        +AssetHandle(AssetKey, string)
+        +SetCompleted(T) void
+        +SetFailed(string) void
+        +AddReference() void
+        +RemoveReference() int
+        +Dispose() void
+    }
+
+    class AssetLoadState {
+        <<enumeration>>
+        Loading
+        Completed
+        Failed
+        Released
+    }
+
+    class IAssetProvider {
+        <<interface>>
+        +Load~T~(AssetKey, string) AssetHandle~T~
+        +LoadAsync~T~(AssetKey, string) Task~AssetHandle~T~~
+        +LoadBatchAsync~T~(AssetKey[], string, IProgress~float~) Task~AssetHandle~T~[]~
+        +InstantiateAsync(AssetKey, Transform, string) Task~GameObject~
+        +Release~T~(AssetHandle~T~) void
+        +GetCachedHandle~T~(AssetKey) AssetHandle~T~
+        +IsCached(AssetKey) bool
+    }
+
+    class ResourcesAssetProvider {
+        <<class>>
+        -AssetCatalog _catalog
+        -ConcurrentDictionary~string, object~ _handleCache
+        -object _lockObject
+        +ResourcesAssetProvider(AssetCatalog)
+        +Load~T~(AssetKey, string) AssetHandle~T~
+        +LoadAsync~T~(AssetKey, string) Task~AssetHandle~T~~
+        +LoadBatchAsync~T~(AssetKey[], string, IProgress~float~) Task~AssetHandle~T~[]~
+        +InstantiateAsync(AssetKey, Transform, string) Task~GameObject~
+        +Release~T~(AssetHandle~T~) void
+        +GetCachedHandle~T~(AssetKey) AssetHandle~T~
+        +IsCached(AssetKey) bool
+    }
+
+    class AssetCatalog {
+        <<ScriptableObject>>
+        -AssetCatalogEntry[] _entries
+        -Dictionary~string, AssetCatalogEntry~ _entryMap
+        +TryGetResourcesPath(AssetKey, out string) bool
+        +GetEntriesByType(Type) AssetCatalogEntry[]
+        +GetEntriesByTag(string) AssetCatalogEntry[]
+        +GetAllEntries() AssetCatalogEntry[]
+        -BuildEntryMap() void
+    }
+
+    class AssetCatalogEntry {
+        <<struct>>
+        +string Key
+        +string ResourcesPath
+        +string AssetType
+        +string[] Tags
+        +string Description
+    }
+
+    class AssetSystem {
+        <<class>>
+        -IAssetProvider _provider
+        -Dictionary~string, AssetScope~ _scopes
+        -object _lockObject
+        -bool _disposed
+        +string GlobalScopeName$
+        +string FrontendScopeName$
+        +AssetSystem Instance$
+        +AssetSystem(AssetCatalog)
+        +CreateScope(string) AssetScope
+        +GetScope(string) AssetScope
+        +GetOrCreateScope(string) AssetScope
+        +ReleaseScope(string) bool
+        +CreateLevelScope(string, string) AssetScope
+        +GlobalScope AssetScope
+        +FrontendScope AssetScope
+        +LoadManifestAsync(AssetManifest, string, IProgress~float~) Task~bool~
+        +Dispose() void
+    }
+
+    class AssetScope {
+        <<class>>
+        +string Name
+        +int HandleCount
+        +bool IsDisposed
+        -IAssetProvider _provider
+        -List~object~ _handles
+        -object _lockObject
+        -bool _disposed
+        +AssetScope(string, IAssetProvider)
+        +Acquire~T~(AssetKey) AssetHandle~T~
+        +AcquireAsync~T~(AssetKey) Task~AssetHandle~T~~
+        +AcquireBatch~T~(AssetKey[], IProgress~float~) Task~AssetHandle~T~[]~
+        +InstantiateAsync(AssetKey, Transform) Task~GameObject~
+        +Release~T~(AssetHandle~T~) bool
+        +ReleaseAll() void
+        +GetHandleInfo() ScopeHandleInfo[]
+        +Dispose() void
+    }
+
+    class AssetManifest {
+        <<ScriptableObject>>
+        -ManifestEntry[] _entries
+        -LoadFailureStrategy _failureStrategy
+        +ManifestEntry[] Entries
+        +LoadFailureStrategy FailureStrategy
+        +GetAllKeys() AssetKey[]
+        +GetKeysByTag(string) AssetKey[]
+        +GetRequiredKeys() AssetKey[]
+        +GetOptionalKeys() AssetKey[]
+        +GetKeysByType(Type) AssetKey[]
+    }
+
+    class ManifestEntry {
+        <<struct>>
+        +string Key
+        +string AssetType
+        +bool IsRequired
+        +float Weight
+        +string[] Tags
+        +string Description
+    }
+
+    class LoadingPipeline {
+        <<class>>
+        -LoadingPhase[] _phases
+        -float _totalWeight
+        -LoadingStatus _status
+        +LoadingStatus Status
+        +LoadingPipeline(LoadingPhase[])
+        +ExecuteAsync(IProgress~LoadingStatus~) Task~bool~
+    }
+
+    class LoadingPhase {
+        <<struct>>
+        +string Name
+        +float Weight
+        +Func~IProgress~float~, Task~ LoadFunc
+        +LoadingPhase(string, float, Func~IProgress~float~, Task~)
+    }
+
+    class LoadingStatus {
+        <<struct>>
+        +string CurrentPhase
+        +float PhaseProgress
+        +float OverallProgress
+        +bool IsCompleted
+        +bool HasErrors
+        +string ErrorMessage
+    }
+
+    class MemoryMaintenanceService {
+        <<MonoBehaviour>>
+        -MemoryMaintenanceSettings _settings
+        -int _levelSwitchCount
+        -float _lastMaintenanceTime
+        -bool _isMaintenanceRunning
+        +MemoryMaintenanceService Instance$
+        +MemoryMaintenanceSettings Settings
+        +bool IsMaintenanceRunning
+        +int LevelSwitchCount
+        +NotifyLevelSwitch() void
+        +NotifyReturnToMainMenu() void
+        +ForceMaintenanceAsync() void
+        +GetMemoryStats() MemoryStats
+        -ShouldPerformMaintenance() bool
+        -GetCurrentMemoryUsage() float
+        -PerformMaintenanceCoroutine(float) IEnumerator
+    }
+
+    class AssetSystemInitializer {
+        <<MonoBehaviour>>
+        -AssetCatalog _assetCatalog
+        +Initialize() void
+    }
+
+    %% Relationships
+    AssetHandle~T~ --> AssetKey : uses
+    AssetHandle~T~ --> AssetLoadState : has
+    ResourcesAssetProvider --|> IAssetProvider : implements
+    ResourcesAssetProvider --> AssetCatalog : uses
+    ResourcesAssetProvider --> AssetHandle~T~ : creates
+    AssetCatalog --> AssetCatalogEntry : contains
+    AssetSystem --> IAssetProvider : uses
+    AssetSystem --> AssetScope : manages
+    AssetScope --> IAssetProvider : uses
+    AssetScope --> AssetHandle~T~ : manages
+    AssetManifest --> ManifestEntry : contains
+    LoadingPipeline --> LoadingPhase : contains
+    LoadingPipeline --> LoadingStatus : produces
+    AssetSystemInitializer --> AssetCatalog : uses
+    AssetSystemInitializer --> AssetSystem : creates
+
+    %% Notes
+    note for AssetKey "业务层统一的资源标识符\n支持隐式字符串转换"
+    note for AssetHandle~T~ "封装资源加载状态和引用计数\n线程安全的资源句柄"
+    note for IAssetProvider "统一的资源访问门面\n支持同步/异步/批量加载"
+    note for AssetSystem "资源系统核心\n管理Provider和Scope"
+    note for AssetScope "资源生命周期容器\n支持批量释放"
+    note for LoadingPipeline "多阶段加载流程编排\n支持进度回调"
+```
+
 ## 核心特性
 
 ### 🎯 设计目标
+
 - **访问收口**：业务层不直接接触Resources.Load，避免字符串路径散落
 - **生命周期可控**：通过Scope管理资源的加载与释放
 - **依赖显式化**：通过Manifest明确定义需要预加载的资源
@@ -14,7 +249,9 @@
 - **可扩展性**：设计支持从Resources平滑迁移到Addressables
 
 ### 🏗️ 架构分层
+
 系统分为以下4个层次：
+
 1. **Key/Catalog层**：AssetKey → 资源路径映射
 2. **Provider层**：统一的资源加载接口
 3. **Cache/Handle层**：资源缓存与引用计数管理
@@ -23,24 +260,30 @@
 ## 核心组件
 
 ### AssetKey
+
 ```csharp
 AssetKey key = "ui:main_menu";  // 业务层只使用键，不使用路径
 ```
+
 - 类型安全的资源键结构
 - 支持隐式字符串转换
 - 统一的资源标识符
 
 ### AssetCatalog (ScriptableObject)
+
 ```csharp
 // 维护 AssetKey → Resources路径 的映射关系
 // 将来可以替换为 AssetKey → Addressables Key 映射
 ```
+
 - Key到路径的映射配置
 - 支持资源类型和标签分类
 - 便于资源路径统一管理
 
 ### IAssetProvider
+
 统一的资源访问门面：
+
 ```csharp
 // 同步加载（仅限小资源）
 AssetHandle<T> Load<T>(AssetKey key);
@@ -56,19 +299,24 @@ Task<GameObject> InstantiateAsync(AssetKey key);
 ```
 
 ### AssetHandle<T>
+
 资源句柄，封装加载状态和生命周期：
+
 ```csharp
 if (handle.IsValid)
 {
     var prefab = handle.Asset;  // 获取资源
 }
 ```
+
 - 包含加载状态、错误信息、引用计数
 - 类似Addressables的AsyncOperationHandle概念
 - 支持引用计数管理
 
 ### AssetScope
+
 资源生命周期容器：
+
 ```csharp
 // 全局作用域 - 游戏启动到退出
 var globalScope = assetSystem.GlobalScope;
@@ -79,32 +327,40 @@ levelScope.ReleaseAll();  // 退出关卡时一键释放所有资源
 ```
 
 预定义作用域：
+
 - **GlobalScope**：全局常驻资源（Loading UI、字体、通用资源）
 - **FrontendScope**：前端界面资源（主菜单相关）
 - **LevelScope(levelId/runId)**：关卡资源（每次进关卡创建新的）
 
 ### AssetManifest (ScriptableObject)
+
 资源清单，定义批量加载的资源列表：
+
 ```csharp
 // 包含资源键、类型、权重、必需性、标签等信息
 // 支持按标签过滤、按必需性分组
 ```
 
 ### LoadingPipeline
+
 加载流程编排器：
+
 ```csharp
 var pipeline = LoadingPipelineBuilder.CreateLevelPipeline(levelId, runId, levelManifest, enemyManifest);
 await pipeline.ExecuteAsync(progressCallback);
 ```
 
 分阶段加载：
+
 1. **场景加载** (30%)
 2. **关卡必需资源** (40%)
 3. **敌人资源** (20%)
 4. **收尾处理** (10%)
 
 ### MemoryMaintenanceService
+
 内存维护服务，控制UnloadUnusedAssets的执行策略：
+
 ```csharp
 // 触发条件：
 // - 连续切关卡N次
@@ -118,6 +374,7 @@ service.NotifyReturnToMainMenu();   // 通知回到主菜单
 ## 使用指南
 
 ### 1. 初始化系统
+
 ```csharp
 // 通过AssetSystemInitializer自动初始化
 // 或手动初始化：
@@ -125,7 +382,9 @@ var assetSystem = new AssetSystem(assetCatalog);
 ```
 
 ### 2. 配置资源目录
+
 创建AssetCatalog ScriptableObject，配置资源映射：
+
 ```
 ui:loading -> UI/LoadingView
 ui:hud -> UI/HUD/HUDView
@@ -134,12 +393,14 @@ enemy:slime:config -> Enemies/SlimeConfig
 ```
 
 ### 3. 加载全局资源
+
 ```csharp
 var globalManifest = LoadGlobalManifest();
 await assetSystem.LoadManifestAsync(globalManifest, AssetSystem.GlobalScopeName);
 ```
 
 ### 4. 关卡加载流程
+
 ```csharp
 // 创建关卡作用域
 var levelScope = assetSystem.CreateLevelScope(levelId, runId);
@@ -154,6 +415,7 @@ assetSystem.ReleaseScope(levelScope.Name);
 ```
 
 ### 5. 运行时使用
+
 ```csharp
 // 获取资源
 var handle = await levelScope.AcquireAsync<GameObject>("enemy:slime:prefab");
@@ -169,6 +431,7 @@ var enemyInstance = await levelScope.InstantiateAsync("enemy:slime:prefab", pare
 ## 目录规范
 
 ### Resources目录结构（建议）
+
 ```
 Resources/
 ├── _Global/          # 全局资源
@@ -189,6 +452,7 @@ Resources/
 ```
 
 ### 资源键命名规范
+
 - UI资源：`ui:name` (如 ui:main_menu, ui:hud)
 - 敌人资源：`enemy:type:asset_type` (如 enemy:slime:prefab, enemy:slime:config)
 - 关卡资源：`level:id:type` (如 level:001:config)
@@ -198,21 +462,23 @@ Resources/
 ## 内存管理策略
 
 ### 释放策略
+
 1. **退出关卡时**：
-   - 执行 `LevelScope.ReleaseAll()`
-   - 清理关卡实例对象
-   - 通知 MemoryMaintenanceService
+    - 执行 `LevelScope.ReleaseAll()`
+    - 清理关卡实例对象
+    - 通知 MemoryMaintenanceService
 
 2. **内存维护触发条件**：
-   - 连续切关卡3次
-   - 内存使用超过500MB
-   - 距离上次维护超过5分钟
+    - 连续切关卡3次
+    - 内存使用超过500MB
+    - 距离上次维护超过5分钟
 
 3. **维护执行时机**：
-   - 回到主界面后延迟执行（避免影响切换体验）
-   - 或满足触发条件时延迟执行
+    - 回到主界面后延迟执行（避免影响切换体验）
+    - 或满足触发条件时延迟执行
 
 ### 监控指标
+
 - 当前内存使用量
 - 资源加载耗时统计
 - 作用域资源数量
@@ -221,7 +487,9 @@ Resources/
 ## 扩展性设计
 
 ### 迁移到Addressables
+
 当需要迁移到Addressables时，只需要：
+
 1. 实现 `AddressablesAssetProvider`
 2. 将AssetCatalog的映射从Resources路径改为Addressables键
 3. 替换AssetSystem中的Provider实现
@@ -229,7 +497,9 @@ Resources/
 业务代码无需任何修改。
 
 ### 对象池集成
+
 资源系统专注于Asset管理，对象池专注于Instance管理：
+
 - Asset缓存：缓存Prefab/Sprite等资产
 - 对象池：缓存Instantiate出来的GameObject实例
 - 两者生命周期独立，便于分别优化
@@ -237,12 +507,14 @@ Resources/
 ## 调试与监控
 
 ### 内存统计
+
 ```csharp
 var memoryStats = MemoryMaintenanceService.Instance.GetMemoryStats();
 Debug.Log(memoryStats.ToString());
 ```
 
 ### 作用域状态
+
 ```csharp
 var scopeInfos = AssetSystemUtils.GetAllScopeInfos();
 foreach (var info in scopeInfos)
@@ -252,6 +524,7 @@ foreach (var info in scopeInfos)
 ```
 
 ### 加载进度追踪
+
 ```csharp
 var pipeline = LoadingPipelineBuilder.CreateLevelPipeline(levelId, runId);
 await pipeline.ExecuteAsync(status => {

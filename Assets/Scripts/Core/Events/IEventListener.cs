@@ -1,12 +1,12 @@
 ﻿namespace Core.Events
 {
     /// <summary>
-    /// 事件监听器接口基类
+    ///     事件监听器接口基类
     /// </summary>
     public interface IEventListener<in T> where T : EventData
     {
         /// <summary>
-        /// 处理事件
+        ///     处理事件
         /// </summary>
         /// <param name="eventData">事件数据</param>
         void OnEventReceived(T eventData);

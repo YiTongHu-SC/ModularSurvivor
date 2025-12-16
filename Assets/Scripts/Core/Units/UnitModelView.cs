@@ -1,6 +1,8 @@
-﻿namespace Core.Units
+﻿using System;
+
+namespace Core.Units
 {
-    [System.Serializable]
+    [Serializable]
     public struct UnitModelView
     {
         public float Height;

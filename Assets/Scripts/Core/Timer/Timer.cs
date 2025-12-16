@@ -4,11 +4,9 @@ namespace Core.Timer
 {
     public class Timer
     {
+        private readonly Action _callback;
+        private readonly float _duration;
         private float _timer;
-        private float _duration;
-        private Action _callback;
-        public int ID { get; private set; }
-        public bool IsCompleted { get; private set; }
 
         public Timer(float duration, Action callback)
         {
@@ -17,6 +15,9 @@ namespace Core.Timer
             _callback = callback;
             IsCompleted = false;
         }
+
+        public int ID { get; private set; }
+        public bool IsCompleted { get; private set; }
 
 
         public void SetId(int id)

@@ -1291,9 +1291,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86810f005e61416fbd4690b8d08b76ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameLoop::GameLoop.Game.GameManager
+  GlobalConfig: {fileID: 11400000, guid: 534e7a46eb557304f9a3d143ad4f27c0, type: 2}
   OnGameInitialized:
     m_PersistentCalls:
       m_Calls: []
+  ShowGameState: 0
 --- !u!1 &1901760097
 GameObject:
   m_ObjectHideFlags: 0

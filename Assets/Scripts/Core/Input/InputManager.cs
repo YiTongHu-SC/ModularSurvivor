@@ -6,25 +6,72 @@ using UnityEngine.InputSystem;
 namespace Core.Input
 {
     /// <summary>
-    /// 输入管理器 - 集中管理所有玩家输入
-    /// 负责监听输入动作，发布输入事件，并提供当前输入状态查询
-    /// 支持键盘、手柄、移动端等多平台输入
+    ///     输入管理器 - 集中管理所有玩家输入
+    ///     负责监听输入动作，发布输入事件，并提供当前输入状态查询
+    ///     支持键盘、手柄、移动端等多平台输入
     /// </summary>
     public class InputManager : BaseInstance<InputManager>
     {
-        private InputSystem_Actions _inputActions;
-
-        public Camera MainCamera { get; private set; }
+        // 输入上下文状态
+        private InputEvents.InputContext _currentContext = InputEvents.InputContext.Gameplay;
+        private Vector2 _currentLookInput;
 
         // 当前输入状态缓存（用于状态查询）
         private Vector2 _currentMoveInput;
-        private Vector2 _currentLookInput;
+        private InputSystem_Actions _inputActions;
         private bool _isAttackPressed;
-        private bool _isSprintPressed;
         private bool _isCrouchPressed;
+        private bool _isSprintPressed;
 
-        // 输入上下文状态
-        private InputEvents.InputContext _currentContext = InputEvents.InputContext.Gameplay;
+        public Camera MainCamera { get; private set; }
+
+        #region Camera Relative Input
+
+        /// <summary>
+        ///     将输入转换为相机相对方向
+        ///     Right 方向对应相机的 X 轴，Forward 方向对应相机的 Z 轴
+        /// </summary>
+        /// <param name="input">原始 2D 输入 (x: 左右, y: 前后)</param>
+        /// <returns>转换为相机相对的 2D 方向</returns>
+        private Vector2 GetCameraRelativeInput(Vector2 input)
+        {
+            if (MainCamera == null)
+            {
+                // 如果没有相机，返回原始输入
+                Debug.LogWarning("[InputManager] MainCamera is null, using raw input");
+                return input;
+            }
+
+            // 获取相机的前向和右向（忽略 Y 轴，保持在水平面）
+            var cameraForward = MainCamera.transform.forward;
+            var cameraRight = MainCamera.transform.right;
+
+            // 将相机方向投影到水平面（Y = 0）
+            cameraForward.y = 0;
+            cameraRight.y = 0;
+
+            // 归一化方向向量
+            cameraForward.Normalize();
+            cameraRight.Normalize();
+
+            // 计算相机相对移动方向
+            var moveDirection = cameraRight * input.x + cameraForward * input.y;
+
+            // 转换为 2D 向量（使用 X 和 Z 分量）
+            return new Vector2(moveDirection.x, moveDirection.z);
+        }
+
+        #endregion
+
+        public void SetMainCamera(Camera mainCamera)
+        {
+            MainCamera = mainCamera;
+            Debug.Log("[InputManager] MainCamera set to: " + mainCamera.name);
+        }
+
+        public void Tick(float deltaTime)
+        {
+        }
 
         #region Lifecycle
 
@@ -59,7 +106,7 @@ namespace Core.Input
         #region Input Registration
 
         /// <summary>
-        /// 注册玩家输入回调
+        ///     注册玩家输入回调
         /// </summary>
         private void RegisterPlayerInputCallbacks()
         {
@@ -89,7 +136,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 注册UI输入回调
+        ///     注册UI输入回调
         /// </summary>
         private void RegisterUIInputCallbacks()
         {
@@ -98,7 +145,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 取消注册玩家输入回调
+        ///     取消注册玩家输入回调
         /// </summary>
         private void UnregisterPlayerInputCallbacks()
         {
@@ -128,7 +175,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 取消注册UI输入回调
+        ///     取消注册UI输入回调
         /// </summary>
         private void UnregisterUIInputCallbacks()
         {
@@ -140,19 +187,19 @@ namespace Core.Input
         #region Input Callbacks - Move & Look
 
         /// <summary>
-        /// 监听移动输入
-        /// 移动输入始终和相机方向相关
+        ///     监听移动输入
+        ///     移动输入始终和相机方向相关
         /// </summary>
         /// <param name="context"></param>
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
-            Vector2 rawInput = context.ReadValue<Vector2>();
+            var rawInput = context.ReadValue<Vector2>();
 
             // 转换为相机相对方向
             _currentMoveInput = GetCameraRelativeInput(rawInput);
 
             // 归一化方向（支持手柄摇杆和键盘输入）
-            Vector2 normalizedDirection =
+            var normalizedDirection =
                 _currentMoveInput.magnitude > 1f ? _currentMoveInput.normalized : _currentMoveInput;
 
             // 发布移动输入事件（使用原始输入和相机相对方向）
@@ -173,7 +220,7 @@ namespace Core.Input
 
         private void OnLookPerformed(InputAction.CallbackContext context)
         {
-            Vector2 lookDelta = context.ReadValue<Vector2>();
+            var lookDelta = context.ReadValue<Vector2>();
             _currentLookInput = lookDelta;
 
             // 发布视角输入事件
@@ -245,7 +292,7 @@ namespace Core.Input
 
         private void OnInteractPerformed(InputAction.CallbackContext context)
         {
-            float duration = (float)context.duration;
+            var duration = (float)context.duration;
             EventManager.Instance.Publish(
                 new InputEvents.PlayerInteractInputEvent(InputEvents.InteractionPhase.Performed, duration)
             );
@@ -270,48 +317,10 @@ namespace Core.Input
 
         #endregion
 
-        #region Camera Relative Input
-
-        /// <summary>
-        /// 将输入转换为相机相对方向
-        /// Right 方向对应相机的 X 轴，Forward 方向对应相机的 Z 轴
-        /// </summary>
-        /// <param name="input">原始 2D 输入 (x: 左右, y: 前后)</param>
-        /// <returns>转换为相机相对的 2D 方向</returns>
-        private Vector2 GetCameraRelativeInput(Vector2 input)
-        {
-            if (MainCamera == null)
-            {
-                // 如果没有相机，返回原始输入
-                Debug.LogWarning("[InputManager] MainCamera is null, using raw input");
-                return input;
-            }
-
-            // 获取相机的前向和右向（忽略 Y 轴，保持在水平面）
-            Vector3 cameraForward = MainCamera.transform.forward;
-            Vector3 cameraRight = MainCamera.transform.right;
-
-            // 将相机方向投影到水平面（Y = 0）
-            cameraForward.y = 0;
-            cameraRight.y = 0;
-
-            // 归一化方向向量
-            cameraForward.Normalize();
-            cameraRight.Normalize();
-
-            // 计算相机相对移动方向
-            Vector3 moveDirection = cameraRight * input.x + cameraForward * input.y;
-
-            // 转换为 2D 向量（使用 X 和 Z 分量）
-            return new Vector2(moveDirection.x, moveDirection.z);
-        }
-
-        #endregion
-
         #region Public Query API - 状态查询接口
 
         /// <summary>
-        /// 获取当前移动输入方向（归一化）
+        ///     获取当前移动输入方向（归一化）
         /// </summary>
         /// <returns>移动方向向量</returns>
         public Vector2 GetMoveDirection()
@@ -320,7 +329,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 获取原始移动输入值
+        ///     获取原始移动输入值
         /// </summary>
         public Vector2 GetRawMoveInput()
         {
@@ -328,7 +337,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 获取视角输入增量
+        ///     获取视角输入增量
         /// </summary>
         public Vector2 GetLookDelta()
         {
@@ -336,7 +345,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 是否正在按下攻击键
+        ///     是否正在按下攻击键
         /// </summary>
         public bool IsAttackPressed()
         {
@@ -344,7 +353,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 是否正在按下冲刺键
+        ///     是否正在按下冲刺键
         /// </summary>
         public bool IsSprintPressed()
         {
@@ -352,7 +361,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 是否正在按下蹲伏键
+        ///     是否正在按下蹲伏键
         /// </summary>
         public bool IsCrouchPressed()
         {
@@ -360,7 +369,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 获取当前输入上下文
+        ///     获取当前输入上下文
         /// </summary>
         public InputEvents.InputContext GetCurrentContext()
         {
@@ -372,7 +381,7 @@ namespace Core.Input
         #region Input Context Control - 输入控制
 
         /// <summary>
-        /// 启用游戏输入
+        ///     启用游戏输入
         /// </summary>
         public void EnableGameplayInput()
         {
@@ -385,7 +394,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 禁用游戏输入
+        ///     禁用游戏输入
         /// </summary>
         public void DisableGameplayInput()
         {
@@ -402,7 +411,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 启用UI输入
+        ///     启用UI输入
         /// </summary>
         public void EnableUIInput()
         {
@@ -415,7 +424,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 禁用UI输入
+        ///     禁用UI输入
         /// </summary>
         public void DisableUIInput()
         {
@@ -424,7 +433,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 切换到暂停状态（禁用游戏输入，保留UI输入）
+        ///     切换到暂停状态（禁用游戏输入，保留UI输入）
         /// </summary>
         public void SetPausedContext()
         {
@@ -437,7 +446,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 禁用所有输入
+        ///     禁用所有输入
         /// </summary>
         public void DisableAllInput()
         {
@@ -450,7 +459,7 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 获取底层 InputSystem_Actions 实例（高级用法）
+        ///     获取底层 InputSystem_Actions 实例（高级用法）
         /// </summary>
         /// <returns>InputSystem_Actions 实例</returns>
         public InputSystem_Actions GetInputActions()
@@ -459,15 +468,5 @@ namespace Core.Input
         }
 
         #endregion
-
-        public void SetMainCamera(Camera mainCamera)
-        {
-            MainCamera = mainCamera;
-            Debug.Log("[InputManager] MainCamera set to: " + mainCamera.name);
-        }
-
-        public void Tick(float deltaTime)
-        {
-        }
     }
 }
