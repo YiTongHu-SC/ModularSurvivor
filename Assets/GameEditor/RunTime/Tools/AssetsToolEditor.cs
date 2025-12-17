@@ -103,7 +103,7 @@ namespace GameEditor.RunTime.Tools
             string[] allAssetGuids = AssetDatabase.FindAssets("", new[] { targetDir });
             Debug.Log($"Found {allAssetGuids.Length} assets in directory: {targetDir}");
             assetCatalog.Clear();
-            
+
             // 先过滤掉文件夹，只保留实际的文件
             var validAssets = new System.Collections.Generic.List<string>();
             foreach (string guid in allAssetGuids)
@@ -115,12 +115,14 @@ namespace GameEditor.RunTime.Tools
                     Debug.Log($"Skipping directory: {assetPath}");
                     continue;
                 }
+
                 validAssets.Add(guid);
             }
-            
-            Debug.Log($"Processing {validAssets.Count} files (skipped {allAssetGuids.Length - validAssets.Count} directories)");
+
+            Debug.Log(
+                $"Processing {validAssets.Count} files (skipped {allAssetGuids.Length - validAssets.Count} directories)");
             assetCatalog.SafeResetEntriesMax(validAssets.Count);
-            
+
             var counter = 0;
             foreach (string guid in validAssets)
             {
@@ -128,51 +130,17 @@ namespace GameEditor.RunTime.Tools
                 var assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
                 Debug.Log($"Load Asset Path: {assetPath}");
-                var entry = new AssetCatalogEntry(assetPath, GetAssetPathResource(assetPath), GetAssetType(asset));
+                var entry = new AssetCatalogEntry(
+                    AssetCatalogExtensions.GetAssetPathKey(assetPath),
+                    AssetCatalogExtensions.GetAssetPathResource(assetPath),
+                    AssetCatalogExtensions.GetAssetType(asset));
                 assetCatalog.TrySetEntryAt(counter, entry);
                 counter++;
             }
-        }
 
-        private static string GetAssetPathResource(string assetPath)
-        {
-            var resourcesIndex = assetPath.IndexOf("Resources/", StringComparison.Ordinal);
-            if (resourcesIndex >= 0)
-            {
-                // 提取 Resources/ 后面的路径，并去掉扩展名
-                var relativePath = assetPath.Substring(resourcesIndex + "Resources/".Length);
-                var extensionIndex = relativePath.LastIndexOf('.');
-                if (extensionIndex >= 0)
-                {
-                    relativePath = relativePath.Substring(0, extensionIndex);
-                }
-
-                return relativePath;
-            }
-
-            Debug.LogWarning($"Asset not in Resources folder: {assetPath}");
-            return null; // 资产不在 Resources 目录下
-        }
-
-        private static AssetType GetAssetType(Object asset)
-        {
-            if (asset is GameObject)
-                return AssetType.Prefab;
-            if (asset is ScriptableObject)
-                return AssetType.ScriptableObject;
-            if (asset is Sprite)
-                return AssetType.Sprite;
-            if (asset is AudioClip)
-                return AssetType.AudioClip;
-            if (asset is TextAsset)
-                return AssetType.TextAsset;
-            if (asset is Material)
-                return AssetType.Material;
-            if (asset is Shader)
-                return AssetType.Shader;
-            if (asset is Texture)
-                return AssetType.Texture;
-            return AssetType.Other;
+            EditorUtility.SetDirty(assetCatalog);
+            Debug.Log($"Asset Catalog '{assetCatalog.name}' updated with {counter} entries.");
+            Debug.Log($"Asset Catalog Update Complete.");
         }
 
         /// <summary>
@@ -221,6 +189,92 @@ namespace GameEditor.RunTime.Tools
                     }
                 }
             }
+        }
+    }
+
+    public static class AssetCatalogExtensions
+    {
+        /// <summary>
+        /// 资源路径转换为键值规则
+        /// 键值：prefix:asset_name (不含扩展名)
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <returns></returns>
+        public static string GetAssetPathKey(string assetPath)
+        {
+            var resPath = GetAssetPathResource(assetPath);
+            if (string.IsNullOrEmpty(resPath))
+            {
+                return null;
+            }
+
+            // 1.去掉扩展名
+            var extensionIndex = resPath.LastIndexOf('.');
+            if (extensionIndex >= 0)
+            {
+                resPath = resPath.Substring(0, extensionIndex);
+            }
+
+            // 2.替换路径分隔符为冒号
+            resPath = resPath.Replace('/', ':').Replace('\\', ':');
+
+            // 3.大写改为下划线 camelCase to snake_case
+            var result = new System.Text.StringBuilder();
+            for (int i = 0; i < resPath.Length; i++)
+            {
+                char currentChar = resPath[i];
+                if (char.IsUpper(currentChar) && i > 0 &&
+                    resPath[i - 1] != ':' && resPath[i - 1] != '_')
+                {
+                    result.Append('_');
+                }
+
+                result.Append(currentChar);
+            }
+
+            // 4.转为全小写
+            return result.ToString().ToLowerInvariant();
+        }
+
+        public static string GetAssetPathResource(string assetPath)
+        {
+            var resourcesIndex = assetPath.IndexOf("Resources/", StringComparison.Ordinal);
+            if (resourcesIndex >= 0)
+            {
+                // 提取 Resources/ 后面的路径，并去掉扩展名
+                var relativePath = assetPath.Substring(resourcesIndex + "Resources/".Length);
+                var extensionIndex = relativePath.LastIndexOf('.');
+                if (extensionIndex >= 0)
+                {
+                    relativePath = relativePath.Substring(0, extensionIndex);
+                }
+
+                return relativePath;
+            }
+
+            Debug.LogWarning($"Asset not in Resources folder: {assetPath}");
+            return null; // 资产不在 Resources 目录下
+        }
+
+        public static AssetType GetAssetType(Object asset)
+        {
+            if (asset is GameObject)
+                return AssetType.Prefab;
+            if (asset is ScriptableObject)
+                return AssetType.ScriptableObject;
+            if (asset is Sprite)
+                return AssetType.Sprite;
+            if (asset is AudioClip)
+                return AssetType.AudioClip;
+            if (asset is TextAsset)
+                return AssetType.TextAsset;
+            if (asset is Material)
+                return AssetType.Material;
+            if (asset is Shader)
+                return AssetType.Shader;
+            if (asset is Texture)
+                return AssetType.Texture;
+            return AssetType.Other;
         }
     }
 }
