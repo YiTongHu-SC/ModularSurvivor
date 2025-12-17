@@ -15,5 +15,6 @@ namespace GameLoop.Config
         public AssetCatalog AssetCatalog;
         public List<LoadSceneMap> SceneMap = new();
         public string StaticSceneName = "Scenes/SystemScene";
+        public string LoadingSceneName = "Scenes/LoadingScene";
     }
 }
