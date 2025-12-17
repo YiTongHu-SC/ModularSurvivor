@@ -156,7 +156,7 @@ namespace Core.Assets
             var result = new LoadManifestResult();
             var entries = manifest.Entries;
 
-            for (var i = 0; i < entries.Length; i++)
+            for (var i = 0; i < entries.Count; i++)
             {
                 var entry = entries[i];
                 var key = new AssetKey(entry.Key);
@@ -185,7 +185,7 @@ namespace Core.Assets
                     HandleLoadFailure(manifest.FailureStrategy, key, ex.Message, entry.IsRequired);
                 }
 
-                progress?.Report((float)(i + 1) / entries.Length);
+                progress?.Report((float)(i + 1) / entries.Count);
             }
 
             return result;

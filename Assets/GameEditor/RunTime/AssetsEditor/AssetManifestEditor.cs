@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Assets;
 using Core.AssetsTool;
@@ -10,7 +11,6 @@ namespace GameEditor.RunTime.AssetsEditor
     [CustomEditor(typeof(AssetManifest))]
     public class AssetManifestEditor : Editor
     {
-        private const string GlobalCatalogPath = "Assets/Configs/AssetsConfig/AssetCatalogGlobal.asset";
         private AssetManifest Manifest => (AssetManifest)target;
 
         public override void OnInspectorGUI()
@@ -33,18 +33,18 @@ namespace GameEditor.RunTime.AssetsEditor
                 return;
             }
 
-            var catalog = AssetDatabase.LoadAssetAtPath<AssetCatalog>(GlobalCatalogPath);
+            var catalog = manifest.Catalog;
             if (catalog == null)
             {
-                Debug.LogError($"无法加载全局资源目录，路径: {GlobalCatalogPath}");
+                Debug.LogError("AssetManifest 的 Catalog 未设置，无法生成条目。", manifest);
                 return;
             }
 
-            var generatedEntries = AssetManifestGenerator.GenerateEntriesFromCatalog(catalog);
+            var generatedEntries = AssetManifestGenerator.Generate(catalog, manifest.Rules, manifest.Overrides);
             Undo.RecordObject(manifest, "Auto Fill Manifest Entries");
             manifest.SetEntries(generatedEntries);
             EditorUtility.SetDirty(manifest);
-            Debug.Log($"已自动填充资源清单 '{manifest.name}' 的条目，共 {generatedEntries.Length} 条。", manifest);
+            Debug.Log($"已自动填充资源清单 '{manifest.name}' 的条目，共 {generatedEntries.Count} 条。", manifest);
         }
 
         private void LogManifestSummary()
@@ -56,7 +56,7 @@ namespace GameEditor.RunTime.AssetsEditor
                 return;
             }
 
-            var entries = manifest.Entries ?? Array.Empty<ManifestEntry>();
+            var entries = manifest.Entries;
             var requiredCount = entries.Count(e => e != null && e.IsRequired);
             var optionalCount = entries.Count(e => e != null && !e.IsRequired);
             var duplicates = entries.Where(e => e != null && !string.IsNullOrEmpty(e.Key))
@@ -66,7 +66,7 @@ namespace GameEditor.RunTime.AssetsEditor
                 .ToArray();
 
             Debug.Log(
-                $"AssetManifest '{manifest.name}' 总计 {entries.Length} 条目，必需 {requiredCount}，可选 {optionalCount}，总权重 {manifest.GetTotalWeight():0.##}",
+                $"AssetManifest '{manifest.name}' 总计 {entries.Count} 条目，必需 {requiredCount}，可选 {optionalCount}，总权重 {manifest.GetTotalWeight():0.##}",
                 manifest);
 
             if (duplicates.Length > 0)
@@ -76,11 +76,137 @@ namespace GameEditor.RunTime.AssetsEditor
         }
     }
 
-    internal static class AssetManifestGenerator
+    public static class AssetManifestGenerator
     {
-        public static ManifestEntry[] GenerateEntriesFromCatalog(AssetCatalog catalog)
+        public static List<ManifestEntry> Generate(AssetCatalog catalog, List<ManifestRule> rules,
+            List<ManifestOverride> overrides)
         {
-            throw new NotImplementedException();
+            var result = new Dictionary<string, ManifestEntry>(StringComparer.Ordinal);
+
+            foreach (var e in catalog.Entries)
+            {
+                foreach (var rule in rules)
+                {
+                    if (rule == null || !rule.enabled) continue;
+                    if (!PassRule(e, rule)) continue;
+
+                    var entry = ToEntry(e, rule);
+
+                    if (result.TryGetValue(entry.Key, out var existing))
+                    {
+                        existing.IsRequired |= entry.IsRequired;
+                        existing.Weight = Mathf.Max(existing.Weight, entry.Weight);
+                        result[entry.Key] = existing;
+                    }
+                    else
+                    {
+                        result.Add(entry.Key, entry);
+                    }
+                }
+            }
+
+            ApplyOverrides(result, catalog, overrides);
+
+            // 可选：排序（按 key）
+            return result.Values.OrderBy(x => x.Key, StringComparer.Ordinal).ToList();
+        }
+
+        static bool PassRule(AssetCatalogEntry e, ManifestRule r)
+        {
+            bool PassPrefix(List<string> prefixes)
+            {
+                if (prefixes == null || prefixes.Count == 0) return true;
+                return prefixes.Any(p => !string.IsNullOrEmpty(p) && e.Key.StartsWith(p, StringComparison.Ordinal));
+            }
+
+            bool PassTags(List<string> tags)
+            {
+                if (tags == null || tags.Count == 0) return true;
+                if (e.Tags == null) return false;
+                return e.Tags.Intersect(tags).Any();
+            }
+
+            bool PassTypes(List<string> types)
+            {
+                if (types == null || types.Count == 0) return true;
+                return types.Any(t => string.Equals(t, e.AssetType.ToString(), StringComparison.Ordinal));
+            }
+
+            bool HitPrefix(List<string> prefixes) => prefixes != null && prefixes.Any(p =>
+                !string.IsNullOrEmpty(p) && e.Key.StartsWith(p, StringComparison.Ordinal));
+
+            bool HitTags(List<string> tags) => tags != null && e.Tags != null && e.Tags.Intersect(tags).Any();
+
+            bool HitTypes(List<string> types) =>
+                types != null && types.Any(t => string.Equals(t, e.AssetType.ToString(), StringComparison.Ordinal));
+
+            var includeOk = PassPrefix(r.includeKeyPrefixes) && PassTags(r.includeTags) && PassTypes(r.includeTypes);
+            if (!includeOk) return false;
+
+            var excluded = HitPrefix(r.excludeKeyPrefixes) || HitTags(r.excludeTags) || HitTypes(r.excludeTypes);
+            return !excluded;
+        }
+
+        private static ManifestEntry ToEntry(AssetCatalogEntry e, ManifestRule r)
+        {
+            bool required = r.defaultRequired || (e.Tags != null && e.Tags.Intersect(r.requiredTags ?? new()).Any());
+            float weight = ResolveWeight(e, r);
+
+            return new ManifestEntry(e.Key, e.AssetType, weight, required, e.Tags);
+        }
+
+        private static float ResolveWeight(AssetCatalogEntry e, ManifestRule r)
+        {
+            float w = r.defaultWeight;
+
+            if (e.Tags != null && r.tagWeights != null)
+            {
+                foreach (var tw in r.tagWeights)
+                    if (!string.IsNullOrEmpty(tw.tag) && e.Tags.Contains(tw.tag))
+                        w = Mathf.Max(w, tw.weight);
+            }
+
+            if (r.typeWeights != null)
+            {
+                foreach (var tw in r.typeWeights)
+                    if (!string.IsNullOrEmpty(tw.type) &&
+                        string.Equals(tw.type, e.AssetType.ToString(), StringComparison.Ordinal))
+                        w = Mathf.Max(w, tw.weight);
+            }
+
+            return w;
+        }
+
+        static void ApplyOverrides(Dictionary<string, ManifestEntry> dict, AssetCatalog catalog,
+            List<ManifestOverride> overrides)
+        {
+            if (overrides == null) return;
+
+            foreach (var ov in overrides)
+            {
+                if (ov == null || string.IsNullOrEmpty(ov.key)) continue;
+
+                if (ov.exclude)
+                {
+                    dict.Remove(ov.key);
+                    continue;
+                }
+
+                if (!dict.TryGetValue(ov.key, out var entry))
+                {
+                    // 允许 override 添加（如果 catalog 有）
+                    if (catalog.TryGetEntry(ov.key, out var catalogEntry))
+                        entry = new ManifestEntry(catalogEntry.Key, catalogEntry.AssetType, 1f, false,
+                            catalogEntry.Tags);
+                    else
+                        entry = new ManifestEntry(ov.key, catalogEntry.AssetType, 1f, false);
+                }
+
+                if (ov.requiredOverride) entry.IsRequired = ov.requiredValue;
+                if (ov.weightOverride) entry.Weight = ov.weightValue;
+
+                dict[ov.key] = entry;
+            }
         }
     }
 }

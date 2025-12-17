@@ -11,10 +11,15 @@ namespace Core.AssetsTool
     [CreateAssetMenu(fileName = "AssetManifest", menuName = "Assets Config/Asset Manifest")]
     public class AssetManifest : ScriptableObject
     {
-        [SerializeField] private ManifestEntry[] _entries;
-        [SerializeField] private LoadFailureStrategy _failureStrategy = LoadFailureStrategy.LogWarning;
+        public AssetCatalog Catalog;
 
-        public ManifestEntry[] Entries => _entries;
+        public List<ManifestRule> Rules = new();
+
+        // 可选：手工附加或排除（解决规则不好表达的例外）
+        public List<ManifestOverride> Overrides = new();
+        [SerializeField] private List<ManifestEntry> _generatedEntries = new();
+        [SerializeField] private LoadFailureStrategy _failureStrategy = LoadFailureStrategy.LogWarning;
+        public IReadOnlyList<ManifestEntry> Entries => _generatedEntries;
         public LoadFailureStrategy FailureStrategy => _failureStrategy;
 
         /// <summary>
@@ -22,8 +27,11 @@ namespace Core.AssetsTool
         /// </summary>
         public AssetKey[] GetAllKeys()
         {
-            var keys = new AssetKey[_entries.Length];
-            for (var i = 0; i < _entries.Length; i++) keys[i] = new AssetKey(_entries[i].Key);
+            var keys = new AssetKey[_generatedEntries.Count];
+            for (var i = 0; i < _generatedEntries.Count; i++)
+            {
+                keys[i] = new AssetKey(_generatedEntries[i].Key);
+            }
 
             return keys;
         }
@@ -34,9 +42,13 @@ namespace Core.AssetsTool
         public AssetKey[] GetKeysByTag(string tag)
         {
             var keys = new List<AssetKey>();
-            foreach (var entry in _entries)
+            foreach (var entry in _generatedEntries)
+            {
                 if (Array.Exists(entry.Tags, t => t == tag))
+                {
                     keys.Add(new AssetKey(entry.Key));
+                }
+            }
 
             return keys.ToArray();
         }
@@ -47,9 +59,13 @@ namespace Core.AssetsTool
         public AssetKey[] GetRequiredKeys()
         {
             var keys = new List<AssetKey>();
-            foreach (var entry in _entries)
+            foreach (var entry in _generatedEntries)
+            {
                 if (entry.IsRequired)
+                {
                     keys.Add(new AssetKey(entry.Key));
+                }
+            }
 
             return keys.ToArray();
         }
@@ -60,7 +76,7 @@ namespace Core.AssetsTool
         public AssetKey[] GetOptionalKeys()
         {
             var keys = new List<AssetKey>();
-            foreach (var entry in _entries)
+            foreach (var entry in _generatedEntries)
                 if (!entry.IsRequired)
                     keys.Add(new AssetKey(entry.Key));
 
@@ -73,16 +89,15 @@ namespace Core.AssetsTool
         public float GetTotalWeight()
         {
             var total = 0f;
-            foreach (var entry in _entries) total += entry.Weight;
+            foreach (var entry in _generatedEntries) total += entry.Weight;
 
             return total;
         }
 
-        public void SetEntries(ManifestEntry[] entries)
+        public void SetEntries(List<ManifestEntry> entries)
         {
-            _entries = null;
-            _entries = new ManifestEntry[entries.Length];
-            _entries = entries;
+            _generatedEntries.Clear();
+            _generatedEntries.AddRange(entries);
         }
     }
 
@@ -110,8 +125,18 @@ namespace Core.AssetsTool
 
         public string Key => _key;
         public AssetType AssetType => _assetType;
-        public float Weight => _weight;
-        public bool IsRequired => _isRequired;
+        public float Weight
+        {
+            get => _weight;
+            set => _weight = value;
+        }
+
+        public bool IsRequired
+        {
+            get => _isRequired;
+            set => _isRequired = value;
+        }
+
         public string[] Tags => _tags ?? Array.Empty<string>();
     }
 
@@ -124,5 +149,54 @@ namespace Core.AssetsTool
         LogWarning, // 记录警告
         LogError, // 记录错误
         ThrowException // 抛出异常
+    }
+
+    [Serializable]
+    public class ManifestRule
+    {
+        public string name = "Rule";
+        public bool enabled = true;
+
+        // 过滤条件
+        public List<string> includeKeyPrefixes = new();
+        public List<string> excludeKeyPrefixes = new();
+        public List<string> includeTags = new();
+        public List<string> excludeTags = new();
+        public List<string> includeTypes = new(); // 用 string 存 "GameObject" 等
+        public List<string> excludeTypes = new();
+
+        // 输出策略
+        public bool defaultRequired = false;
+        public List<string> requiredTags = new() { "required" };
+
+        // 最简权重策略：按 tag / type 给权重
+        public List<TagWeight> tagWeights = new();
+        public List<TypeWeight> typeWeights = new();
+        public float defaultWeight = 1f;
+    }
+
+    [Serializable]
+    public struct TagWeight
+    {
+        public string tag;
+        public float weight;
+    }
+
+    [Serializable]
+    public struct TypeWeight
+    {
+        public string type;
+        public float weight;
+    }
+
+    [Serializable]
+    public class ManifestOverride
+    {
+        public string key;
+        public bool exclude; // true：强制排除
+        public bool requiredOverride; // 是否覆盖 required
+        public bool requiredValue;
+        public bool weightOverride; // 是否覆盖 weight
+        public float weightValue;
     }
 }
