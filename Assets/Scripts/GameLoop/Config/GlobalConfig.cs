@@ -1,4 +1,5 @@
 ﻿using Core.Assets;
+using Core.AssetsTool;
 using UnityEngine;
 
 namespace GameLoop.Config

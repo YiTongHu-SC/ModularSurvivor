@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Assets;
 using UnityEngine;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     资源清单，定义需要加载的资源列表

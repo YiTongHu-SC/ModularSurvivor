@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Core.AssetsTool;
 using UnityEngine;
 
 namespace Core.Assets
