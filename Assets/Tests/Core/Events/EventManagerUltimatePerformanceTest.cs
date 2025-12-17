@@ -49,8 +49,6 @@ namespace Tests.Core.Events
         public void UltimatePerformance_10x10_ShouldBeLightning()
         {
             // 超小负载：10个监听器，10个事件
-            eventManager.SetHighPerformanceMode(true);
-
             var listeners = new MinimalTestListener[10];
             for (int i = 0; i < listeners.Length; i++)
             {
@@ -77,14 +75,12 @@ namespace Tests.Core.Events
             }
 
             Debug.Log($"Ultra small (100 deliveries): {stopwatch.ElapsedMilliseconds}ms");
-            eventManager.SetHighPerformanceMode(false);
         }
 
         [Test]
         public void UltimatePerformance_50x50_ShouldBeVeryFast()
         {
             // 小负载：50个监听器，50个事件
-            eventManager.SetHighPerformanceMode(true);
 
             var listeners = new MinimalTestListener[50];
             for (int i = 0; i < listeners.Length; i++)
@@ -112,15 +108,12 @@ namespace Tests.Core.Events
             }
 
             Debug.Log($"Small (2500 deliveries): {stopwatch.ElapsedMilliseconds}ms");
-            eventManager.SetHighPerformanceMode(false);
         }
 
         [Test]
         public void UltimatePerformance_100x100_ShouldBeFast()
         {
             // 标准压力测试：100个监听器，100个事件
-            eventManager.SetHighPerformanceMode(true);
-
             var listeners = new MinimalTestListener[100];
             for (int i = 0; i < listeners.Length; i++)
             {
@@ -147,14 +140,12 @@ namespace Tests.Core.Events
             }
 
             Debug.Log($"Standard (10000 deliveries): {stopwatch.ElapsedMilliseconds}ms");
-            eventManager.SetHighPerformanceMode(false);
         }
 
         [UnityTest]
         public IEnumerator UltimatePerformance_FullStressTest()
         {
             // 完整压力测试：在UnityTest中运行
-            eventManager.SetHighPerformanceMode(true);
 
             var listeners = new MinimalTestListener[100];
             for (int i = 0; i < listeners.Length; i++)
@@ -193,7 +184,6 @@ namespace Tests.Core.Events
             }
 
             Debug.Log($"Unity coroutine stress test (10000 deliveries): {stopwatch.ElapsedMilliseconds}ms");
-            eventManager.SetHighPerformanceMode(false);
         }
     }
 }

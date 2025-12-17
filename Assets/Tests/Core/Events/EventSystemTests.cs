@@ -69,7 +69,7 @@ namespace Tests.Core.Events
 
             // 验证事件被接收
             Assert.IsTrue(testListener.EventReceived);
-            Assert.AreEqual("TestUnit", testListener.LastUnitId);
+            Assert.AreEqual(1, testListener.LastUnitId);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Tests.Core.Events
             eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData =>
             {
                 // 空回调用于测试注册
-            }, this);
+            });
 
             // 验证订阅者数量
             Assert.AreEqual(1, eventManager.GetSubscriberCount(typeof(GameEvents.UnitDeathEvent)));
@@ -118,7 +118,7 @@ namespace Tests.Core.Events
             {
                 callbackInvoked = true;
                 receivedUnitId = eventData.GUID;
-            }, this);
+            });
 
             // 发布事件
             var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
@@ -126,22 +126,44 @@ namespace Tests.Core.Events
 
             // 验证事件被接收
             Assert.IsTrue(callbackInvoked);
-            Assert.AreEqual("TestUnit", receivedUnitId);
+            Assert.AreEqual(1, receivedUnitId);
         }
 
+        [Test]
+        public void EventManager_DelegateUnsubscribe_ShouldUnregisterCallback()
+        {
+            // 委托订阅
+            eventManager.Subscribe<GameEvents.UnitDeathEvent>(OnUnitDeathEvent);
+
+            // 验证订阅者已注册
+            Assert.AreEqual(1, eventManager.GetSubscriberCount(typeof(GameEvents.UnitDeathEvent)));
+
+            // 注销订阅
+            eventManager.Unsubscribe<GameEvents.UnitDeathEvent>(OnUnitDeathEvent);
+
+            // 验证订阅者已移除
+            Assert.AreEqual(0, eventManager.GetSubscriberCount(typeof(GameEvents.UnitDeathEvent)));
+            
+        }
+        
+        private void OnUnitDeathEvent(GameEvents.UnitDeathEvent eventData)
+        {
+            // 空方法用于测试注销
+        }
+        
         [Test]
         public void EventManager_UnsubscribeAll_ShouldRemoveAllSubscriptions()
         {
             // 委托订阅多个事件
-            eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData => { }, this);
-            eventManager.Subscribe<GameEvents.PlayerLevelUpEvent>(eventData => { }, this);
+            eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData => { });
+            eventManager.Subscribe<GameEvents.PlayerLevelUpEvent>(eventData => { });
 
             // 验证订阅者已注册
             Assert.AreEqual(1, eventManager.GetSubscriberCount(typeof(GameEvents.UnitDeathEvent)));
             Assert.AreEqual(1, eventManager.GetSubscriberCount(typeof(GameEvents.PlayerLevelUpEvent)));
 
             // 取消所有订阅
-            eventManager.UnsubscribeAll(this);
+            eventManager.ClearAllListeners();
 
             // 验证订阅者已移除
             Assert.AreEqual(0, eventManager.GetSubscriberCount(typeof(GameEvents.UnitDeathEvent)));
@@ -161,7 +183,7 @@ namespace Tests.Core.Events
 
             // 委托订阅同一事件
             bool delegateInvoked = false;
-            eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData => { delegateInvoked = true; }, this);
+            eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData => { delegateInvoked = true; });
 
             // 验证总数量
             Assert.AreEqual(1, eventManager.GetListenerObjectCount(typeof(GameEvents.UnitDeathEvent)));
@@ -195,7 +217,7 @@ namespace Tests.Core.Events
             {
                 levelUpDelegateInvoked = true;
                 receivedLevel = eventData.NewLevel;
-            }, this);
+            });
 
             yield return null; // 等待一帧
 
@@ -214,7 +236,7 @@ namespace Tests.Core.Events
             Assert.IsTrue(unitDeathListener.EventReceived);
             Assert.IsTrue(waveListener.EventReceived);
             Assert.IsTrue(levelUpDelegateInvoked);
-            Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
+            Assert.AreEqual(1, unitDeathListener.LastUnitId);
             Assert.AreEqual(1, waveListener.LastWaveNumber);
             Assert.AreEqual(3, receivedLevel);
         }

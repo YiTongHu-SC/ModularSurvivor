@@ -174,14 +174,14 @@ namespace GameLoop.Game
 
         private void SubscribeEvents()
         {
-            EventManager.Instance.Subscribe<GameEvents.GameStartEvent>(OnGameStart, this);
-            EventManager.Instance.Subscribe<GameEvents.GameExitEvent>(OnGameExit, this);
+            EventManager.Instance.Subscribe<GameEvents.GameStartEvent>(OnGameStart);
+            EventManager.Instance.Subscribe<GameEvents.GameExitEvent>(OnGameExit);
         }
 
         private void UnsubscribeEvents()
         {
-            EventManager.Instance.Unsubscribe<GameEvents.GameStartEvent>(OnGameStart, this);
-            EventManager.Instance.Unsubscribe<GameEvents.GameExitEvent>(OnGameExit, this);
+            EventManager.Instance.Unsubscribe<GameEvents.GameStartEvent>(OnGameStart);
+            EventManager.Instance.Unsubscribe<GameEvents.GameExitEvent>(OnGameExit);
         }
 
         private void OnGameStart(GameEvents.GameStartEvent gameStartEvent)

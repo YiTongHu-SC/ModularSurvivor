@@ -15,21 +15,17 @@ namespace Core.Events
         // 事件监听器字典，按事件类型分组
         private readonly Dictionary<Type, List<IEventListener<EventData>>> _eventListeners = new();
 
-        // 委托订阅字典，按事件类型分组
-        private readonly Dictionary<Type, List<Action<EventData>>> _eventSubscribers = new();
+        // 委托订阅字典，按事件类型分组，存储委托适配器
+        private readonly Dictionary<Type, List<object>> _eventSubscribers = new();
 
         // 事件监听器字典，按监听器实例分组（用于快速注销）
         private readonly Dictionary<IEventListener<EventData>, List<Type>> _listenerEvents = new();
 
-        // 委托订阅管理，按拥有者分组（用于批量清理）
-        private readonly Dictionary<object, List<(Type eventType, Action<EventData> callback)>> _subscriberOwners =
-            new();
-
         // 待移除的监听器队列（延迟移除机制）
         private readonly List<(Type eventType, IEventListener<EventData> listener)> _pendingListenerRemovals = new();
 
-        // 待移除的委托队列（延迟移除机制）
-        private readonly List<(Type eventType, Action<EventData> callback)> _pendingSubscriberRemovals = new();
+        // 待移除的委托适配器队列（延迟移除机制）
+        private readonly List<(Type eventType, object adapter)> _pendingSubscriberRemovals = new();
 
         // 发布状态控制
         private bool _isPublishing;
@@ -62,12 +58,12 @@ namespace Core.Events
                 }
             }
 
-            // 处理待移除的委托
-            foreach (var (eventType, callback) in _pendingSubscriberRemovals)
+            // 处理待移除的委托适配器
+            foreach (var (eventType, pendingAdapter) in _pendingSubscriberRemovals)
             {
                 if (_eventSubscribers.TryGetValue(eventType, out var subscribers))
                 {
-                    subscribers.Remove(callback);
+                    subscribers.Remove(pendingAdapter);
                     if (subscribers.Count == 0)
                         _eventSubscribers.Remove(eventType);
                 }
@@ -105,9 +101,12 @@ namespace Core.Events
                 // 触发委托订阅者
                 if (_eventSubscribers.TryGetValue(eventType, out var subscribers) && subscribers.Count > 0)
                 {
-                    foreach (var t in subscribers)
+                    foreach (var adapter in subscribers)
                     {
-                        t(eventData);
+                        if (adapter is ICallbackAdapter callbackAdapter)
+                        {
+                            callbackAdapter.Invoke(eventData);
+                        }
                     }
                 }
             }
@@ -226,7 +225,6 @@ namespace Core.Events
             _eventListeners.Clear();
             _listenerEvents.Clear();
             _eventSubscribers.Clear();
-            _subscriberOwners.Clear();
             _pendingListenerRemovals.Clear();
             _pendingSubscriberRemovals.Clear();
         }
@@ -262,6 +260,46 @@ namespace Core.Events
             }
         }
 
+        /// <summary>
+        ///     委托适配器接口
+        /// </summary>
+        private interface ICallbackAdapter
+        {
+            void Invoke(EventData eventData);
+        }
+
+        /// <summary>
+        ///     委托适配器，用于处理委托订阅的泛型类型转换和匹配
+        /// </summary>
+        /// <typeparam name="T">具体事件类型</typeparam>
+        private class CallbackAdapter<T> : ICallbackAdapter where T : EventData
+        {
+            private readonly Action<T> _originalCallback;
+
+            public CallbackAdapter(Action<T> originalCallback)
+            {
+                _originalCallback = originalCallback;
+            }
+
+            public void Invoke(EventData eventData)
+            {
+                if (eventData is T specificEventData)
+                    _originalCallback(specificEventData);
+            }
+
+            // 重写 Equals 和 GetHashCode 以支持正确的比较
+            public override bool Equals(object obj)
+            {
+                return obj is CallbackAdapter<T> adapter &&
+                       Delegate.Equals(_originalCallback, adapter._originalCallback);
+            }
+
+            public override int GetHashCode()
+            {
+                return _originalCallback?.GetHashCode() ?? 0;
+            }
+        }
+
         #region 委托订阅方法
 
         /// <summary>
@@ -269,112 +307,47 @@ namespace Core.Events
         /// </summary>
         /// <typeparam name="T">事件类型</typeparam>
         /// <param name="callback">回调函数</param>
-        /// <param name="owner">拥有者（可选，用于批量管理）</param>
-        public void Subscribe<T>(Action<T> callback, object owner = null) where T : EventData
+        public void Subscribe<T>(Action<T> callback) where T : EventData
         {
             if (callback == null) return;
 
             var eventType = typeof(T);
 
-            // 包装回调以匹配基类型
-            Action<EventData> wrappedCallback = eventData =>
-            {
-                if (eventData is T specificEventData) callback(specificEventData);
-            };
+            // 创建委托适配器
+            var adapter = new CallbackAdapter<T>(callback);
 
             // 添加到委托订阅字典
-            if (!_eventSubscribers.ContainsKey(eventType)) _eventSubscribers[eventType] = new List<Action<EventData>>();
+            if (!_eventSubscribers.ContainsKey(eventType))
+                _eventSubscribers[eventType] = new List<object>();
 
-            _eventSubscribers[eventType].Add(wrappedCallback);
-
-            // 如果有拥有者，添加到拥有者管理字典
-            if (owner != null)
-            {
-                if (!_subscriberOwners.ContainsKey(owner))
-                    _subscriberOwners[owner] = new List<(Type eventType, Action<EventData> callback)>();
-
-                _subscriberOwners[owner].Add((eventType, wrappedCallback));
-            }
+            _eventSubscribers[eventType].Add(adapter);
         }
 
         /// <summary>
-        ///     取消委托订阅（需要提供原始回调引用）
+        ///     取消委托订阅
         /// </summary>
         /// <typeparam name="T">事件类型</typeparam>
         /// <param name="callback">原始回调函数</param>
-        /// <param name="owner">拥有者（可选）</param>
-        public void Unsubscribe<T>(Action<T> callback, object owner = null) where T : EventData
+        public void Unsubscribe<T>(Action<T> callback) where T : EventData
         {
             if (callback == null) return;
 
             var eventType = typeof(T);
+            var searchAdapter = new CallbackAdapter<T>(callback);
 
-            // 如果有拥有者信息，通过拥有者来移除
-            if (owner != null && _subscriberOwners.ContainsKey(owner))
+            // 如果正在发布，创建适配器并加入待处理队列
+            if (_isPublishing)
             {
-                var ownerSubscriptions = _subscriberOwners[owner];
-                for (var i = ownerSubscriptions.Count - 1; i >= 0; i--)
-                {
-                    var subscription = ownerSubscriptions[i];
-                    if (subscription.eventType == eventType)
-                    {
-                        // 如果正在发布，将移除操作加入待处理队列
-                        if (_isPublishing)
-                        {
-                            _pendingSubscriberRemovals.Add((eventType, subscription.callback));
-                        }
-                        else
-                        {
-                            // 立即从委托订阅字典中移除
-                            if (_eventSubscribers.ContainsKey(eventType))
-                            {
-                                _eventSubscribers[eventType].Remove(subscription.callback);
-                                if (_eventSubscribers[eventType].Count == 0)
-                                    _eventSubscribers.Remove(eventType);
-                            }
-                        }
-
-                        // 从拥有者字典中移除
-                        ownerSubscriptions.RemoveAt(i);
-                        break;
-                    }
-                }
-
-                if (ownerSubscriptions.Count == 0)
-                    _subscriberOwners.Remove(owner);
+                _pendingSubscriberRemovals.Add((eventType, searchAdapter));
+                return;
             }
-        }
 
-        /// <summary>
-        ///     根据拥有者取消所有委托订阅
-        /// </summary>
-        /// <param name="owner">拥有者对象</param>
-        public void UnsubscribeAll(object owner)
-        {
-            if (owner == null) return;
-
-            if (_subscriberOwners.TryGetValue(owner, out var subscriptions))
+            // 立即移除
+            if (_eventSubscribers.TryGetValue(eventType, out var subscribers))
             {
-                foreach (var (eventType, callback) in subscriptions)
-                {
-                    // 如果正在发布，将移除操作加入待处理队列
-                    if (_isPublishing)
-                    {
-                        _pendingSubscriberRemovals.Add((eventType, callback));
-                    }
-                    else
-                    {
-                        // 立即移除
-                        if (_eventSubscribers.ContainsKey(eventType))
-                        {
-                            _eventSubscribers[eventType].Remove(callback);
-                            if (_eventSubscribers[eventType].Count == 0)
-                                _eventSubscribers.Remove(eventType);
-                        }
-                    }
-                }
-
-                _subscriberOwners.Remove(owner);
+                subscribers.Remove(searchAdapter);
+                if (subscribers.Count == 0)
+                    _eventSubscribers.Remove(eventType);
             }
         }
 

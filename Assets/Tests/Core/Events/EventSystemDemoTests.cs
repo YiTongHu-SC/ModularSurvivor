@@ -113,14 +113,14 @@ namespace Tests.Core.Events
             {
                 playerLevelUpCalled = true;
                 Debug.Log($"[委托] 玩家升级到 {eventData.NewLevel} 级! 获得 {eventData.ExperienceGained} 经验");
-            }, this);
+            });
 
             // Lambda表达式订阅 - 内联逻辑
             EventManager.Instance.Subscribe<GameEvents.UIRefreshEvent>(eventData =>
             {
                 uiRefreshCalled = true;
                 Debug.Log($"[Lambda] UI refresh for: {eventData.UIName}");
-            }, this);
+            });
 
             // 匿名方法订阅 - 复杂逻辑
             EventManager.Instance.Subscribe<GameEvents.WaveEndEvent>(eventData =>
@@ -135,7 +135,7 @@ namespace Tests.Core.Events
                 {
                     Debug.Log("Failed!");
                 }
-            }, this);
+            });
 
             // 验证订阅成功
             Assert.AreEqual(1, EventManager.Instance.GetSubscriberCount(typeof(GameEvents.PlayerLevelUpEvent)));
@@ -169,18 +169,17 @@ namespace Tests.Core.Events
             bool uiRefreshCalled = false;
             bool waveEndCalled = false;
 
-            EventManager.Instance.Subscribe<GameEvents.PlayerLevelUpEvent>(eventData => { levelUpCalled = true; },
-                this);
+            EventManager.Instance.Subscribe<GameEvents.PlayerLevelUpEvent>(eventData => { levelUpCalled = true; });
 
-            EventManager.Instance.Subscribe<GameEvents.UIRefreshEvent>(eventData => { uiRefreshCalled = true; }, this);
+            EventManager.Instance.Subscribe<GameEvents.UIRefreshEvent>(eventData => { uiRefreshCalled = true; });
 
-            EventManager.Instance.Subscribe<GameEvents.WaveEndEvent>(eventData => { waveEndCalled = true; }, this);
+            EventManager.Instance.Subscribe<GameEvents.WaveEndEvent>(eventData => { waveEndCalled = true; });
 
             // 1. 单位死亡事件 - 只有监听器对象处理
             var deathEvent = new GameEvents.UnitDeathEvent(1, 2);
             EventManager.Instance.Publish(deathEvent);
             Assert.IsTrue(unitDeathListener.EventReceived);
-            Assert.AreEqual("Enemy_001", unitDeathListener.LastUnitId);
+            Assert.AreEqual(1, unitDeathListener.LastUnitId);
 
             // 2. 玩家升级事件 - 只有委托处理
             var levelUpEvent = new GameEvents.PlayerLevelUpEvent(5, 1000);
@@ -212,8 +211,8 @@ namespace Tests.Core.Events
         {
             // 设置混合订阅
             EventManager.Instance.Subscribe(unitDeathListener);
-            EventManager.Instance.Subscribe<GameEvents.PlayerLevelUpEvent>(eventData => { }, this);
-            EventManager.Instance.Subscribe<GameEvents.UIRefreshEvent>(eventData => { }, this);
+            EventManager.Instance.Subscribe<GameEvents.PlayerLevelUpEvent>(eventData => { });
+            EventManager.Instance.Subscribe<GameEvents.UIRefreshEvent>(eventData => { });
 
             // 验证统计信息
             Assert.AreEqual(1, EventManager.Instance.GetListenerObjectCount(typeof(GameEvents.UnitDeathEvent)));
@@ -244,14 +243,14 @@ namespace Tests.Core.Events
             {
                 eventCount++;
                 Debug.Log($"[PlayMode委托] 玩家升级到 {eventData.NewLevel} 级!");
-            }, this);
+            });
 
             EventManager.Instance.Subscribe<GameEvents.WaveEndEvent>(eventData =>
             {
                 eventCount++;
                 if (eventCount >= 4) allEventsCalled = true;
                 Debug.Log($"[PlayMode委托] 波次 {eventData.WaveNumber} 结束");
-            }, this);
+            });
 
             yield return null; // 等待一帧
 

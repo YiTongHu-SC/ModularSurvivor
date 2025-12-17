@@ -81,9 +81,6 @@ namespace Tests.Core.Events
         [UnityTest]
         public IEnumerator EventSystem_StressTest_ShouldHandleHighLoad()
         {
-            // 启用高性能模式以获得最大性能
-            eventManager.SetHighPerformanceMode(true);
-
             // 使用高性能监听器，无Debug.Log输出
             var listeners = new HighPerformanceTestListener[100];
             for (int i = 0; i < listeners.Length; i++)
@@ -121,16 +118,11 @@ namespace Tests.Core.Events
             Debug.Log($"Processed 10000 events (100 events × 100 listeners) in {stopwatch.ElapsedMilliseconds}ms");
 
             // 恢复正常模式
-            eventManager.SetHighPerformanceMode(false);
-            eventManager.SetVerboseLogging(true);
         }
 
         [UnityTest]
         public IEnumerator EventSystem_ExtremeLightweightTest_ShouldHandleVeryHighLoad()
         {
-            // 极限性能测试：启用高性能模式
-            eventManager.SetHighPerformanceMode(true);
-
             // 创建更多高性能监听器
             var listeners = new HighPerformanceTestListener[500];
             for (int i = 0; i < listeners.Length; i++)
@@ -171,10 +163,6 @@ namespace Tests.Core.Events
 
             Debug.Log(
                 $"Extreme test: Processed 100000 events (200 events × 500 listeners) in {stopwatch.ElapsedMilliseconds}ms");
-
-            // 恢复正常模式
-            eventManager.SetHighPerformanceMode(false);
-            eventManager.SetVerboseLogging(true);
         }
 
         [Test]

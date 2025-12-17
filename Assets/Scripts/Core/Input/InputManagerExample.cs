@@ -1,8 +1,7 @@
 ﻿using Core.Events;
-using Core.Input;
 using UnityEngine;
 
-namespace Examples
+namespace Core.Input
 {
     /// <summary>
     ///     InputManager 使用示例
@@ -18,26 +17,22 @@ namespace Examples
         {
             // === 示例1：订阅攻击输入事件 ===
             EventManager.Instance.Subscribe<InputEvents.PlayerAttackInputEvent>(
-                OnAttackInput,
-                this
+                OnAttackInput
             );
 
             // === 示例2：订阅交互输入事件 ===
             EventManager.Instance.Subscribe<InputEvents.PlayerInteractInputEvent>(
-                OnInteractInput,
-                this
+                OnInteractInput
             );
 
             // === 示例3：订阅跳跃输入事件 ===
             EventManager.Instance.Subscribe<InputEvents.PlayerJumpInputEvent>(
-                OnJumpInput,
-                this
+                OnJumpInput
             );
 
             // === 示例4：监听输入上下文切换 ===
             EventManager.Instance.Subscribe<InputEvents.InputContextChangedEvent>(
-                OnInputContextChanged,
-                this
+                OnInputContextChanged
             );
         }
 
@@ -62,8 +57,11 @@ namespace Examples
 
         private void OnDestroy()
         {
-            // 清理：批量取消订阅（通过 owner 参数）
-            EventManager.Instance.UnsubscribeAll(this);
+            // 清理：手动取消订阅
+            EventManager.Instance.Unsubscribe<InputEvents.PlayerAttackInputEvent>(OnAttackInput);
+            EventManager.Instance.Unsubscribe<InputEvents.PlayerInteractInputEvent>(OnInteractInput);
+            EventManager.Instance.Unsubscribe<InputEvents.PlayerJumpInputEvent>(OnJumpInput);
+            EventManager.Instance.Unsubscribe<InputEvents.InputContextChangedEvent>(OnInputContextChanged);
         }
 
         #region 事件回调示例
