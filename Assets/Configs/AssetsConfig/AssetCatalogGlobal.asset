@@ -12,16 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eb737bc7bc44bd88392a573fe694a1e, type: 3}
   m_Name: AssetCatalogGlobal
   m_EditorClassIdentifier: Core::Core.Assets.AssetCatalog
-  _entries:
-  - _key: 
-    _resourcesPath: 
-    _assetType: 0
+  EntriesConfig:
+  - _key: actor_configs:actor_100000
+    _resourcesPath: ActorConfigs/Actor_100000
+    _assetType: 1
     _tags: []
-  - _key: 
-    _resourcesPath: 
-    _assetType: 0
+  - _key: actor_configs:actor_100001
+    _resourcesPath: ActorConfigs/Actor_100001
+    _assetType: 1
     _tags: []
-  - _key: 
-    _resourcesPath: 
-    _assetType: 0
+  - _key: d_o_tween_settings
+    _resourcesPath: DOTweenSettings
+    _assetType: 1
+    _tags: []
+  - _key: effect_configs:presentation_config
+    _resourcesPath: EffectConfigs/PresentationConfig
+    _assetType: 1
+    _tags: []
+  - _key: wave_configs:wave_config
+    _resourcesPath: WaveConfigs/WaveConfig
+    _assetType: 1
     _tags: []

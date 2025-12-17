@@ -217,6 +217,7 @@ namespace GameLoop.Game
         /// </summary>
         private void LoadingGameProcess()
         {
+            Debug.Log("Loading game process...");
             StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadGame, GlobalConfig.GlobalManifest));
         }
 
@@ -224,7 +225,8 @@ namespace GameLoop.Game
             AssetsScopeLabel scopeLabel = default)
         {
             // load assets
-            var loadTask = AssetSystem.Instance.LoadManifestAsync(manifest, scopeLabel, null);
+            var loadTask =
+                AssetSystem.Instance.LoadManifestAsync(manifest, scopeLabel, new Progress<float>(TestProgress));
             yield return new WaitUntil(() => loadTask.IsCompleted);
             if (loadTask.IsFaulted)
             {
@@ -234,6 +236,11 @@ namespace GameLoop.Game
             // Simulate loading delay
             yield return new WaitForSeconds(2.0f);
             StateMachine.PerformTransition(finishTransition);
+        }
+
+        public void TestProgress(float progress)
+        {
+            Debug.Log($"Loading progress: {progress * 100}%");
         }
 
         private void Update()

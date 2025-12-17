@@ -29,5 +29,15 @@ MonoBehaviour:
     typeWeights: []
     defaultWeight: 0
   Overrides: []
-  _generatedEntries: []
+  _generatedEntries:
+  - _key: actor_configs:actor_100000
+    _assetType: 1
+    _weight: 0
+    _isRequired: 1
+    _tags: []
+  - _key: actor_configs:actor_100001
+    _assetType: 1
+    _weight: 0
+    _isRequired: 1
+    _tags: []
   _failureStrategy: 2
