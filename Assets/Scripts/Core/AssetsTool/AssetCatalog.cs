@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Assets;
 using UnityEngine;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     资源目录，管理 AssetKey 到路径的映射关系

@@ -77,6 +77,13 @@ namespace Core.AssetsTool
 
             return total;
         }
+
+        public void SetEntries(ManifestEntry[] entries)
+        {
+            _entries = null;
+            _entries = new ManifestEntry[entries.Length];
+            _entries = entries;
+        }
     }
 
     /// <summary>
