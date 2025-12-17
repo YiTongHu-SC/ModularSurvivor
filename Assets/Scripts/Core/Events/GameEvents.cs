@@ -7,10 +7,6 @@ namespace Core.Events
     /// </summary>
     public static class GameEvents
     {
-        public class GameInitializedEvent : EventData
-        {
-        }
-
         public class UnitMovementEvent : EventData
         {
             public UnitMovementEvent(UnitData unitData)

@@ -11,8 +11,9 @@ namespace GameLoop.Config
     {
         public bool CreateMemoryMaintenanceService;
         public AssetsScopeLabel GlobalScopeLabel = default;
-        public AssetManifest GlobalManifest;
         public AssetCatalog AssetCatalog;
+        public AssetManifest GlobalManifest;
+        public AssetManifest DebugManifest;
         public List<LoadSceneMap> SceneMap = new();
         public string StaticSceneName = "Scenes/SystemScene";
         public string LoadingSceneName = "Scenes/LoadingScene";

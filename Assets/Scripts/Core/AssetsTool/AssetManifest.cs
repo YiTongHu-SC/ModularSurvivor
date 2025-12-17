@@ -125,6 +125,7 @@ namespace Core.AssetsTool
 
         public string Key => _key;
         public AssetType AssetType => _assetType;
+
         public float Weight
         {
             get => _weight;
@@ -154,32 +155,33 @@ namespace Core.AssetsTool
     [Serializable]
     public class ManifestRule
     {
-        public string name = "Rule";
-        public bool enabled = true;
+        public string Name = "Rule";
+
+        public bool Enabled = true;
 
         // 过滤条件
-        public List<string> includeKeyPrefixes = new();
-        public List<string> excludeKeyPrefixes = new();
-        public List<string> includeTags = new();
-        public List<string> excludeTags = new();
-        public List<string> includeTypes = new(); // 用 string 存 "GameObject" 等
-        public List<string> excludeTypes = new();
+        public List<string> IncludeKeyPrefixes = new();
+        public List<string> ExcludeKeyPrefixes = new();
+        public List<string> IncludeTags = new();
+        public List<string> ExcludeTags = new();
+        public List<string> IncludeTypes = new(); // 用 string 存 "GameObject" 等
+        public List<string> ExcludeTypes = new();
 
         // 输出策略
-        public bool defaultRequired = false;
-        public List<string> requiredTags = new() { "required" };
+        public bool DefaultRequired = false;
+        public List<string> RequiredTags = new() { "required" };
 
         // 最简权重策略：按 tag / type 给权重
-        public List<TagWeight> tagWeights = new();
-        public List<TypeWeight> typeWeights = new();
-        public float defaultWeight = 1f;
+        public List<TagWeight> TagWeights = new();
+        public List<TypeWeight> TypeWeights = new();
+        public float DefaultWeight = 1f;
     }
 
     [Serializable]
     public struct TagWeight
     {
-        public string tag;
-        public float weight;
+        public string Tag;
+        public float Weight;
     }
 
     [Serializable]

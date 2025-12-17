@@ -87,7 +87,7 @@ namespace GameEditor.RunTime.AssetsEditor
             {
                 foreach (var rule in rules)
                 {
-                    if (rule == null || !rule.enabled) continue;
+                    if (rule == null || !rule.Enabled) continue;
                     if (!PassRule(e, rule)) continue;
 
                     var entry = ToEntry(e, rule);
@@ -140,16 +140,16 @@ namespace GameEditor.RunTime.AssetsEditor
             bool HitTypes(List<string> types) =>
                 types != null && types.Any(t => string.Equals(t, e.AssetType.ToString(), StringComparison.Ordinal));
 
-            var includeOk = PassPrefix(r.includeKeyPrefixes) && PassTags(r.includeTags) && PassTypes(r.includeTypes);
+            var includeOk = PassPrefix(r.IncludeKeyPrefixes) && PassTags(r.IncludeTags) && PassTypes(r.IncludeTypes);
             if (!includeOk) return false;
 
-            var excluded = HitPrefix(r.excludeKeyPrefixes) || HitTags(r.excludeTags) || HitTypes(r.excludeTypes);
+            var excluded = HitPrefix(r.ExcludeKeyPrefixes) || HitTags(r.ExcludeTags) || HitTypes(r.ExcludeTypes);
             return !excluded;
         }
 
         private static ManifestEntry ToEntry(AssetCatalogEntry e, ManifestRule r)
         {
-            bool required = r.defaultRequired || (e.Tags != null && e.Tags.Intersect(r.requiredTags ?? new()).Any());
+            bool required = r.DefaultRequired || (e.Tags != null && e.Tags.Intersect(r.RequiredTags ?? new()).Any());
             float weight = ResolveWeight(e, r);
 
             return new ManifestEntry(e.Key, e.AssetType, weight, required, e.Tags);
@@ -157,18 +157,18 @@ namespace GameEditor.RunTime.AssetsEditor
 
         private static float ResolveWeight(AssetCatalogEntry e, ManifestRule r)
         {
-            float w = r.defaultWeight;
+            float w = r.DefaultWeight;
 
-            if (e.Tags != null && r.tagWeights != null)
+            if (e.Tags != null && r.TagWeights != null)
             {
-                foreach (var tw in r.tagWeights)
-                    if (!string.IsNullOrEmpty(tw.tag) && e.Tags.Contains(tw.tag))
-                        w = Mathf.Max(w, tw.weight);
+                foreach (var tw in r.TagWeights)
+                    if (!string.IsNullOrEmpty(tw.Tag) && e.Tags.Contains(tw.Tag))
+                        w = Mathf.Max(w, tw.Weight);
             }
 
-            if (r.typeWeights != null)
+            if (r.TypeWeights != null)
             {
-                foreach (var tw in r.typeWeights)
+                foreach (var tw in r.TypeWeights)
                     if (!string.IsNullOrEmpty(tw.type) &&
                         string.Equals(tw.type, e.AssetType.ToString(), StringComparison.Ordinal))
                         w = Mathf.Max(w, tw.weight);

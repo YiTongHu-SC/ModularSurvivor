@@ -8,6 +8,7 @@ using Core.Input;
 using Core.Timer;
 using Core.Units;
 using GameLoop.Config;
+using GameLoop.Events;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UI.Framework;
@@ -42,6 +43,8 @@ namespace GameLoop.Game
     {
         public GlobalConfig GlobalConfig;
         public UnityEvent OnGameInitialized;
+        public Transform UIRootTransform;
+        public Transform WorldRootTransform;
         public GameState ShowGameState;
         private StateMachine<GameManager, GameState, GameTransition> StateMachine { get; set; }
         public GameState CurrentState => StateMachine.CurrentStateID;
@@ -51,6 +54,20 @@ namespace GameLoop.Game
         public AssetSystem AssetSystem { get; private set; }
         public MemoryMaintenanceService MemoryMaintenanceServiceInstance { get; private set; }
         private SceneLoader _sceneLoader;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (UIRootTransform)
+            {
+                UIRootTransform.gameObject.SetActive(false);
+            }
+
+            if (WorldRootTransform)
+            {
+                WorldRootTransform.gameObject.SetActive(false);
+            }
+        }
 
         private void Start()
         {
@@ -136,20 +153,25 @@ namespace GameLoop.Game
             WaveManager.Instance.Initialize();
             MVCManager.Instance.Initialize();
             yield return null;
-            // 初始化资源系统
-            if (GlobalConfig)
+            if (UIRootTransform)
             {
-                if (GlobalConfig.AssetCatalog)
+                UIRootTransform.gameObject.SetActive(true);
+            }
+
+            if (WorldRootTransform)
+            {
+                WorldRootTransform.gameObject.SetActive(true);
+            }
+
+            yield return null;
+            // 初始化资源系统
+
+            if (GlobalConfig && GlobalConfig.AssetCatalog)
+            {
+                AssetSystem = new AssetSystem(GlobalConfig.AssetCatalog);
+                if (GlobalConfig.CreateMemoryMaintenanceService)
                 {
-                    AssetSystem = new AssetSystem(GlobalConfig.AssetCatalog);
-                    if (GlobalConfig.CreateMemoryMaintenanceService)
-                    {
-                        CreateMemoryMaintenanceService();
-                    }
-                }
-                else
-                {
-                    Debug.LogError("GlobalConfig or AssetCatalog is not assigned!");
+                    CreateMemoryMaintenanceService();
                 }
             }
             else
@@ -157,16 +179,22 @@ namespace GameLoop.Game
                 Debug.LogError("GlobalConfig or AssetCatalog is not assigned!");
             }
 
-            yield return null;
+            var loadDebugAssetsTask = AssetSystem.LoadManifestAsync(GlobalConfig.DebugManifest, AssetsScopeLabel.Debug);
+            yield return new WaitUntil(() => loadDebugAssetsTask.IsCompleted);
+            if (loadDebugAssetsTask.IsFaulted)
+            {
+                Debug.LogError($"Failed to load debug assets: {loadDebugAssetsTask.Exception}");
+            }
+
             // 初始化场景加载器
             _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
             DontDestroyOnLoad(_sceneLoader.gameObject);
             _sceneLoader.Initialize(GlobalConfig.StaticSceneName, GlobalConfig.SceneMap);
-            yield return null;
             // 加载完成
             Initialized = true;
             OnGameInitialized?.Invoke();
-            EventManager.Instance.Publish(new GameEvents.GameInitializedEvent());
+            EventManager.Instance.Publish(new GameLoopEvents.BootComplete());
+            Debug.Log("Game bootstrapping completed.");
         }
 
         // ReSharper disable Unity.PerformanceAnalysis

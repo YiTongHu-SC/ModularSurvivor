@@ -21,7 +21,11 @@ MonoBehaviour:
     _resourcesPath: ActorConfigs/Actor_100001
     _assetType: 1
     _tags: []
-  - _key: d_o_tween_settings
+  - _key: debug:ui:debug_view
+    _resourcesPath: Debug/UI/DebugView
+    _assetType: 0
+    _tags: []
+  - _key: dotween_settings
     _resourcesPath: DOTweenSettings
     _assetType: 1
     _tags: []

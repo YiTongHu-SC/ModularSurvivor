@@ -240,6 +240,7 @@ namespace Core.Assets
     {
         Global = 0,
         Frontend = 1,
-        Level = 2
+        Level = 2,
+        Debug = 3
     }
 }

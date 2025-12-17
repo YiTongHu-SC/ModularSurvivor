@@ -95,7 +95,7 @@ namespace GameEditor.RunTime.Tools
 
             var config = AssetDatabase.LoadAssetAtPath<AssetsToolEditorConfig>(savedPath);
             Debug.Log("Loaded Asset Tool Config: " + (config != null ? config.name : "null"));
-            var assetCatalog = AssetDatabase.LoadAssetAtPath<AssetCatalog>(config.AssetCatalogFile);
+            var assetCatalog = config.AssetCatalogFile;
             Debug.Log("Loaded Asset Catalog: " + (assetCatalog != null ? assetCatalog.name : "null"));
             // Further processing 
             // 递归遍历资产目录下所有资源
@@ -195,7 +195,7 @@ namespace GameEditor.RunTime.Tools
     public static class AssetCatalogExtensions
     {
         /// <summary>
-        /// 资源路径转换为键值规则
+        /// 资源路径转换为键值,命名规则
         /// 键值：prefix:asset_name (不含扩展名)
         /// </summary>
         /// <param name="assetPath"></param>
@@ -224,7 +224,7 @@ namespace GameEditor.RunTime.Tools
             {
                 char currentChar = resPath[i];
                 if (char.IsUpper(currentChar) && i > 0 &&
-                    resPath[i - 1] != ':' && resPath[i - 1] != '_')
+                    resPath[i - 1] != ':' && resPath[i - 1] != '_' && !char.IsUpper(resPath[i - 1]))
                 {
                     result.Append('_');
                 }

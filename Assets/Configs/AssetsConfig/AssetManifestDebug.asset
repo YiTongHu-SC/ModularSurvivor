@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25c88af8bb9b4b49a6e2d9e505a98851, type: 3}
+  m_Name: AssetManifestDebug
+  m_EditorClassIdentifier: Core::Core.AssetsTool.AssetManifest
+  Catalog: {fileID: 11400000, guid: 8467e15f2c577064d832a16b87e46dcf, type: 2}
+  Rules:
+  - Name: all debug
+    Enabled: 1
+    IncludeKeyPrefixes:
+    - debug
+    ExcludeKeyPrefixes: []
+    IncludeTags: []
+    ExcludeTags: []
+    IncludeTypes: []
+    ExcludeTypes: []
+    DefaultRequired: 1
+    RequiredTags:
+    - required
+    TagWeights: []
+    TypeWeights: []
+    DefaultWeight: 1
+  Overrides: []
+  _generatedEntries:
+  - _key: debug:ui:debug_view
+    _assetType: 0
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  _failureStrategy: 1

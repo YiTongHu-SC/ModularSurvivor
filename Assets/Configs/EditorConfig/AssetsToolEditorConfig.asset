@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f7576a6844ef880ce3ed7135f2414, type: 3}
   m_Name: AssetsToolEditorConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameEditor.RunTime.Config.AssetsToolEditorConfig
-  AssetCatalogFile: Assets/Configs/AssetsConfig/AssetCatalogGlobal.asset
+  AssetCatalogFile: {fileID: 11400000, guid: 8467e15f2c577064d832a16b87e46dcf, type: 2}
   AssetTargetPath: Assets/Resources
