@@ -21,7 +21,7 @@ namespace Core.Assets
             _handleCache = new ConcurrentDictionary<string, object>();
         }
 
-        public AssetHandle<T> Load<T>(AssetKey key, string scopeName = null) where T : Object
+        public AssetHandle<T> Load<T>(AssetKey key, AssetsScopeLabel scopeLabel = default) where T : Object
         {
             var cacheKey = GetCacheKey<T>(key);
 
@@ -44,7 +44,7 @@ namespace Core.Assets
                 }
 
                 // 创建新句柄
-                var newHandle = new AssetHandle<T>(key, scopeName);
+                var newHandle = new AssetHandle<T>(key, scopeLabel);
                 _handleCache[cacheKey] = newHandle;
 
                 try
@@ -75,7 +75,7 @@ namespace Core.Assets
             }
         }
 
-        public async Task<AssetHandle<T>> LoadAsync<T>(AssetKey key, string scopeName = null) where T : Object
+        public async Task<AssetHandle<T>> LoadAsync<T>(AssetKey key, AssetsScopeLabel scopeLabel = default) where T : Object
         {
             var cacheKey = GetCacheKey<T>(key);
 
@@ -104,7 +104,7 @@ namespace Core.Assets
                 else
                 {
                     // 创建新句柄
-                    newHandle = new AssetHandle<T>(key, scopeName);
+                    newHandle = new AssetHandle<T>(key, scopeLabel);
                     _handleCache[cacheKey] = newHandle;
                 }
             }
@@ -145,7 +145,7 @@ namespace Core.Assets
             return newHandle;
         }
 
-        public async Task<AssetHandle<T>[]> LoadBatchAsync<T>(AssetKey[] keys, string scopeName = null,
+        public async Task<AssetHandle<T>[]> LoadBatchAsync<T>(AssetKey[] keys, AssetsScopeLabel scopeLabel = default,
             IProgress<float> progress = null) where T : Object
         {
             if (keys == null || keys.Length == 0) return Array.Empty<AssetHandle<T>>();
@@ -154,7 +154,7 @@ namespace Core.Assets
             var tasks = new Task<AssetHandle<T>>[keys.Length];
 
             // 启动所有加载任务
-            for (var i = 0; i < keys.Length; i++) tasks[i] = LoadAsync<T>(keys[i], scopeName);
+            for (var i = 0; i < keys.Length; i++) tasks[i] = LoadAsync<T>(keys[i], scopeLabel);
 
             // 等待完成并更新进度
             for (var i = 0; i < tasks.Length; i++)
@@ -166,9 +166,9 @@ namespace Core.Assets
             return handles;
         }
 
-        public async Task<GameObject> InstantiateAsync(AssetKey key, Transform parent = null, string scopeName = null)
+        public async Task<GameObject> InstantiateAsync(AssetKey key, Transform parent = null, AssetsScopeLabel scopeLabel = default)
         {
-            var handle = await LoadAsync<GameObject>(key, scopeName);
+            var handle = await LoadAsync<GameObject>(key, scopeLabel);
 
             if (!handle.IsValid)
                 throw new InvalidOperationException(

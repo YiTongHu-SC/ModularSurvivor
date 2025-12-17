@@ -208,7 +208,7 @@ namespace GameLoop.Game
             StartCoroutine(LoadingProcessCoroutine(
                 GameTransition.FinishLoadMain,
                 GlobalConfig.GlobalManifest,
-                GlobalConfig.GlobalScopeName));
+                GlobalConfig.GlobalScopeLabel));
         }
 
         /// <summary>
@@ -220,10 +220,10 @@ namespace GameLoop.Game
         }
 
         IEnumerator LoadingProcessCoroutine(GameTransition finishTransition, AssetManifest manifest,
-            string scopeName = "Default")
+            AssetsScopeLabel scopeLabel = default)
         {
             // load assets
-            var loadTask = AssetSystem.Instance.LoadManifestAsync(manifest, scopeName, null);
+            var loadTask = AssetSystem.Instance.LoadManifestAsync(manifest, scopeLabel, null);
             yield return new WaitUntil(() => loadTask.IsCompleted);
             if (loadTask.IsFaulted)
             {

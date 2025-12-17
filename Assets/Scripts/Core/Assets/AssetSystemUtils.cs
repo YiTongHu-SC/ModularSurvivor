@@ -38,11 +38,11 @@ namespace Core.Assets
         public static ScopeInfo GetScopeInfo(AssetScope scope)
         {
             if (scope == null)
-                return new ScopeInfo { Name = "null", IsValid = false };
+                return new ScopeInfo { ScopeLabel = default, IsValid = false };
 
             return new ScopeInfo
             {
-                Name = scope.Name,
+                ScopeLabel = scope.ScopeLabel,
                 IsValid = !scope.IsDisposed,
                 HandleCount = scope.HandleCount
             };
@@ -170,13 +170,13 @@ namespace Core.Assets
     /// </summary>
     public struct ScopeInfo
     {
-        public string Name;
+        public AssetsScopeLabel ScopeLabel;
         public bool IsValid;
         public int HandleCount;
 
         public override string ToString()
         {
-            return $"Scope '{Name}': Valid={IsValid}, Handles={HandleCount}";
+            return $"Scope '{ScopeLabel}': Valid={IsValid}, Handles={HandleCount}";
         }
     }
 }

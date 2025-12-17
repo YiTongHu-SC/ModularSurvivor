@@ -8,7 +8,7 @@ namespace GameLoop.Config
     {
         public bool LoadGlobalAssetsOnStart;
         public bool CreateMemoryMaintenanceService;
-        public string GlobalScopeName = "Global";
+        public AssetsScopeLabel GlobalScopeLabel = default;
         public AssetManifest GlobalManifest;
         public AssetCatalog AssetCatalog;
     }

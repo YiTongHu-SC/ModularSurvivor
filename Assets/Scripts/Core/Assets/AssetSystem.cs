@@ -12,10 +12,10 @@ namespace Core.Assets
     public class AssetSystem : IDisposable
     {
         // 预定义的作用域名称
-        public const string GlobalScopeName = "Global";
-        public const string FrontendScopeName = "Frontend";
+        public const AssetsScopeLabel GlobalScopeLabel = AssetsScopeLabel.Global;
+        public const AssetsScopeLabel FrontendScopeLabel = AssetsScopeLabel.Frontend;
         private readonly object _lockObject = new();
-        private readonly Dictionary<string, AssetScope> _scopes;
+        private readonly Dictionary<AssetsScopeLabel, AssetScope> _scopes;
         private bool _disposed;
 
         public static AssetSystem Instance { get; private set; }
@@ -23,12 +23,12 @@ namespace Core.Assets
         /// <summary>
         ///     获取全局作用域
         /// </summary>
-        public AssetScope GlobalScope => GetScope(GlobalScopeName);
+        public AssetScope GlobalScope => GetScope(GlobalScopeLabel);
 
         /// <summary>
         ///     获取前端作用域
         /// </summary>
-        public AssetScope FrontendScope => GetScope(FrontendScopeName);
+        public AssetScope FrontendScope => GetScope(FrontendScopeLabel);
 
         /// <summary>
         ///     直接通过提供者访问（绕过作用域）
@@ -41,10 +41,10 @@ namespace Core.Assets
                 throw new ArgumentNullException(nameof(catalog));
 
             Provider = new ResourcesAssetProvider(catalog);
-            _scopes = new Dictionary<string, AssetScope>();
+            _scopes = new Dictionary<AssetsScopeLabel, AssetScope>();
 
             // 创建全局作用域
-            CreateScope(GlobalScopeName);
+            CreateScope(GlobalScopeLabel);
 
             Instance = this;
         }
@@ -67,16 +67,16 @@ namespace Core.Assets
         /// <summary>
         ///     创建作用域
         /// </summary>
-        public AssetScope CreateScope(string name)
+        public AssetScope CreateScope(AssetsScopeLabel label)
         {
             ThrowIfDisposed();
 
             lock (_lockObject)
             {
-                if (_scopes.ContainsKey(name)) throw new InvalidOperationException($"Scope '{name}' already exists");
+                if (_scopes.ContainsKey(label)) throw new InvalidOperationException($"Scope '{label}' already exists");
 
-                var scope = new AssetScope(name, Provider);
-                _scopes[name] = scope;
+                var scope = new AssetScope(label, Provider);
+                _scopes[label] = scope;
                 return scope;
             }
         }
@@ -84,38 +84,38 @@ namespace Core.Assets
         /// <summary>
         ///     获取作用域
         /// </summary>
-        public AssetScope GetScope(string name)
+        public AssetScope GetScope(AssetsScopeLabel label)
         {
             ThrowIfDisposed();
 
             lock (_lockObject)
             {
-                return _scopes.GetValueOrDefault(name);
+                return _scopes.GetValueOrDefault(label);
             }
         }
 
         /// <summary>
         ///     获取或创建作用域
         /// </summary>
-        public AssetScope GetOrCreateScope(string name)
+        public AssetScope GetOrCreateScope(AssetsScopeLabel label)
         {
-            var scope = GetScope(name);
-            return scope ?? CreateScope(name);
+            var scope = GetScope(label);
+            return scope ?? CreateScope(label);
         }
 
         /// <summary>
         ///     释放作用域
         /// </summary>
-        public bool ReleaseScope(string name)
+        public bool ReleaseScope(AssetsScopeLabel label)
         {
             ThrowIfDisposed();
 
             lock (_lockObject)
             {
-                if (_scopes.TryGetValue(name, out var scope))
+                if (_scopes.TryGetValue(label, out var scope))
                 {
                     scope.Dispose();
-                    _scopes.Remove(name);
+                    _scopes.Remove(label);
                     return true;
                 }
 
@@ -128,8 +128,8 @@ namespace Core.Assets
         /// </summary>
         public AssetScope CreateLevelScope(string levelId, int runId)
         {
-            var scopeName = $"Level_{levelId}_{runId}";
-            return CreateScope(scopeName);
+            // TODO: 使用组合标签来区分不同关卡实例
+            return CreateScope(AssetsScopeLabel.Level);
         }
 
         /// <summary>
@@ -137,13 +137,13 @@ namespace Core.Assets
         /// </summary>
         public AssetScope EnsureFrontendScope()
         {
-            return GetScope(FrontendScopeName) ?? CreateScope(FrontendScopeName);
+            return GetScope(FrontendScopeLabel) ?? CreateScope(FrontendScopeLabel);
         }
 
         /// <summary>
         ///     加载清单中的所有资源到指定作用域
         /// </summary>
-        public async Task<LoadManifestResult> LoadManifestAsync(AssetManifest manifest, string scopeName,
+        public async Task<LoadManifestResult> LoadManifestAsync(AssetManifest manifest, AssetsScopeLabel scopeLabel,
             IProgress<float> progress = null)
         {
             ThrowIfDisposed();
@@ -151,7 +151,7 @@ namespace Core.Assets
             if (manifest == null)
                 throw new ArgumentNullException(nameof(manifest));
 
-            var scope = GetOrCreateScope(scopeName);
+            var scope = GetOrCreateScope(scopeLabel);
             var result = new LoadManifestResult();
             var entries = manifest.Entries;
 
@@ -232,5 +232,13 @@ namespace Core.Assets
         public bool HasFailures => FailedCount > 0;
         public int TotalCount => SuccessCount + FailedCount;
         public float SuccessRate => TotalCount > 0 ? (float)SuccessCount / TotalCount : 0f;
+    }
+
+    [Serializable]
+    public enum AssetsScopeLabel
+    {
+        Global = 0,
+        Frontend = 1,
+        Level = 2
     }
 }

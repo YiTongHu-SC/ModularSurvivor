@@ -16,14 +16,14 @@ namespace Core.Assets
 
         private readonly IAssetProvider _provider;
 
-        internal AssetScope(string name, IAssetProvider provider)
+        internal AssetScope(AssetsScopeLabel label, IAssetProvider provider)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            ScopeLabel = label;
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _handles = new List<object>();
         }
 
-        public string Name { get; }
+        public AssetsScopeLabel ScopeLabel { get; }
 
         public int HandleCount
         {
@@ -53,7 +53,7 @@ namespace Core.Assets
         {
             ThrowIfDisposed();
 
-            var handle = _provider.Load<T>(key, Name);
+            var handle = _provider.Load<T>(key, ScopeLabel);
 
             lock (_lockObject)
             {
@@ -71,7 +71,7 @@ namespace Core.Assets
         {
             ThrowIfDisposed();
 
-            var handle = await _provider.LoadAsync<T>(key, Name);
+            var handle = await _provider.LoadAsync<T>(key, ScopeLabel);
 
             lock (_lockObject)
             {
@@ -89,7 +89,7 @@ namespace Core.Assets
         {
             ThrowIfDisposed();
 
-            var handles = await _provider.LoadBatchAsync<T>(keys, Name, progress);
+            var handles = await _provider.LoadBatchAsync<T>(keys, ScopeLabel, progress);
 
             lock (_lockObject)
             {
@@ -105,7 +105,7 @@ namespace Core.Assets
         public async Task<GameObject> InstantiateAsync(AssetKey key, Transform parent = null)
         {
             ThrowIfDisposed();
-            return await _provider.InstantiateAsync(key, parent, Name);
+            return await _provider.InstantiateAsync(key, parent, ScopeLabel);
         }
 
         /// <summary>

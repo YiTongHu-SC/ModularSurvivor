@@ -11,10 +11,10 @@ namespace Core.Assets
     {
         private readonly object _lockObject = new();
 
-        internal AssetHandle(AssetKey key, string scopeName = null)
+        internal AssetHandle(AssetKey key, AssetsScopeLabel scopeLabel = default)
         {
             Key = key;
-            ScopeName = scopeName;
+            ScopeLabel = scopeLabel;
             State = AssetLoadState.Loading;
             ReferenceCount = 1;
         }
@@ -23,7 +23,7 @@ namespace Core.Assets
         public T Asset { get; private set; }
         public AssetLoadState State { get; private set; }
         public string ErrorMessage { get; private set; }
-        public string ScopeName { get; internal set; }
+        public AssetsScopeLabel ScopeLabel { get; internal set; }
 
         public bool IsValid => State == AssetLoadState.Completed && Asset != null;
         public int ReferenceCount { get; private set; }

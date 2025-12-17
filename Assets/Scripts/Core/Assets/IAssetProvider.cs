@@ -13,23 +13,23 @@ namespace Core.Assets
         /// <summary>
         ///     同步加载资源（仅限小资源或编辑器工具使用）
         /// </summary>
-        AssetHandle<T> Load<T>(AssetKey key, string scopeName = null) where T : Object;
+        AssetHandle<T> Load<T>(AssetKey key, AssetsScopeLabel scopeLabel = default) where T : Object;
 
         /// <summary>
         ///     异步加载单个资源
         /// </summary>
-        Task<AssetHandle<T>> LoadAsync<T>(AssetKey key, string scopeName = null) where T : Object;
+        Task<AssetHandle<T>> LoadAsync<T>(AssetKey key, AssetsScopeLabel scopeLabel = default) where T : Object;
 
         /// <summary>
         ///     批量异步加载资源
         /// </summary>
-        Task<AssetHandle<T>[]> LoadBatchAsync<T>(AssetKey[] keys, string scopeName = null,
+        Task<AssetHandle<T>[]> LoadBatchAsync<T>(AssetKey[] keys, AssetsScopeLabel scopeLabel = default,
             IProgress<float> progress = null) where T : Object;
 
         /// <summary>
         ///     实例化预制体（异步）
         /// </summary>
-        Task<GameObject> InstantiateAsync(AssetKey key, Transform parent = null, string scopeName = null);
+        Task<GameObject> InstantiateAsync(AssetKey key, Transform parent = null, AssetsScopeLabel scopeLabel = default);
 
         /// <summary>
         ///     释放资源句柄引用

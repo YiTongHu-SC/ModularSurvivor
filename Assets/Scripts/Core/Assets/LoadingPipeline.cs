@@ -173,8 +173,7 @@ namespace Core.Assets
                     40f,
                     async progress =>
                     {
-                        var scopeName = $"Level_{levelId}_{runId}";
-                        await AssetSystem.Instance.LoadManifestAsync(levelManifest, scopeName, progress);
+                        await AssetSystem.Instance.LoadManifestAsync(levelManifest, AssetsScopeLabel.Level, progress);
                     }
                 ));
 
@@ -186,7 +185,7 @@ namespace Core.Assets
                     async progress =>
                     {
                         var scopeName = $"Level_{levelId}_{runId}";
-                        await AssetSystem.Instance.LoadManifestAsync(enemyManifest, scopeName, progress);
+                        await AssetSystem.Instance.LoadManifestAsync(enemyManifest, AssetsScopeLabel.Level, progress);
                     }
                 ));
 
@@ -220,7 +219,7 @@ namespace Core.Assets
                     100f,
                     async progress =>
                     {
-                        await AssetSystem.Instance.LoadManifestAsync(globalManifest, AssetSystem.GlobalScopeName,
+                        await AssetSystem.Instance.LoadManifestAsync(globalManifest, AssetSystem.GlobalScopeLabel,
                             progress);
                     }
                 )
