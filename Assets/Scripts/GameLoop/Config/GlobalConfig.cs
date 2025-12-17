@@ -1,5 +1,7 @@
-﻿using Core.Assets;
+﻿using System.Collections.Generic;
+using Core.Assets;
 using Core.AssetsTool;
+using GameLoop.Game;
 using UnityEngine;
 
 namespace GameLoop.Config
@@ -12,5 +14,6 @@ namespace GameLoop.Config
         public AssetsScopeLabel GlobalScopeLabel = default;
         public AssetManifest GlobalManifest;
         public AssetCatalog AssetCatalog;
+        public List<LoadSceneMap> SceneMap = new();
     }
 }

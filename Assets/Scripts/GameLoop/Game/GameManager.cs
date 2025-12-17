@@ -50,6 +50,7 @@ namespace GameLoop.Game
         private LoadSceneType CurrentLoadSceneType { get; set; }
         public AssetSystem AssetSystem { get; private set; }
         public MemoryMaintenanceService MemoryMaintenanceServiceInstance { get; private set; }
+        private SceneLoader _sceneLoader;
 
         private void Start()
         {
@@ -157,7 +158,11 @@ namespace GameLoop.Game
             }
 
             yield return null;
-
+            // 初始化场景加载器
+            _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
+            DontDestroyOnLoad(_sceneLoader.gameObject);
+            _sceneLoader.Initialize(GlobalConfig.SceneMap);
+            yield return null;
             // 加载完成
             Initialized = true;
             OnGameInitialized?.Invoke();
@@ -206,10 +211,11 @@ namespace GameLoop.Game
         /// </summary>
         private void LoadingMainProcess()
         {
-            StartCoroutine(LoadingProcessCoroutine(
-                GameTransition.FinishLoadMain,
+            Debug.Log("Loading main process...");
+            var loadSceneRequest = new LoadSceneRequest(GameTransition.FinishLoadMain,
                 GlobalConfig.GlobalManifest,
-                GlobalConfig.GlobalScopeLabel));
+                GlobalConfig.GlobalScopeLabel);
+            _sceneLoader.LoadScene(loadSceneRequest);
         }
 
         /// <summary>
@@ -218,30 +224,17 @@ namespace GameLoop.Game
         private void LoadingGameProcess()
         {
             Debug.Log("Loading game process...");
-            StartCoroutine(LoadingProcessCoroutine(GameTransition.FinishLoadGame, GlobalConfig.GlobalManifest));
+            var loadSceneRequest = new LoadSceneRequest(GameTransition.FinishLoadGame,
+                GlobalConfig.GlobalManifest,
+                GlobalConfig.GlobalScopeLabel);
+            _sceneLoader.LoadScene(loadSceneRequest);
         }
 
-        IEnumerator LoadingProcessCoroutine(GameTransition finishTransition, AssetManifest manifest,
-            AssetsScopeLabel scopeLabel = default)
+        public void PerformTransition(GameTransition transition)
         {
-            // load assets
-            var loadTask =
-                AssetSystem.Instance.LoadManifestAsync(manifest, scopeLabel, new Progress<float>(TestProgress));
-            yield return new WaitUntil(() => loadTask.IsCompleted);
-            if (loadTask.IsFaulted)
-            {
-                Debug.LogError($"Failed to load assets: {loadTask.Exception}");
-            }
-
-            // Simulate loading delay
-            yield return new WaitForSeconds(2.0f);
-            StateMachine.PerformTransition(finishTransition);
+            StateMachine.PerformTransition(transition);
         }
 
-        public void TestProgress(float progress)
-        {
-            Debug.Log($"Loading progress: {progress * 100}%");
-        }
 
         private void Update()
         {
