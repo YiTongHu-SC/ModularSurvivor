@@ -12,6 +12,12 @@ namespace SceneTests.TestUI
             EventManager.Instance.Publish(new GameEvents.GameStartEvent(0));
         }
 
+        public void ReturnToMainMenu()
+        {
+            Debug.Log("Return to main menu button clicked!");
+            EventManager.Instance.Publish(new GameEvents.ReturnToMainMenuEvent());
+        }
+
         public void ExitGame()
         {
             Debug.Log("Exit Game button clicked!");

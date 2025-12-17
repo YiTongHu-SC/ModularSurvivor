@@ -161,7 +161,7 @@ namespace GameLoop.Game
             // 初始化场景加载器
             _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
             DontDestroyOnLoad(_sceneLoader.gameObject);
-            _sceneLoader.Initialize(GlobalConfig.SceneMap);
+            _sceneLoader.Initialize(GlobalConfig.StaticSceneName, GlobalConfig.SceneMap);
             yield return null;
             // 加载完成
             Initialized = true;
@@ -182,12 +182,21 @@ namespace GameLoop.Game
         {
             EventManager.Instance.Subscribe<GameEvents.GameStartEvent>(OnGameStart);
             EventManager.Instance.Subscribe<GameEvents.GameExitEvent>(OnGameExit);
+            EventManager.Instance.Subscribe<GameEvents.ReturnToMainMenuEvent>(ReturnToMainMenu);
         }
+
 
         private void UnsubscribeEvents()
         {
             EventManager.Instance.Unsubscribe<GameEvents.GameStartEvent>(OnGameStart);
             EventManager.Instance.Unsubscribe<GameEvents.GameExitEvent>(OnGameExit);
+            EventManager.Instance.Unsubscribe<GameEvents.ReturnToMainMenuEvent>(ReturnToMainMenu);
+        }
+
+        private void ReturnToMainMenu(GameEvents.ReturnToMainMenuEvent evt)
+        {
+            CurrentLoadSceneType = LoadSceneType.MainMenu;
+            StateMachine.PerformTransition(GameTransition.ReturnToMenu);
         }
 
         private void OnGameStart(GameEvents.GameStartEvent gameStartEvent)

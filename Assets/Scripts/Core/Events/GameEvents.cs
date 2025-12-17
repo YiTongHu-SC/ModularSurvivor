@@ -194,5 +194,9 @@ namespace Core.Events
         public class GameExitEvent : EventData
         {
         }
+
+        public class ReturnToMainMenuEvent : EventData
+        {
+        }
     }
 }

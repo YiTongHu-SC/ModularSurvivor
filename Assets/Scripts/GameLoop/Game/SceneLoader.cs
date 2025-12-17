@@ -10,10 +10,14 @@ namespace GameLoop.Game
 {
     public class SceneLoader : MonoBehaviour
     {
+        private string _systemSceneName = "SystemScene";
         private Dictionary<GameTransition, string> _transitions;
+        private Scene _currentScene;
+        private bool _hasScene;
 
-        public void Initialize(List<LoadSceneMap> sceneMaps)
+        public void Initialize(string systemSceneName, List<LoadSceneMap> sceneMaps)
         {
+            _systemSceneName = systemSceneName;
             _transitions ??= new Dictionary<GameTransition, string>();
             _transitions.Clear();
 
@@ -31,6 +35,12 @@ namespace GameLoop.Game
 
         IEnumerator LoadSceneCoroutine(LoadSceneRequest sceneRequest)
         {
+            // 卸载当前场景
+            if (_hasScene)
+            {
+                yield return UnloadCurrentLevel();
+            }
+
             // load assets
             var loadTask = AssetSystem.Instance.LoadManifestAsync(sceneRequest.Manifest,
                 sceneRequest.ScopeLabel,
@@ -66,7 +76,8 @@ namespace GameLoop.Game
             }
 
             yield return null;
-
+            _currentScene = SceneManager.GetSceneByName(sceneName);
+            _hasScene = _currentScene.IsValid() && _currentScene.isLoaded;
             // Simulate loading delay
             GameManager.Instance.PerformTransition(sceneRequest.GameTransition);
         }
@@ -74,6 +85,24 @@ namespace GameLoop.Game
         private void TestProgress(float progress)
         {
             Debug.Log($"Loading progress: {progress * 100}%");
+        }
+
+        private IEnumerator UnloadCurrentLevel()
+        {
+            if (!_hasScene) yield break;
+            if (!_currentScene.IsValid() || !_currentScene.isLoaded) yield break;
+
+            // 关键点：卸载前先把 ActiveScene 切走（切回 System 或任意已加载场景）
+            Scene systemScene = SceneManager.GetSceneByName(_systemSceneName);
+            if (systemScene.IsValid() && systemScene.isLoaded)
+                SceneManager.SetActiveScene(systemScene);
+
+            // 异步卸载旧关卡
+            var op = SceneManager.UnloadSceneAsync(_currentScene);
+            while (op != null && !op.isDone) yield return null;
+
+            _hasScene = false;
+            _currentScene = default;
         }
     }
 
