@@ -379,6 +379,7 @@ namespace GameLoop.Game
 
             public override void Enter()
             {
+                CombatManager.Instance.CombatClock.SetBattleClock(300f); // 设置默认战斗时间为300秒
             }
 
             public override void Exit()

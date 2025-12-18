@@ -40,6 +40,11 @@ namespace UI.Game
             // 关闭后的逻辑
             Debug.Log("MainMenuUI: Closed successfully");
         }
+
+        protected override void OnDispose()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -140,6 +145,11 @@ namespace UI.Game
         protected override void OnAfterClose()
         {
             Debug.Log("SettingsUI: Popup closed, input unblocked");
+        }
+
+        protected override void OnDispose()
+        {
+            throw new System.NotImplementedException();
         }
     }
 

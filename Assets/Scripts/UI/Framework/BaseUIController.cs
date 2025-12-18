@@ -74,7 +74,7 @@ namespace UI.Framework
         where TModel : class
         where TView : class
     {
-        protected bool _enableDebugLogging = true;
+        protected bool EnableDebugLogging = true;
 
         public TModel Model { get; private set; }
         public TView View { get; private set; }
@@ -85,6 +85,16 @@ namespace UI.Framework
         public bool AllowStack { get; private set; }
         public bool IsOpen { get; private set; }
         public string ViewKey { get; protected set; }
+
+        /// <summary>
+        /// 控制器是否正在运行
+        /// </summary>
+        public bool IsRunning { get; private set; }
+
+        /// <summary>
+        /// 控制器是否已销毁
+        /// </summary>
+        public bool IsDisposed { get; private set; } = false;
 
         public virtual void InitLayerAttr()
         {
@@ -106,7 +116,7 @@ namespace UI.Framework
                 AllowStack = true;
             }
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log(
                     $"BaseUIController: {GetType().Name} configured - Layer: {Layer}, BlockInput: {BlockInput}, AllowStack: {AllowStack}");
@@ -118,7 +128,8 @@ namespace UI.Framework
             Model = model;
             View = view;
             IsInitialized = true;
-            if (_enableDebugLogging)
+            IsDisposed = false;
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} initialized");
             }
@@ -126,7 +137,7 @@ namespace UI.Framework
 
         public virtual void Start()
         {
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} started");
             }
@@ -134,7 +145,7 @@ namespace UI.Framework
 
         public virtual void Stop()
         {
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} stopped");
             }
@@ -144,7 +155,7 @@ namespace UI.Framework
         {
             if (IsOpen)
             {
-                if (_enableDebugLogging)
+                if (EnableDebugLogging)
                 {
                     Debug.LogWarning($"BaseUIController: {GetType().Name} is already open");
                 }
@@ -157,7 +168,7 @@ namespace UI.Framework
             Show();
             OnAfterOpen(args);
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} opened with args: {args}");
             }
@@ -167,7 +178,7 @@ namespace UI.Framework
         {
             if (!IsOpen)
             {
-                if (_enableDebugLogging)
+                if (EnableDebugLogging)
                 {
                     Debug.LogWarning($"BaseUIController: {GetType().Name} is already closed");
                 }
@@ -180,7 +191,7 @@ namespace UI.Framework
             Hide();
             OnAfterClose();
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} closed");
             }
@@ -222,8 +233,8 @@ namespace UI.Framework
             Model = null;
             View = null;
             IsInitialized = false;
-
-            if (_enableDebugLogging)
+            IsDisposed = true;
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} disposed");
             }
@@ -258,10 +269,18 @@ namespace UI.Framework
         }
 
         /// <summary>
-        /// 销毁时回调
+        /// 销毁时回调, 子类必须重写
         /// </summary>
-        protected virtual void OnDispose()
+        protected abstract void OnDispose();
+
+        ~BaseUIController()
         {
+            if (!IsDisposed)
+            {
+                Debug.LogWarning(
+                    $"BaseController<{typeof(TModel).Name}, {typeof(TView).Name}>: Controller was not properly disposed!");
+                Dispose();
+            }
         }
     }
 }

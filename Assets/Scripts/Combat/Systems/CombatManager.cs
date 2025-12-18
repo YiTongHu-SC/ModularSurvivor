@@ -1,4 +1,5 @@
 ﻿using Combat.Actors;
+using Combat.Data;
 using StellarCore.Singleton;
 
 namespace Combat.Systems
@@ -12,6 +13,7 @@ namespace Combat.Systems
         public ViewSystem ViewSystem { get; set; } = new();
         public Actor HeroActor { get; set; }
         public ActorFactory ActorFactory { get; set; } = new();
+        public CombatClockData CombatClock { get; set; }
 
         public override void Initialize()
         {
@@ -19,6 +21,7 @@ namespace Combat.Systems
             BuffSystem.Initialize();
             MovementSystem.Initialize();
             ViewSystem.Initialize();
+            CombatClock = new CombatClockData(300f); // 默认战斗时间300秒
         }
 
         public void Tick(float deltaTime)

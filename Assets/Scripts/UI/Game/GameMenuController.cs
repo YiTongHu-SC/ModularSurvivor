@@ -23,7 +23,6 @@ namespace UI.Game
             Debug.Log("GameMenuController disposed.");
             Model.Dispose();
             Object.Destroy(View.gameObject);
-            base.OnDispose();
         }
     }
 }

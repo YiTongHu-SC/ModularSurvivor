@@ -1,4 +1,5 @@
-﻿using Core.Events;
+﻿using System;
+using Core.Events;
 using Core.Input;
 using UI.Framework;
 using UnityEngine;
@@ -7,6 +8,19 @@ namespace UI.Game
 {
     public class GameUIManager : MonoBehaviour
     {
+        private LevelHudController _levelHudController;
+
+        private void Start()
+        {
+            MvcManager.Instance.Open<LevelHudController>();
+            _levelHudController = MvcManager.Instance.GetController<LevelHudController>();
+        }
+
+        private void Update()
+        {
+            _levelHudController.Update();
+        }
+
         private void OnEnable()
         {
             EventManager.Instance.Subscribe<InputEvents.InputContextChangedEvent>(ProcessEvent);

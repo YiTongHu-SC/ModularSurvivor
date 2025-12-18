@@ -16,5 +16,11 @@ namespace DebugTools.DebugMVC
             Initialize(model, viewComponent);
             return true;
         }
+
+        protected override void OnDispose()
+        {
+            Model.Dispose();
+            Object.Destroy(View.gameObject);
+        }
     }
 }
