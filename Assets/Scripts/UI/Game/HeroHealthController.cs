@@ -2,7 +2,7 @@
 using UI.Framework;
 using UnityEngine;
 
-namespace UI.Game.MVC
+namespace UI.Game
 {
     /// <summary>
     /// 英雄血量控制器 - 连接UnitManager和血量UI的桥梁
@@ -47,8 +47,6 @@ namespace UI.Game.MVC
 
         protected override void OnDispose()
         {
-            base.OnDispose();
-
             // 解绑视图
             View?.UnbindModel();
         }

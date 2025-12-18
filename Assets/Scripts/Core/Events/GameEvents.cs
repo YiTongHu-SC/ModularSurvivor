@@ -177,22 +177,6 @@ namespace Core.Events
             public ViewBaseData ViewData { get; }
         }
 
-        public class GameStartEvent : EventData
-        {
-            public GameStartEvent(int levelId)
-            {
-                LevelID = levelId;
-            }
 
-            public int LevelID { get; }
-        }
-
-        public class GameExitEvent : EventData
-        {
-        }
-
-        public class ReturnToMainMenuEvent : EventData
-        {
-        }
     }
 }

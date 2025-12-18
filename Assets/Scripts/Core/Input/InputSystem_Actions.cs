@@ -659,39 +659,12 @@ namespace Core.Input
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""OpenSettings"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""e7f3d5fe-0344-4175-8023-8072f334769e"",
-                    ""expectedControlType"": ""Button"",
+                    ""name"": ""PauseGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""9ec5271d-bd7e-4844-932c-7787c48a531d"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""OpenMan"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""a56c3e0b-83bf-485b-bbd9-225c1a6fee92"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""CloseTop"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""d2353725-cdcb-4fe9-b20e-880b817c6053"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ShowStackInfo"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""6bb43602-9669-414d-adce-e4fa77deb6b5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -1116,45 +1089,23 @@ namespace Core.Input
                 },
                 {
                     ""name"": """",
-                    ""id"": ""724302ed-1145-461a-ab07-7b36043bb416"",
-                    ""path"": ""<Keyboard>/n"",
-                    ""interactions"": ""Tap"",
+                    ""id"": ""5ec8ce82-3b5d-4da5-8c46-d5de3b9c235f"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""OpenSettings"",
+                    ""action"": ""PauseGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3a6e86e5-a115-4759-b6b3-99d46627a7a6"",
-                    ""path"": ""<Keyboard>/m"",
-                    ""interactions"": ""Tap"",
+                    ""id"": ""1238c6f5-ab17-448f-91b4-6f40f33583b4"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""OpenMan"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""01a28eff-e180-4fbb-9432-563574380740"",
-                    ""path"": ""<Keyboard>/k"",
-                    ""interactions"": ""Tap"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CloseTop"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f928f270-c110-4fdf-8bce-f73db5d0ec10"",
-                    ""path"": ""<Keyboard>/l"",
-                    ""interactions"": ""Tap"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ShowStackInfo"",
+                    ""action"": ""PauseGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1275,10 +1226,7 @@ namespace Core.Input
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-            m_UI_OpenSettings = m_UI.FindAction("OpenSettings", throwIfNotFound: true);
-            m_UI_OpenMan = m_UI.FindAction("OpenMan", throwIfNotFound: true);
-            m_UI_CloseTop = m_UI.FindAction("CloseTop", throwIfNotFound: true);
-            m_UI_ShowStackInfo = m_UI.FindAction("ShowStackInfo", throwIfNotFound: true);
+            m_UI_PauseGame = m_UI.FindAction("PauseGame", throwIfNotFound: true);
             // Debug
             m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
             m_Debug_DebugTool = m_Debug.FindAction("DebugTool", throwIfNotFound: true);
@@ -1558,10 +1506,7 @@ namespace Core.Input
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_TrackedDevicePosition;
         private readonly InputAction m_UI_TrackedDeviceOrientation;
-        private readonly InputAction m_UI_OpenSettings;
-        private readonly InputAction m_UI_OpenMan;
-        private readonly InputAction m_UI_CloseTop;
-        private readonly InputAction m_UI_ShowStackInfo;
+        private readonly InputAction m_UI_PauseGame;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -1614,21 +1559,9 @@ namespace Core.Input
             /// </summary>
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
             /// <summary>
-            /// Provides access to the underlying input action "UI/OpenSettings".
+            /// Provides access to the underlying input action "UI/PauseGame".
             /// </summary>
-            public InputAction @OpenSettings => m_Wrapper.m_UI_OpenSettings;
-            /// <summary>
-            /// Provides access to the underlying input action "UI/OpenMan".
-            /// </summary>
-            public InputAction @OpenMan => m_Wrapper.m_UI_OpenMan;
-            /// <summary>
-            /// Provides access to the underlying input action "UI/CloseTop".
-            /// </summary>
-            public InputAction @CloseTop => m_Wrapper.m_UI_CloseTop;
-            /// <summary>
-            /// Provides access to the underlying input action "UI/ShowStackInfo".
-            /// </summary>
-            public InputAction @ShowStackInfo => m_Wrapper.m_UI_ShowStackInfo;
+            public InputAction @PauseGame => m_Wrapper.m_UI_PauseGame;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1685,18 +1618,9 @@ namespace Core.Input
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
-                @OpenSettings.started += instance.OnOpenSettings;
-                @OpenSettings.performed += instance.OnOpenSettings;
-                @OpenSettings.canceled += instance.OnOpenSettings;
-                @OpenMan.started += instance.OnOpenMan;
-                @OpenMan.performed += instance.OnOpenMan;
-                @OpenMan.canceled += instance.OnOpenMan;
-                @CloseTop.started += instance.OnCloseTop;
-                @CloseTop.performed += instance.OnCloseTop;
-                @CloseTop.canceled += instance.OnCloseTop;
-                @ShowStackInfo.started += instance.OnShowStackInfo;
-                @ShowStackInfo.performed += instance.OnShowStackInfo;
-                @ShowStackInfo.canceled += instance.OnShowStackInfo;
+                @PauseGame.started += instance.OnPauseGame;
+                @PauseGame.performed += instance.OnPauseGame;
+                @PauseGame.canceled += instance.OnPauseGame;
             }
 
             /// <summary>
@@ -1738,18 +1662,9 @@ namespace Core.Input
                 @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
-                @OpenSettings.started -= instance.OnOpenSettings;
-                @OpenSettings.performed -= instance.OnOpenSettings;
-                @OpenSettings.canceled -= instance.OnOpenSettings;
-                @OpenMan.started -= instance.OnOpenMan;
-                @OpenMan.performed -= instance.OnOpenMan;
-                @OpenMan.canceled -= instance.OnOpenMan;
-                @CloseTop.started -= instance.OnCloseTop;
-                @CloseTop.performed -= instance.OnCloseTop;
-                @CloseTop.canceled -= instance.OnCloseTop;
-                @ShowStackInfo.started -= instance.OnShowStackInfo;
-                @ShowStackInfo.performed -= instance.OnShowStackInfo;
-                @ShowStackInfo.canceled -= instance.OnShowStackInfo;
+                @PauseGame.started -= instance.OnPauseGame;
+                @PauseGame.performed -= instance.OnPauseGame;
+                @PauseGame.canceled -= instance.OnPauseGame;
             }
 
             /// <summary>
@@ -2093,33 +2008,12 @@ namespace Core.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
             /// <summary>
-            /// Method invoked when associated input action "OpenSettings" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// Method invoked when associated input action "PauseGame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnOpenSettings(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "OpenMan" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnOpenMan(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "CloseTop" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnCloseTop(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "ShowStackInfo" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnShowStackInfo(InputAction.CallbackContext context);
+            void OnPauseGame(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.

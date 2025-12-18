@@ -1,7 +1,7 @@
 ﻿using Core.Events;
 using UI.Framework;
 
-namespace UI.Game.MVC
+namespace UI.Game
 {
     /// <summary>
     /// 英雄血量数据事件

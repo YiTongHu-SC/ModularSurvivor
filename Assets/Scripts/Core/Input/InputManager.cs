@@ -139,35 +139,6 @@ namespace Core.Input
         }
 
         /// <summary>
-        /// 注册调试输入回调
-        /// </summary>
-        private void RegisterDebugInputCallbacks()
-        {
-            _inputActions.Debug.DebugTool.performed += ToggleDebugUI;
-        }
-
-        /// <summary>
-        /// 取消注册调试输入回调
-        /// </summary>
-        private void UnregisterDebugInputCallbacks()
-        {
-            _inputActions.Debug.DebugTool.performed -= ToggleDebugUI;
-        }
-
-        private void ToggleDebugUI(InputAction.CallbackContext obj)
-        {
-            EventManager.Instance.Publish(new InputEvents.InputDebugUIEvent(InputEvents.DebugContext.ToggleDebugUI));
-        }
-
-        /// <summary>
-        ///     注册UI输入回调
-        /// </summary>
-        private void RegisterUIInputCallbacks()
-        {
-            // _inputActions.UI
-        }
-
-        /// <summary>
         ///     取消注册玩家输入回调
         /// </summary>
         private void UnregisterPlayerInputCallbacks()
@@ -198,11 +169,50 @@ namespace Core.Input
         }
 
         /// <summary>
+        /// 注册调试输入回调
+        /// </summary>
+        private void RegisterDebugInputCallbacks()
+        {
+            _inputActions.Debug.DebugTool.performed += ToggleDebugUI;
+        }
+
+        /// <summary>
+        /// 取消注册调试输入回调
+        /// </summary>
+        private void UnregisterDebugInputCallbacks()
+        {
+            _inputActions.Debug.DebugTool.performed -= ToggleDebugUI;
+        }
+
+
+        /// <summary>
+        ///     注册UI输入回调
+        /// </summary>
+        private void RegisterUIInputCallbacks()
+        {
+            _inputActions.UI.PauseGame.performed += OnPauseGamePerformed;
+        }
+
+        /// <summary>
         ///     取消注册UI输入回调
         /// </summary>
         private void UnregisterUIInputCallbacks()
         {
-            // 对应 RegisterUIInputCallbacks
+            _inputActions.UI.PauseGame.performed -= OnPauseGamePerformed;
+        }
+
+        #endregion
+
+        #region UI
+
+        private void ToggleDebugUI(InputAction.CallbackContext obj)
+        {
+            EventManager.Instance.Publish(new InputEvents.InputDebugUIEvent(InputEvents.DebugContext.ToggleDebugUI));
+        }
+
+        private void OnPauseGamePerformed(InputAction.CallbackContext context)
+        {
+            EventManager.Instance.Publish(new InputEvents.InputContextChangedEvent(InputEvents.InputContext.Paused));
         }
 
         #endregion

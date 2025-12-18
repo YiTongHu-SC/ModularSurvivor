@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Object = System.Object;
 
 namespace UI.Framework
 {
@@ -217,6 +218,10 @@ namespace UI.Framework
             }
 
             OnDispose();
+
+            Model = null;
+            View = null;
+            IsInitialized = false;
 
             if (_enableDebugLogging)
             {

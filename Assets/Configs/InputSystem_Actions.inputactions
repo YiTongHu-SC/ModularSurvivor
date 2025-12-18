@@ -571,39 +571,12 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "OpenSettings",
-                    "type": "PassThrough",
-                    "id": "e7f3d5fe-0344-4175-8023-8072f334769e",
-                    "expectedControlType": "Button",
+                    "name": "PauseGame",
+                    "type": "Button",
+                    "id": "9ec5271d-bd7e-4844-932c-7787c48a531d",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "OpenMan",
-                    "type": "PassThrough",
-                    "id": "a56c3e0b-83bf-485b-bbd9-225c1a6fee92",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CloseTop",
-                    "type": "PassThrough",
-                    "id": "d2353725-cdcb-4fe9-b20e-880b817c6053",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ShowStackInfo",
-                    "type": "PassThrough",
-                    "id": "6bb43602-9669-414d-adce-e4fa77deb6b5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false
                 }
             ],
@@ -1028,45 +1001,23 @@
                 },
                 {
                     "name": "",
-                    "id": "724302ed-1145-461a-ab07-7b36043bb416",
-                    "path": "<Keyboard>/n",
-                    "interactions": "Tap",
+                    "id": "5ec8ce82-3b5d-4da5-8c46-d5de3b9c235f",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "OpenSettings",
+                    "action": "PauseGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3a6e86e5-a115-4759-b6b3-99d46627a7a6",
-                    "path": "<Keyboard>/m",
-                    "interactions": "Tap",
+                    "id": "1238c6f5-ab17-448f-91b4-6f40f33583b4",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "OpenMan",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "01a28eff-e180-4fbb-9432-563574380740",
-                    "path": "<Keyboard>/k",
-                    "interactions": "Tap",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CloseTop",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f928f270-c110-4fdf-8bce-f73db5d0ec10",
-                    "path": "<Keyboard>/l",
-                    "interactions": "Tap",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ShowStackInfo",
+                    "action": "PauseGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

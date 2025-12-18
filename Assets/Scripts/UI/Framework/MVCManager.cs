@@ -11,7 +11,7 @@ namespace UI.Framework
     /// <summary>
     /// MVC管理器 - 管理所有MVC控制器的生命周期
     /// </summary>
-    public class MVCManager : BaseInstance<MVCManager>
+    public class MvcManager : BaseInstance<MvcManager>
     {
         [Header("Settings")] [SerializeField] private bool _enableDebugLogging = true;
 
@@ -441,7 +441,7 @@ namespace UI.Framework
 
             try
             {
-                if (!_uiControllerInstances.ContainsKey(uiType))
+                if (!_uiControllerInstances.TryGetValue(uiType, out var controller))
                 {
                     if (_enableDebugLogging)
                     {
@@ -451,7 +451,6 @@ namespace UI.Framework
                     return false;
                 }
 
-                var controller = _uiControllerInstances[uiType];
                 CloseUIController(controller);
                 return true;
             }
@@ -459,6 +458,42 @@ namespace UI.Framework
             {
                 Debug.LogError($"MVCManager: Error closing UI {uiType.Name} - {ex.Message}");
                 return false;
+            }
+        }
+
+        public void DisposeUI<T>() where T : class, IUIController
+        {
+            var uiType = typeof(T);
+
+            try
+            {
+                if (_uiControllerInstances.TryGetValue(uiType, out var controller))
+                {
+                    // 关闭UI
+                    CloseUIController(controller);
+
+                    // 注销控制器
+                    UnregisterController(controller);
+
+                    // 移除实例缓存
+                    _uiControllerInstances.Remove(uiType);
+
+                    if (_enableDebugLogging)
+                    {
+                        Debug.Log($"MVCManager: Disposed UI {uiType.Name}");
+                    }
+                }
+                else
+                {
+                    if (_enableDebugLogging)
+                    {
+                        Debug.LogWarning($"MVCManager: UI {uiType.Name} instance not found for disposal");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"MVCManager: Error disposing UI {uiType.Name} - {ex.Message}");
             }
         }
 
@@ -698,10 +733,5 @@ namespace UI.Framework
         }
 
         #endregion
-
-        public void CreateUI<T>()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

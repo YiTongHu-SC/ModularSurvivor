@@ -137,7 +137,7 @@ namespace GameLoop.Game
             new GameObject("UnitManager").AddComponent<UnitManager>();
             new GameObject("CombatManager").AddComponent<CombatManager>();
             new GameObject("WaveManager").AddComponent<WaveManager>();
-            new GameObject("MVCManager").AddComponent<MVCManager>();
+            new GameObject("MVCManager").AddComponent<MvcManager>();
             yield return null; // 等待一帧，确保所有单例都已初始化
             EventManager.Instance.Initialize();
             InputManager.Instance.Initialize();
@@ -145,7 +145,7 @@ namespace GameLoop.Game
             UnitManager.Instance.Initialize();
             CombatManager.Instance.Initialize();
             WaveManager.Instance.Initialize();
-            MVCManager.Instance.Initialize(UIConfig);
+            MvcManager.Instance.Initialize(UIConfig);
             yield return null;
             if (SystemRootSocket)
             {
@@ -178,7 +178,10 @@ namespace GameLoop.Game
             // 初始化场景加载器
             _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
             DontDestroyOnLoad(_sceneLoader.gameObject);
-            _sceneLoader.Initialize(GlobalConfig.SystemSceneName, GlobalConfig.LoadingSceneName, GlobalConfig.SceneMap);
+            _sceneLoader.Initialize(GlobalConfig.SystemSceneName,
+                GlobalConfig.LoadingSceneName,
+                GlobalConfig.SceneMap,
+                GlobalConfig.MinLoadingTime);
             // 加载完成
             Initialized = true;
             OnGameInitialized?.Invoke();
@@ -197,26 +200,26 @@ namespace GameLoop.Game
 
         private void SubscribeEvents()
         {
-            EventManager.Instance.Subscribe<GameEvents.GameStartEvent>(OnGameStart);
-            EventManager.Instance.Subscribe<GameEvents.GameExitEvent>(OnGameExit);
-            EventManager.Instance.Subscribe<GameEvents.ReturnToMainMenuEvent>(ReturnToMainMenu);
+            EventManager.Instance.Subscribe<GameLoopEvents.GameStartEvent>(OnGameStart);
+            EventManager.Instance.Subscribe<GameLoopEvents.GameExitEvent>(OnGameExit);
+            EventManager.Instance.Subscribe<GameLoopEvents.ReturnToMainMenuEvent>(ReturnToMainMenu);
         }
 
 
         private void UnsubscribeEvents()
         {
-            EventManager.Instance.Unsubscribe<GameEvents.GameStartEvent>(OnGameStart);
-            EventManager.Instance.Unsubscribe<GameEvents.GameExitEvent>(OnGameExit);
-            EventManager.Instance.Unsubscribe<GameEvents.ReturnToMainMenuEvent>(ReturnToMainMenu);
+            EventManager.Instance.Unsubscribe<GameLoopEvents.GameStartEvent>(OnGameStart);
+            EventManager.Instance.Unsubscribe<GameLoopEvents.GameExitEvent>(OnGameExit);
+            EventManager.Instance.Unsubscribe<GameLoopEvents.ReturnToMainMenuEvent>(ReturnToMainMenu);
         }
 
-        private void ReturnToMainMenu(GameEvents.ReturnToMainMenuEvent evt)
+        private void ReturnToMainMenu(GameLoopEvents.ReturnToMainMenuEvent evt)
         {
             CurrentLoadSceneType = LoadSceneType.MainMenu;
             StateMachine.PerformTransition(GameTransition.ReturnToMenu);
         }
 
-        private void OnGameStart(GameEvents.GameStartEvent gameStartEvent)
+        private void OnGameStart(GameLoopEvents.GameStartEvent gameStartEvent)
         {
             CurrentLevelData = new LoadSceneStruct()
             {
@@ -226,7 +229,7 @@ namespace GameLoop.Game
             StateMachine.PerformTransition(GameTransition.StartGame);
         }
 
-        private void OnGameExit(GameEvents.GameExitEvent gameExitEvent)
+        private void OnGameExit(GameLoopEvents.GameExitEvent gameExitEvent)
         {
             CurrentLoadSceneType = LoadSceneType.Exit;
             StateMachine.PerformTransition(GameTransition.ExitGame);

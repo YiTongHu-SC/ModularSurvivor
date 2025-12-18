@@ -12,7 +12,7 @@ namespace UI.Framework
         [SerializeField] private bool autoSetup = true;
         [SerializeField] private bool showGUI = true;
         
-        private MVCManager _mvcManager;
+        private MvcManager _mvcManager;
         private MVCFrameworkUsageExample _usageExample;
 
         private void Start()
@@ -29,15 +29,15 @@ namespace UI.Framework
         public void SetupMVCFramework()
         {
             // 创建MVCManager如果不存在
-            if (MVCManager.Instance == null)
+            if (MvcManager.Instance == null)
             {
                 var mvcManagerGO = new GameObject("MVCManager");
-                _mvcManager = mvcManagerGO.AddComponent<MVCManager>();
+                _mvcManager = mvcManagerGO.AddComponent<MvcManager>();
                 DontDestroyOnLoad(mvcManagerGO);
             }
             else
             {
-                _mvcManager = MVCManager.Instance;
+                _mvcManager = MvcManager.Instance;
             }
 
             // 创建使用示例组件

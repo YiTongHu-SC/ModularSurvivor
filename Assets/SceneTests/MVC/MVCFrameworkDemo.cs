@@ -1,5 +1,5 @@
 ﻿using UI.Framework;
-using UI.Game.MVC;
+using UI.Game;
 using UnityEngine;
 
 namespace UI.Framework
@@ -102,7 +102,7 @@ namespace UI.Framework
             // 清理MVC组件
             if (_heroHealthController != null)
             {
-                MVCManager.Instance?.UnregisterController(_heroHealthController);
+                MvcManager.Instance?.UnregisterController(_heroHealthController);
                 _heroHealthController = null;
             }
             
@@ -154,7 +154,7 @@ namespace UI.Framework
             _heroHealthController.SetDebugLogging(_enableDebugLogs);
             
             // 注册到MVC管理器
-            MVCManager.Instance.RegisterController(_heroHealthController);
+            MvcManager.Instance.RegisterController(_heroHealthController);
             
             // 启动控制器
             _heroHealthController.Start();
@@ -233,9 +233,9 @@ namespace UI.Framework
             Debug.Log($"Demo Running: {_isDemoRunning}");
             Debug.Log($"Current Health: {_currentHealth:F1}/{_maxHealth:F1}");
             
-            if (MVCManager.Instance != null)
+            if (MvcManager.Instance != null)
             {
-                Debug.Log(MVCManager.Instance.GetStatistics());
+                Debug.Log(MvcManager.Instance.GetStatistics());
             }
             
             if (_heroHealthController != null)

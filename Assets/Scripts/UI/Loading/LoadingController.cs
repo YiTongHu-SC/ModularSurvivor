@@ -1,5 +1,6 @@
 ﻿using Core.Events;
 using UI.Framework;
+using UnityEngine;
 
 namespace UI.Loading
 {
@@ -24,8 +25,9 @@ namespace UI.Loading
 
         protected override void OnDispose()
         {
-            base.OnDispose();
             EventManager.Instance.Unsubscribe<GameLoopEvents.LoadingProgressEvent>(UpdateLoading);
+            Model.Dispose();
+            Object.Destroy(View.gameObject);
         }
     }
 }

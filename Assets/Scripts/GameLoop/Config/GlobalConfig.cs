@@ -15,5 +15,6 @@ namespace GameLoop.Config
         public List<LoadSceneMap> SceneMap = new();
         public string SystemSceneName = "Scenes/SystemScene";
         public string LoadingSceneName = "Scenes/LoadingScene";
+        public float MinLoadingTime = 1.0f;
     }
 }

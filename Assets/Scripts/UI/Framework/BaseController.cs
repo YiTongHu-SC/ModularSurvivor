@@ -185,12 +185,9 @@ namespace UI.Framework
         }
 
         /// <summary>
-        /// 销毁时调用 - 子类可重写
+        /// 销毁时调用 - 子类必须重写
         /// </summary>
-        protected virtual void OnDispose()
-        {
-            // 子类可重写此方法进行特定清理逻辑
-        }
+        protected abstract void OnDispose();
 
         #endregion
 

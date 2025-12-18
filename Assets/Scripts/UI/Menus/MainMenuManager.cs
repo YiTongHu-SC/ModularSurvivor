@@ -12,7 +12,12 @@ namespace UI.Menus
 
         private void StartMainMenu()
         {
-            MVCManager.Instance.Open<MainMenuController>();
+            MvcManager.Instance.Open<MainMenuController>();
+        }
+
+        private void OnDestroy()
+        {
+            MvcManager.Instance.DisposeUI<MainMenuController>();
         }
     }
 }

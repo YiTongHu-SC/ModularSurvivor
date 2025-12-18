@@ -1,7 +1,7 @@
 ﻿using UI.Framework;
 using UnityEngine;
 
-namespace UI.Game.MVC
+namespace UI.Game
 {
     /// <summary>
     /// 英雄血量条MVC组件 - 演示如何使用MVC框架
@@ -84,9 +84,9 @@ namespace UI.Game.MVC
             _controller.SetDebugLogging(_enableDebugLogging);
             
             // 注册到MVC管理器
-            if (MVCManager.Instance != null)
+            if (MvcManager.Instance != null)
             {
-                MVCManager.Instance.RegisterController(_controller);
+                MvcManager.Instance.RegisterController(_controller);
             }
             
             IsInitialized = true;
@@ -136,9 +136,9 @@ namespace UI.Game.MVC
             if (_controller != null)
             {
                 // 从管理器注销
-                if (MVCManager.Instance != null)
+                if (MvcManager.Instance != null)
                 {
-                    MVCManager.Instance.UnregisterController(_controller);
+                    MvcManager.Instance.UnregisterController(_controller);
                 }
                 
                 _controller.Dispose();

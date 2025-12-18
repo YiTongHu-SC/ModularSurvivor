@@ -23,7 +23,8 @@ namespace Core.Input
             UI, // UI交互
             Paused, // 暂停
             Disabled, // 禁用所有输入
-            Debug // 调试模式
+            Debug, // 调试模式
+            ContinueGame // 继续游戏
         }
 
         /// <summary>

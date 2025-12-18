@@ -99,7 +99,7 @@ namespace UI.Game
         {
             Debug.Log("Settings button clicked");
             // 打开设置界面
-            MVCManager.Instance.Open<SettingsUIController>();
+            MvcManager.Instance.Open<SettingsUIController>();
         }
 
         private void OnExitClicked()
@@ -166,7 +166,7 @@ namespace UI.Game
         private void Start()
         {
             if (closeButton != null)
-                closeButton.onClick.AddListener(() => { MVCManager.Instance.Close<SettingsUIController>(); });
+                closeButton.onClick.AddListener(() => { MvcManager.Instance.Close<SettingsUIController>(); });
         }
 
         public void UpdateView(SettingsModel model)

@@ -17,21 +17,21 @@ namespace UI.Loading
 
         private void Start()
         {
-            InitializeMVC();
+            InitializeMvc();
         }
 
         private void OnDestroy()
         {
-            if (MVCManager.Instance == null) return;
-            MVCManager.Instance.UnregisterController(_loadingController);
+            if (MvcManager.Instance == null) return;
+            MvcManager.Instance.UnregisterController(_loadingController);
             _loadingController = null;
         }
 
         #endregion
 
-        private void InitializeMVC()
+        private void InitializeMvc()
         {
-            if (MVCManager.Instance == null) return;
+            if (MvcManager.Instance == null) return;
             if (_loadingController != null && _loadingController.IsInitialized)
             {
                 return;
@@ -41,7 +41,7 @@ namespace UI.Loading
             _loadingController = new LoadingController();
             var loadingModel = new LoadingModel();
             _loadingController.Initialize(loadingModel, _loadingView);
-            MVCManager.Instance.RegisterController(_loadingController);
+            MvcManager.Instance.RegisterController(_loadingController);
             Debug.Log("LoadingMVC Initialized");
         }
     }

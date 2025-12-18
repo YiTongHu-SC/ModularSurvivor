@@ -26,11 +26,6 @@ namespace UI.Framework
             {
                 StartDemo();
             }
-
-            _inputActions.UI.OpenMan.performed += OpenMainMenu;
-            _inputActions.UI.OpenSettings.performed += OpenSettings;
-            _inputActions.UI.CloseTop.performed += ctx => CloseTopUI();
-            _inputActions.UI.ShowStackInfo.performed += ctx => ShowStackInfo();
         }
 
         private void Update()
@@ -59,36 +54,36 @@ namespace UI.Framework
                 FromScene = "DemoScene"
             };
 
-            bool success = MVCManager.Instance.Open<MainMenuUIController>(args);
+            bool success = MvcManager.Instance.Open<MainMenuUIController>(args);
             Debug.Log($"Open MainMenu: {(success ? "Success" : "Failed")}");
         }
 
         public void OpenSettings(InputAction.CallbackContext callbackContext = default)
         {
-            bool success = MVCManager.Instance.Open<SettingsUIController>();
+            bool success = MvcManager.Instance.Open<SettingsUIController>();
             Debug.Log($"Open Settings: {(success ? "Success" : "Failed")}");
         }
 
         public void CloseTopUI()
         {
-            bool success = MVCManager.Instance.CloseTop();
+            bool success = MvcManager.Instance.CloseTop();
             Debug.Log($"Close Top UI: {(success ? "Success" : "No UI to close")}");
         }
 
         public void ShowStackInfo()
         {
-            string stackInfo = MVCManager.Instance.GetUIStackInfo();
+            string stackInfo = MvcManager.Instance.GetUIStackInfo();
             Debug.Log("=== UI Stack Info ===\n" + stackInfo);
 
-            Debug.Log($"Has Input Blocker: {MVCManager.Instance.HasInputBlocker()}");
+            Debug.Log($"Has Input Blocker: {MvcManager.Instance.HasInputBlocker()}");
 
-            string stats = MVCManager.Instance.GetStatistics();
+            string stats = MvcManager.Instance.GetStatistics();
             Debug.Log("=== MVC Statistics ===\n" + stats);
         }
 
         public void CloseAllUI()
         {
-            MVCManager.Instance.CloseAllUI();
+            MvcManager.Instance.CloseAllUI();
             Debug.Log("All UI closed");
         }
 
@@ -98,16 +93,16 @@ namespace UI.Framework
             Debug.Log("=== Testing Input Blocking ===");
 
             // 先打开一个非阻塞的UI
-            MVCManager.Instance.Open<MainMenuUIController>();
-            Debug.Log($"After MainMenu - Has Input Blocker: {MVCManager.Instance.HasInputBlocker()}");
+            MvcManager.Instance.Open<MainMenuUIController>();
+            Debug.Log($"After MainMenu - Has Input Blocker: {MvcManager.Instance.HasInputBlocker()}");
 
             // 再打开一个阻塞输入的UI
-            MVCManager.Instance.Open<SettingsUIController>();
-            Debug.Log($"After Settings - Has Input Blocker: {MVCManager.Instance.HasInputBlocker()}");
+            MvcManager.Instance.Open<SettingsUIController>();
+            Debug.Log($"After Settings - Has Input Blocker: {MvcManager.Instance.HasInputBlocker()}");
 
             // 关闭阻塞UI
-            MVCManager.Instance.Close<SettingsUIController>();
-            Debug.Log($"After Closing Settings - Has Input Blocker: {MVCManager.Instance.HasInputBlocker()}");
+            MvcManager.Instance.Close<SettingsUIController>();
+            Debug.Log($"After Closing Settings - Has Input Blocker: {MvcManager.Instance.HasInputBlocker()}");
         }
 
         public void TestStackBehavior()
@@ -116,16 +111,16 @@ namespace UI.Framework
             Debug.Log("=== Testing Stack Behavior ===");
 
             // 清空现有UI
-            MVCManager.Instance.CloseAllUI();
+            MvcManager.Instance.CloseAllUI();
 
             // 打开多个UI测试堆叠
-            MVCManager.Instance.Open<MainMenuUIController>();
-            MVCManager.Instance.Open<SettingsUIController>();
+            MvcManager.Instance.Open<MainMenuUIController>();
+            MvcManager.Instance.Open<SettingsUIController>();
 
             ShowStackInfo();
 
             // 测试CloseTop
-            MVCManager.Instance.CloseTop();
+            MvcManager.Instance.CloseTop();
             ShowStackInfo();
         }
     }

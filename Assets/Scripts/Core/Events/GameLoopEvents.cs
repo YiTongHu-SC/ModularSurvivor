@@ -22,5 +22,23 @@
                 SceneWeight = sceneWeight / (assetWeight + sceneWeight);
             }
         }
+
+        public class GameStartEvent : EventData
+        {
+            public GameStartEvent(int levelId)
+            {
+                LevelID = levelId;
+            }
+
+            public int LevelID { get; }
+        }
+
+        public class GameExitEvent : EventData
+        {
+        }
+
+        public class ReturnToMainMenuEvent : EventData
+        {
+        }
     }
 }

@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Core::Core.Assets.AssetManifest
   Catalog: {fileID: 11400000, guid: 8467e15f2c577064d832a16b87e46dcf, type: 2}
   Rules:
-  - name: 
-    enabled: 1
-    includeKeyPrefixes:
-    - actor
-    excludeKeyPrefixes: []
-    includeTags: []
-    excludeTags: []
-    includeTypes: []
-    excludeTypes: []
-    defaultRequired: 1
-    requiredTags: []
-    tagWeights: []
-    typeWeights: []
-    defaultWeight: 0
+  - Name: Rule
+    Enabled: 1
+    IncludeKeyPrefixes: []
+    ExcludeKeyPrefixes: []
+    IncludeTags: []
+    ExcludeTags: []
+    IncludeTypes: []
+    ExcludeTypes: []
+    DefaultRequired: 1
+    RequiredTags:
+    - required
+    TagWeights: []
+    TypeWeights: []
+    DefaultWeight: 1
   Overrides: []
   _generatedEntries:
   - _key: actor_configs:actor_100000

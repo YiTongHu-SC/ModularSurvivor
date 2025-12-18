@@ -27,17 +27,17 @@ namespace DebugTools.DebugMVC
         {
             if (obj.Context == InputEvents.DebugContext.ToggleDebugUI)
             {
-                var controller = MVCManager.Instance.GetController<DebugController>();
+                var controller = MvcManager.Instance.GetController<DebugController>();
                 if (controller != null)
                 {
                     var isOpen = controller.IsOpen;
                     if (isOpen)
                     {
-                        MVCManager.Instance.Close<DebugController>();
+                        MvcManager.Instance.Close<DebugController>();
                     }
                     else
                     {
-                        MVCManager.Instance.Open<DebugController>();
+                        MvcManager.Instance.Open<DebugController>();
                     }
                 }
             }
@@ -59,7 +59,7 @@ namespace DebugTools.DebugMVC
 
             if (InitOpen)
             {
-                MVCManager.Instance.Open<DebugController>();
+                MvcManager.Instance.Open<DebugController>();
             }
         }
     }

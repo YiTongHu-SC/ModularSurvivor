@@ -21,17 +21,17 @@ namespace DebugTools.DebugMVC
 
         private void OnExitGameClicked()
         {
-            EventManager.Instance.Publish(new GameEvents.GameExitEvent());
+            EventManager.Instance.Publish(new GameLoopEvents.GameExitEvent());
         }
 
         private void OnReturnMainClicked()
         {
-            EventManager.Instance.Publish(new GameEvents.ReturnToMainMenuEvent());
+            EventManager.Instance.Publish(new GameLoopEvents.ReturnToMainMenuEvent());
         }
 
         private void OnStartGameClicked()
         {
-            EventManager.Instance.Publish(new GameEvents.GameStartEvent(0));
+            EventManager.Instance.Publish(new GameLoopEvents.GameStartEvent(0));
         }
 
         public override void UpdateView(GameDebugData data)

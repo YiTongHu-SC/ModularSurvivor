@@ -3,7 +3,7 @@ using UI.Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Game.MVC
+namespace UI.Game
 {
     /// <summary>
     /// 英雄血量条视图 - MVC模式的血量显示组件
