@@ -33,6 +33,10 @@ MonoBehaviour:
     _resourcesPath: EffectConfigs/PresentationConfig
     _assetType: 1
     _tags: []
+  - _key: ui:prefab:main_menu_view
+    _resourcesPath: UI/Prefab/MainMenuView
+    _assetType: 0
+    _tags: []
   - _key: wave_configs:wave_config
     _resourcesPath: WaveConfigs/WaveConfig
     _assetType: 1

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DebugTools.DebugMVC
 {
-    [UILayer(UILayer.Window, "debug:ui:debug_view", blockInput: false, allowStack: false)]
+    [UILayer(UILayer.System, "debug:ui:debug_view", blockInput: false, allowStack: false)]
     public class DebugController : BaseUIController<DebugModel, DebugView>
     {
         public override bool Initialize(GameObject targetView, object args = null)

@@ -367,17 +367,13 @@ namespace UI.Framework
             // 获取UI层级配置
             var layerAttribute = uiType.GetCustomAttributes(typeof(UILayerAttribute), false);
             UILayer layer = UILayer.Window;
-            bool blockInput = false;
             bool allowStack = true;
-            string viewKey = string.Empty;
 
             if (layerAttribute.Length > 0)
             {
                 var attr = (UILayerAttribute)layerAttribute[0];
                 layer = attr.Layer;
-                blockInput = attr.BlockInput;
                 allowStack = attr.AllowStack;
-                viewKey = attr.ViewKey;
             }
 
             // 检查是否允许堆叠
@@ -411,18 +407,19 @@ namespace UI.Framework
                     }
 
                     // 重新打开现有实例
-                    OpenUIController(existingController, viewKey, args);
+                    OpenUIController(existingController, args);
                     return true;
                 }
 
                 // 创建新实例
                 var controller = new T();
+                controller.InitLayerAttr();
                 // 注册控制器
                 RegisterController(controller);
                 _uiControllerInstances[uiType] = controller;
 
                 // 打开UI
-                OpenUIController(controller, viewKey, args);
+                OpenUIController(controller, args);
 
                 return true;
             }
@@ -581,11 +578,11 @@ namespace UI.Framework
         /// <summary>
         /// 内部方法：打开UI控制器
         /// </summary>
-        private void OpenUIController(IUIController controller, string viewKey, object args)
+        private void OpenUIController(IUIController controller, object args)
         {
             // 将UI挂到正确的层级
 
-            AttachToLayer(controller, viewKey, args, () =>
+            AttachToLayer(controller, args, () =>
             {
                 // 推入UI栈
                 var stackElement = new UIStackElement(
@@ -628,7 +625,8 @@ namespace UI.Framework
         /// <summary>
         /// 将UI挂到正确的层级
         /// </summary>
-        private async void AttachToLayer(IUIController controller, string viewKey, object args,
+        private async void AttachToLayer(IUIController controller,
+            object args,
             Action callback = null)
         {
             // 这里可以根据实际需求实现UI prefab的加载和层级挂载
@@ -656,7 +654,8 @@ namespace UI.Framework
                     Debug.Log($"MVCManager: UI {controller.GetType().Name} attache to layer {controller.Layer}");
                 }
 
-                var targetView = await AssetSystem.Instance.Provider.InstantiateAsync(viewKey, layerRoot,
+                var targetView = await AssetSystem.Instance.Provider.InstantiateAsync(controller.ViewKey,
+                    layerRoot,
                     AssetsScopeLabel.Frontend);
                 controller.Initialize(targetView, args);
                 callback?.Invoke();

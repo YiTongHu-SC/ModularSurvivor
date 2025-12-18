@@ -8,6 +8,13 @@ namespace UI.Framework
     /// </summary>
     public interface IUIController : IDisposable
     {
+        public void InitLayerAttr();
+
+        /// <summary>
+        /// 用于标识不同UI的唯一键值，加载View资源
+        /// </summary>
+        public string ViewKey { get; }
+
         /// <summary>
         /// 是否已初始化
         /// </summary>
@@ -18,7 +25,7 @@ namespace UI.Framework
         /// <summary>
         /// UI层级
         /// </summary>
-        UILayer Layer { get; }
+        public UILayer Layer { get; }
 
         /// <summary>
         /// 是否阻塞输入
@@ -72,12 +79,13 @@ namespace UI.Framework
         public TView View { get; private set; }
         public bool IsInitialized { get; private set; }
         public abstract bool Initialize(GameObject targetView, object args = null);
-        public UILayer Layer { get; private set; }
+        public UILayer Layer { get; protected set; }
         public bool BlockInput { get; private set; }
         public bool AllowStack { get; private set; }
         public bool IsOpen { get; private set; }
+        public string ViewKey { get; protected set; }
 
-        protected virtual void InitLayerAttr()
+        public virtual void InitLayerAttr()
         {
             // 通过Attribute获取UI配置
             var layerAttribute = GetType().GetCustomAttributes(typeof(UILayerAttribute), false);
@@ -87,6 +95,7 @@ namespace UI.Framework
                 Layer = attr.Layer;
                 BlockInput = attr.BlockInput;
                 AllowStack = attr.AllowStack;
+                ViewKey = attr.ViewKey;
             }
             else
             {
@@ -105,7 +114,6 @@ namespace UI.Framework
 
         public virtual void Initialize(TModel model, TView view)
         {
-            InitLayerAttr();
             Model = model;
             View = view;
             IsInitialized = true;

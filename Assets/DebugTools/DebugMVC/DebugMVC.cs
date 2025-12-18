@@ -7,7 +7,7 @@ namespace DebugTools.DebugMVC
 {
     public class DebugMvc : MonoBehaviour
     {
-        // public string DebugViewPrefabKey = "debug:ui:debug_view";
+        public bool InitOpen = false;
         public bool EnableDebugLogging = false;
         private bool _isInitialized = false;
 
@@ -57,7 +57,10 @@ namespace DebugTools.DebugMVC
                 Debug.Log("DebugMvc: Creating Debug MVC");
             }
 
-            MVCManager.Instance.Open<DebugController>();
+            if (InitOpen)
+            {
+                MVCManager.Instance.Open<DebugController>();
+            }
         }
     }
 }
