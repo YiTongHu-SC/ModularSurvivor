@@ -256,7 +256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 358942226}
   m_Layer: 5
-  m_Name: UIRootTransform
+  m_Name: SystemRootSocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,11 +667,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GameLoop::GameLoop.Game.GameManager
   GlobalConfig: {fileID: 11400000, guid: 534e7a46eb557304f9a3d143ad4f27c0, type: 2}
+  UIConfig: {fileID: 0}
   OnGameInitialized:
     m_PersistentCalls:
       m_Calls: []
-  UIRootTransform: {fileID: 358942226}
-  WorldRootTransform: {fileID: 0}
+  SystemRootSocket: {fileID: 358942226}
   ShowGameState: 0
 --- !u!1 &1901760097
 GameObject:

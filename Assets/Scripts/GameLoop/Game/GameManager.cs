@@ -44,8 +44,7 @@ namespace GameLoop.Game
         public GlobalConfig GlobalConfig;
         public UIConfig UIConfig;
         public UnityEvent OnGameInitialized;
-        public Transform UIRootTransform;
-        public Transform WorldRootTransform;
+        public Transform SystemRootSocket;
         public GameState ShowGameState;
         private StateMachine<GameManager, GameState, GameTransition> StateMachine { get; set; }
         public GameState CurrentState => StateMachine.CurrentStateID;
@@ -59,14 +58,9 @@ namespace GameLoop.Game
         protected override void Awake()
         {
             base.Awake();
-            if (UIRootTransform)
+            if (SystemRootSocket)
             {
-                UIRootTransform.gameObject.SetActive(false);
-            }
-
-            if (WorldRootTransform)
-            {
-                WorldRootTransform.gameObject.SetActive(false);
+                SystemRootSocket.gameObject.SetActive(false);
             }
         }
 
@@ -154,14 +148,9 @@ namespace GameLoop.Game
             WaveManager.Instance.Initialize();
             MVCManager.Instance.Initialize(UIConfig);
             yield return null;
-            if (UIRootTransform)
+            if (SystemRootSocket)
             {
-                UIRootTransform.gameObject.SetActive(true);
-            }
-
-            if (WorldRootTransform)
-            {
-                WorldRootTransform.gameObject.SetActive(true);
+                SystemRootSocket.gameObject.SetActive(true);
             }
 
             yield return null;
