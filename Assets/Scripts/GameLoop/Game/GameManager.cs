@@ -7,7 +7,6 @@ using Core.Input;
 using Core.Timer;
 using Core.Units;
 using GameLoop.Config;
-using GameLoop.Events;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UI.Config;

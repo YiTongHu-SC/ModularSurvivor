@@ -1,6 +1,5 @@
 ﻿using Core.Events;
 using Core.Input;
-using GameLoop.Events;
 using UI.Framework;
 using UnityEngine;
 

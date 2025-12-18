@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Assets;
 using Core.AssetsTool;
+using Core.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,9 +15,13 @@ namespace GameLoop.Game
         private Dictionary<GameTransition, string> _transitions;
         private Scene _currentScene;
         private bool _hasScene;
+        private GameLoopEvents.LoadingProgressEvent _loadingProgressEvent = new(0.5f, 0.5f);
+        private float _loadingSceneTimer;
+        private float _minLoadingSceneTime = 3.0f;
 
-        public void Initialize(string systemSceneName, List<LoadSceneMap> sceneMaps)
+        public void Initialize(string systemSceneName, List<LoadSceneMap> sceneMaps, float minLoadingSceneTime = 3.0f)
         {
+            _minLoadingSceneTime = minLoadingSceneTime;
             _systemSceneName = systemSceneName;
             _transitions ??= new Dictionary<GameTransition, string>();
             _transitions.Clear();
@@ -63,9 +68,23 @@ namespace GameLoop.Game
             if (operation != null)
             {
                 operation.allowSceneActivation = false;
-                while (operation.progress < 0.9f)
+                _loadingSceneTimer = 0f;
+                var minTimeReached = false;
+                var timerProgress = 0f;
+                while (operation.progress < 0.9f || !minTimeReached)
                 {
+                    if (_loadingSceneTimer >= _minLoadingSceneTime)
+                    {
+                        minTimeReached = true;
+                    }
+
+                    _loadingSceneTimer += Time.deltaTime;
+                    timerProgress = Mathf.Clamp01(_loadingSceneTimer / _minLoadingSceneTime);
+                    // 保证最小加载时间
                     Debug.Log($"Scene loading progress: {operation.progress * 100}%");
+                    _loadingProgressEvent.SceneProgress = 0.5f * (operation.progress + timerProgress);
+                    _loadingProgressEvent.Message = "Loading Scene Progress";
+                    EventManager.Instance.Publish(_loadingProgressEvent);
                     yield return null;
                 }
 
@@ -84,7 +103,10 @@ namespace GameLoop.Game
 
         private void TestProgress(float progress)
         {
-            Debug.Log($"Loading progress: {progress * 100}%");
+            Debug.Log($"Loading Assets Progress: {progress * 100}%");
+            _loadingProgressEvent.AssetProgress = progress;
+            _loadingProgressEvent.Message = "Loading Assets Progress";
+            EventManager.Instance.Publish(_loadingProgressEvent);
         }
 
         private IEnumerator UnloadCurrentLevel()

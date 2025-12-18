@@ -23,6 +23,7 @@ namespace UI.Loading
 
         private void OnDestroy()
         {
+            if (MVCManager.Instance == null) return;
             MVCManager.Instance.UnregisterController(_loadingController);
             _loadingController = null;
         }
@@ -31,6 +32,7 @@ namespace UI.Loading
 
         private void InitializeMVC()
         {
+            if (MVCManager.Instance == null) return;
             if (_loadingController != null && _loadingController.IsInitialized)
             {
                 return;
