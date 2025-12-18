@@ -1,4 +1,5 @@
-﻿using UI.Framework;
+﻿using Core.Events;
+using UI.Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,17 +21,17 @@ namespace DebugTools.DebugMVC
 
         private void OnExitGameClicked()
         {
-            throw new System.NotImplementedException();
+            EventManager.Instance.Publish(new GameEvents.GameExitEvent());
         }
 
         private void OnReturnMainClicked()
         {
-            throw new System.NotImplementedException();
+            EventManager.Instance.Publish(new GameEvents.ReturnToMainMenuEvent());
         }
 
         private void OnStartGameClicked()
         {
-            throw new System.NotImplementedException();
+            EventManager.Instance.Publish(new GameEvents.GameStartEvent(0));
         }
 
         public override void UpdateView(GameDebugData data)

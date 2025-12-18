@@ -10,6 +10,7 @@ using GameLoop.Config;
 using GameLoop.Events;
 using StellarCore.FSM;
 using StellarCore.Singleton;
+using UI.Config;
 using UI.Framework;
 using UnityEngine;
 using UnityEngine.Events;
@@ -41,6 +42,7 @@ namespace GameLoop.Game
     public class GameManager : BaseInstance<GameManager>
     {
         public GlobalConfig GlobalConfig;
+        public UIConfig UIConfig;
         public UnityEvent OnGameInitialized;
         public Transform UIRootTransform;
         public Transform WorldRootTransform;
@@ -150,7 +152,7 @@ namespace GameLoop.Game
             UnitManager.Instance.Initialize();
             CombatManager.Instance.Initialize();
             WaveManager.Instance.Initialize();
-            MVCManager.Instance.Initialize();
+            MVCManager.Instance.Initialize(UIConfig);
             yield return null;
             if (UIRootTransform)
             {

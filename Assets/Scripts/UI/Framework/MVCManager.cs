@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core.Assets;
 using StellarCore.Singleton;
+using UI.Config;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,8 @@ namespace UI.Framework
     public class MVCManager : BaseInstance<MVCManager>
     {
         [Header("Settings")] [SerializeField] private bool _enableDebugLogging = true;
+
+        private UIConfig _uiConfig;
 
         /// <summary>
         /// 所有注册的控制器
@@ -56,6 +59,12 @@ namespace UI.Framework
 
         #region 初始化和清理
 
+        public void Initialize(UIConfig uiConfig)
+        {
+            _uiConfig = uiConfig;
+            Initialize();
+        }
+
         /// <summary>
         /// 初始化管理器
         /// </summary>
@@ -84,7 +93,7 @@ namespace UI.Framework
 
             var canvasScaler = uiRoot.AddComponent<CanvasScaler>();
             canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            canvasScaler.referenceResolution = new Vector2(1920, 1080);
+            canvasScaler.referenceResolution = _uiConfig ? _uiConfig.DefaultScreenSize : new Vector2(1920, 1080);
 
             var graphicRaycaster = uiRoot.AddComponent<GraphicRaycaster>();
             graphicRaycaster.ignoreReversedGraphics = true;
@@ -690,5 +699,10 @@ namespace UI.Framework
         }
 
         #endregion
+
+        public void CreateUI<T>()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace UI.Framework
         public bool AllowStack { get; private set; }
         public bool IsOpen { get; private set; }
 
-        protected virtual void Awake()
+        protected virtual void InitLayerAttr()
         {
             // 通过Attribute获取UI配置
             var layerAttribute = GetType().GetCustomAttributes(typeof(UILayerAttribute), false);
@@ -105,9 +105,10 @@ namespace UI.Framework
 
         public virtual void Initialize(TModel model, TView view)
         {
+            InitLayerAttr();
             Model = model;
             View = view;
-
+            IsInitialized = true;
             if (_enableDebugLogging)
             {
                 Debug.Log($"BaseUIController: {GetType().Name} initialized");
