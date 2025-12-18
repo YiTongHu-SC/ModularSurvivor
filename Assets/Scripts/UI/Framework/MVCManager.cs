@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Assets;
 using StellarCore.Singleton;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI.Framework
 {
@@ -80,6 +81,15 @@ namespace UI.Framework
             var canvas = uiRoot.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 0;
+
+            var canvasScaler = uiRoot.AddComponent<CanvasScaler>();
+            canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            canvasScaler.referenceResolution = new Vector2(1920, 1080);
+
+            var graphicRaycaster = uiRoot.AddComponent<GraphicRaycaster>();
+            graphicRaycaster.ignoreReversedGraphics = true;
+            graphicRaycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
+            graphicRaycaster.blockingMask = LayerMask.GetMask("UI");
 
             // 为每个UI层级创建根节点
             foreach (UILayer layer in Enum.GetValues(typeof(UILayer)))

@@ -85,9 +85,11 @@ namespace Core.Input
             // 订阅所有输入动作
             RegisterPlayerInputCallbacks();
             RegisterUIInputCallbacks();
-
+            RegisterDebugInputCallbacks();
             // 默认启用游戏输入
             EnableGameplayInput();
+            EnableUIInput();
+            EnableDebugInput();
         }
 
         private void OnDestroy()
@@ -97,6 +99,7 @@ namespace Core.Input
             {
                 UnregisterPlayerInputCallbacks();
                 UnregisterUIInputCallbacks();
+                UnregisterDebugInputCallbacks();
                 _inputActions.Dispose();
             }
         }
@@ -136,12 +139,32 @@ namespace Core.Input
         }
 
         /// <summary>
+        /// 注册调试输入回调
+        /// </summary>
+        private void RegisterDebugInputCallbacks()
+        {
+            _inputActions.Debug.DebugTool.performed += ToggleDebugUI;
+        }
+
+        /// <summary>
+        /// 取消注册调试输入回调
+        /// </summary>
+        private void UnregisterDebugInputCallbacks()
+        {
+            _inputActions.Debug.DebugTool.performed -= ToggleDebugUI;
+        }
+
+        private void ToggleDebugUI(InputAction.CallbackContext obj)
+        {
+            EventManager.Instance.Publish(new InputEvents.InputDebugUIEvent(InputEvents.DebugContext.ToggleDebugUI));
+        }
+
+        /// <summary>
         ///     注册UI输入回调
         /// </summary>
         private void RegisterUIInputCallbacks()
         {
-            // UI 输入由各自的 UI 模块管理（如 DebugPanel）
-            // 这里可以预留全局 UI 输入监听
+            // _inputActions.UI
         }
 
         /// <summary>
@@ -408,6 +431,23 @@ namespace Core.Input
             _isCrouchPressed = false;
 
             Debug.Log("[InputManager] Gameplay input disabled.");
+        }
+
+        public void EnableDebugInput()
+        {
+            // 这里可以启用一些调试输入，比如切换摄像机视角等
+            _inputActions.Debug.Enable();
+            _currentContext = InputEvents.InputContext.Debug;
+            EventManager.Instance.Publish(
+                new InputEvents.InputContextChangedEvent(InputEvents.InputContext.Debug)
+            );
+            Debug.Log("[InputManager] Debug input enabled.");
+        }
+
+        public void DisableDebugInput()
+        {
+            _inputActions.Debug.Disable();
+            Debug.Log("[InputManager] Debug input disabled.");
         }
 
         /// <summary>

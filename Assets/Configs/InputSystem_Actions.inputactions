@@ -46,7 +46,7 @@
                     "name": "Crouch",
                     "type": "Button",
                     "id": "27c5f898-bc57-4ee1-8800-db469aca5fe3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -571,15 +571,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DebugTool",
-                    "type": "PassThrough",
-                    "id": "1129d017-84c1-41a9-bfbd-a8341ac6a5a0",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "OpenSettings",
                     "type": "PassThrough",
                     "id": "e7f3d5fe-0344-4175-8023-8072f334769e",
@@ -1037,17 +1028,6 @@
                 },
                 {
                     "name": "",
-                    "id": "74ad7df8-11e1-4f72-b2d6-df1fd9adc82a",
-                    "path": "<Keyboard>/g",
-                    "interactions": "Tap",
-                    "processors": "",
-                    "groups": "",
-                    "action": "DebugTool",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "724302ed-1145-461a-ab07-7b36043bb416",
                     "path": "<Keyboard>/n",
                     "interactions": "Tap",
@@ -1087,6 +1067,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "ShowStackInfo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "id": "dc19ae9d-a1a9-4be2-8614-4522241d2f85",
+            "actions": [
+                {
+                    "name": "DebugTool",
+                    "type": "Button",
+                    "id": "5316b483-7e42-499f-a46c-9e7ab9ac9ff0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "99fa0c66-f682-4908-ac67-7a9388461719",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugTool",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Core.Input;
 using GameLoop.Events;
 using UI.Framework;
 using UnityEngine;
@@ -20,11 +21,33 @@ namespace DebugTools.DebugMVC
         {
             if (EventManager.Instance == null) return;
             EventManager.Instance.Subscribe<GameLoopEvents.BootComplete>(CreateMvc);
+            EventManager.Instance.Subscribe<InputEvents.InputDebugUIEvent>(ProcessDebugInput);
+        }
+
+        private void ProcessDebugInput(InputEvents.InputDebugUIEvent obj)
+        {
+            if (obj.Context == InputEvents.DebugContext.ToggleDebugUI)
+            {
+                var controller = MVCManager.Instance.GetController<DebugController>();
+                if (controller != null)
+                {
+                    var isOpen = controller.IsOpen;
+                    if (isOpen)
+                    {
+                        MVCManager.Instance.Close<DebugController>();
+                    }
+                    else
+                    {
+                        MVCManager.Instance.Open<DebugController>();
+                    }
+                }
+            }
         }
 
         private void OnDisable()
         {
             EventManager.Instance.Unsubscribe<GameLoopEvents.BootComplete>(CreateMvc);
+            EventManager.Instance.Unsubscribe<InputEvents.InputDebugUIEvent>(ProcessDebugInput);
         }
 
         private void CreateMvc(GameLoopEvents.BootComplete eventData)

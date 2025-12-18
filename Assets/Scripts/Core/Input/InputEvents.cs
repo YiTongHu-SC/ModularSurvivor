@@ -9,6 +9,11 @@ namespace Core.Input
     /// </summary>
     public static class InputEvents
     {
+        public enum DebugContext
+        {
+            ToggleDebugUI // 切换调试UI显示
+        }
+
         /// <summary>
         ///     输入上下文枚举
         /// </summary>
@@ -17,7 +22,8 @@ namespace Core.Input
             Gameplay, // 游戏中
             UI, // UI交互
             Paused, // 暂停
-            Disabled // 禁用所有输入
+            Disabled, // 禁用所有输入
+            Debug // 调试模式
         }
 
         /// <summary>
@@ -165,6 +171,16 @@ namespace Core.Input
             }
 
             public InputContext Context { get; }
+        }
+
+        public class InputDebugUIEvent : EventData
+        {
+            public DebugContext Context { get; }
+
+            public InputDebugUIEvent(DebugContext context)
+            {
+                Context = context;
+            }
         }
     }
 }
