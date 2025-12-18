@@ -9,41 +9,48 @@ namespace UI.Framework
     public interface IUIController : IDisposable
     {
         /// <summary>
+        /// 是否已初始化
+        /// </summary>
+        bool IsInitialized { get; }
+
+        bool Initialize(GameObject targetView, object args = null);
+
+        /// <summary>
         /// UI层级
         /// </summary>
         UILayer Layer { get; }
-        
+
         /// <summary>
         /// 是否阻塞输入
         /// </summary>
         bool BlockInput { get; }
-        
+
         /// <summary>
         /// 是否允许堆叠
         /// </summary>
         bool AllowStack { get; }
-        
+
         /// <summary>
         /// UI是否已打开
         /// </summary>
         bool IsOpen { get; }
-        
+
         /// <summary>
         /// 打开UI
         /// </summary>
         /// <param name="args">打开参数</param>
         void Open(object args = null);
-        
+
         /// <summary>
         /// 关闭UI
         /// </summary>
         void Close();
-        
+
         /// <summary>
         /// 显示UI
         /// </summary>
         void Show();
-        
+
         /// <summary>
         /// 隐藏UI
         /// </summary>
@@ -63,6 +70,8 @@ namespace UI.Framework
 
         public TModel Model { get; private set; }
         public TView View { get; private set; }
+        public bool IsInitialized { get; private set; }
+        public abstract bool Initialize(GameObject targetView, object args = null);
         public UILayer Layer { get; private set; }
         public bool BlockInput { get; private set; }
         public bool AllowStack { get; private set; }
@@ -89,7 +98,8 @@ namespace UI.Framework
 
             if (_enableDebugLogging)
             {
-                Debug.Log($"BaseUIController: {GetType().Name} configured - Layer: {Layer}, BlockInput: {BlockInput}, AllowStack: {AllowStack}");
+                Debug.Log(
+                    $"BaseUIController: {GetType().Name} configured - Layer: {Layer}, BlockInput: {BlockInput}, AllowStack: {AllowStack}");
             }
         }
 
@@ -128,6 +138,7 @@ namespace UI.Framework
                 {
                     Debug.LogWarning($"BaseUIController: {GetType().Name} is already open");
                 }
+
                 return;
             }
 
@@ -150,6 +161,7 @@ namespace UI.Framework
                 {
                     Debug.LogWarning($"BaseUIController: {GetType().Name} is already closed");
                 }
+
                 return;
             }
 
@@ -206,26 +218,36 @@ namespace UI.Framework
         /// <summary>
         /// 打开前回调
         /// </summary>
-        protected virtual void OnBeforeOpen(object args) { }
+        protected virtual void OnBeforeOpen(object args)
+        {
+        }
 
         /// <summary>
         /// 打开后回调
         /// </summary>
-        protected virtual void OnAfterOpen(object args) { }
+        protected virtual void OnAfterOpen(object args)
+        {
+        }
 
         /// <summary>
         /// 关闭前回调
         /// </summary>
-        protected virtual void OnBeforeClose() { }
+        protected virtual void OnBeforeClose()
+        {
+        }
 
         /// <summary>
         /// 关闭后回调
         /// </summary>
-        protected virtual void OnAfterClose() { }
+        protected virtual void OnAfterClose()
+        {
+        }
 
         /// <summary>
         /// 销毁时回调
         /// </summary>
-        protected virtual void OnDispose() { }
+        protected virtual void OnDispose()
+        {
+        }
     }
 }

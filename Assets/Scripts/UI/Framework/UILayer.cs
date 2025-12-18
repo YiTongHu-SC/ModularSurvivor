@@ -11,27 +11,27 @@ namespace UI.Framework
         /// 背景层 - 最底层UI元素
         /// </summary>
         Background = 0,
-        
+
         /// <summary>
         /// HUD层 - 游戏内HUD元素
         /// </summary>
         HUD = 100,
-        
+
         /// <summary>
         /// 窗口层 - 普通窗口
         /// </summary>
         Window = 200,
-        
+
         /// <summary>
         /// 弹窗层 - 弹出窗口
         /// </summary>
         Popup = 300,
-        
+
         /// <summary>
         /// 加载层 - 加载界面
         /// </summary>
         Loading = 400,
-        
+
         /// <summary>
         /// 系统层 - 系统提示等最高优先级UI
         /// </summary>
@@ -47,10 +47,12 @@ namespace UI.Framework
         public UILayer Layer { get; }
         public bool BlockInput { get; }
         public bool AllowStack { get; }
+        public string ViewKey { get; }
 
-        public UILayerAttribute(UILayer layer, bool blockInput = false, bool allowStack = true)
+        public UILayerAttribute(UILayer layer, string viewKey, bool blockInput = false, bool allowStack = true)
         {
             Layer = layer;
+            ViewKey = viewKey;
             BlockInput = blockInput;
             AllowStack = allowStack;
         }

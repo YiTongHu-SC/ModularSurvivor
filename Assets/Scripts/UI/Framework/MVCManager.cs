@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Assets;
 using StellarCore.Singleton;
 using UnityEngine;
 
@@ -40,13 +41,6 @@ namespace UI.Framework
 
         #region Unity生命周期
 
-        protected override void Awake()
-        {
-            base.Awake();
-            Initialize();
-            InitializeUILayers();
-        }
-
         private void Update()
         {
             UpdateControllers();
@@ -67,6 +61,7 @@ namespace UI.Framework
         public override void Initialize()
         {
             base.Initialize();
+            InitializeUILayers();
             if (_enableDebugLogging)
             {
                 Debug.Log("MVCManager: Initialized.");
@@ -350,64 +345,65 @@ namespace UI.Framework
         public bool Open<T>(object args = null) where T : class, IUIController, new()
         {
             var uiType = typeof(T);
+            // 获取UI层级配置
+            var layerAttribute = uiType.GetCustomAttributes(typeof(UILayerAttribute), false);
+            UILayer layer = UILayer.Window;
+            bool blockInput = false;
+            bool allowStack = true;
+            string viewKey = string.Empty;
+
+            if (layerAttribute.Length > 0)
+            {
+                var attr = (UILayerAttribute)layerAttribute[0];
+                layer = attr.Layer;
+                blockInput = attr.BlockInput;
+                allowStack = attr.AllowStack;
+                viewKey = attr.ViewKey;
+            }
+
+            // 检查是否允许堆叠
+            if (!allowStack)
+            {
+                var existingInLayer = _uiStack.GetElementsInLayer(layer);
+                if (existingInLayer.Count > 0)
+                {
+                    if (_enableDebugLogging)
+                    {
+                        Debug.LogWarning($"MVCManager: UI {uiType.Name} cannot stack in layer {layer}");
+                    }
+
+                    return false;
+                }
+            }
 
             try
             {
                 // 检查是否已经存在实例
-                if (_uiControllerInstances.ContainsKey(uiType))
+                if (_uiControllerInstances.TryGetValue(uiType, out var existingController))
                 {
-                    var existingController = _uiControllerInstances[uiType];
                     if (existingController.IsOpen)
                     {
                         if (_enableDebugLogging)
                         {
                             Debug.LogWarning($"MVCManager: UI {uiType.Name} is already open");
                         }
+
                         return false;
                     }
 
                     // 重新打开现有实例
-                    OpenUIController(existingController, args);
+                    OpenUIController(existingController, viewKey, args);
                     return true;
                 }
 
                 // 创建新实例
                 var controller = new T();
-                
-                // 获取UI层级配置
-                var layerAttribute = uiType.GetCustomAttributes(typeof(UILayerAttribute), false);
-                UILayer layer = UILayer.Window;
-                bool blockInput = false;
-                bool allowStack = true;
-                
-                if (layerAttribute.Length > 0)
-                {
-                    var attr = (UILayerAttribute)layerAttribute[0];
-                    layer = attr.Layer;
-                    blockInput = attr.BlockInput;
-                    allowStack = attr.AllowStack;
-                }
-
-                // 检查是否允许堆叠
-                if (!allowStack)
-                {
-                    var existingInLayer = _uiStack.GetElementsInLayer(layer);
-                    if (existingInLayer.Count > 0)
-                    {
-                        if (_enableDebugLogging)
-                        {
-                            Debug.LogWarning($"MVCManager: UI {uiType.Name} cannot stack in layer {layer}");
-                        }
-                        return false;
-                    }
-                }
-
                 // 注册控制器
                 RegisterController(controller);
                 _uiControllerInstances[uiType] = controller;
 
                 // 打开UI
-                OpenUIController(controller, args);
+                OpenUIController(controller, viewKey, args);
 
                 return true;
             }
@@ -435,6 +431,7 @@ namespace UI.Framework
                     {
                         Debug.LogWarning($"MVCManager: UI {uiType.Name} instance not found");
                     }
+
                     return false;
                 }
 
@@ -464,6 +461,7 @@ namespace UI.Framework
                     {
                         Debug.LogWarning("MVCManager: No UI in stack to close");
                     }
+
                     return false;
                 }
 
@@ -477,6 +475,7 @@ namespace UI.Framework
                 {
                     Debug.LogError($"MVCManager: Top UI {topElement.UIType.Name} is not a valid UI controller");
                 }
+
                 return false;
             }
             catch (Exception ex)
@@ -492,7 +491,7 @@ namespace UI.Framework
         public void CloseAllUI()
         {
             var allElements = _uiStack.GetAllElements();
-            
+
             foreach (var element in allElements)
             {
                 if (element.UIInstance is IUIController controller)
@@ -544,12 +543,13 @@ namespace UI.Framework
         {
             var info = $"UI Stack Info (Count: {_uiStack.Count}):\n";
             var elements = _uiStack.GetAllElements();
-            
+
             for (int i = 0; i < elements.Count; i++)
             {
                 var element = elements[i];
                 var prefix = i == 0 ? "[TOP] " : "      ";
-                info += $"{prefix}{element.UIType.Name} - Layer: {element.Layer}, BlockInput: {element.BlockInput}, OpenTime: {element.OpenTime:HH:mm:ss}\n";
+                info +=
+                    $"{prefix}{element.UIType.Name} - Layer: {element.Layer}, BlockInput: {element.BlockInput}, OpenTime: {element.OpenTime:HH:mm:ss}\n";
             }
 
             return info;
@@ -562,28 +562,31 @@ namespace UI.Framework
         /// <summary>
         /// 内部方法：打开UI控制器
         /// </summary>
-        private void OpenUIController(IUIController controller, object args)
+        private void OpenUIController(IUIController controller, string viewKey, object args)
         {
             // 将UI挂到正确的层级
-            AttachToLayer(controller);
 
-            // 推入UI栈
-            var stackElement = new UIStackElement(
-                controller.GetType(),
-                controller,
-                controller.Layer,
-                controller.BlockInput,
-                args
-            );
-            _uiStack.Push(stackElement);
-
-            // 打开UI
-            controller.Open(args);
-
-            if (_enableDebugLogging)
+            AttachToLayer(controller, viewKey, args, () =>
             {
-                Debug.Log($"MVCManager: Opened UI {controller.GetType().Name} in layer {controller.Layer}");
-            }
+                // 推入UI栈
+                var stackElement = new UIStackElement(
+                    controller.GetType(),
+                    controller,
+                    controller.Layer,
+                    controller.BlockInput,
+                    args
+                );
+
+                _uiStack.Push(stackElement);
+
+                // 打开UI
+                controller.Open(args);
+
+                if (_enableDebugLogging)
+                {
+                    Debug.Log($"MVCManager: Opened UI {controller.GetType().Name} in layer {controller.Layer}");
+                }
+            });
         }
 
         /// <summary>
@@ -606,18 +609,38 @@ namespace UI.Framework
         /// <summary>
         /// 将UI挂到正确的层级
         /// </summary>
-        private void AttachToLayer(IUIController controller)
+        private async void AttachToLayer(IUIController controller, string viewKey, object args,
+            Action callback = null)
         {
             // 这里可以根据实际需求实现UI prefab的加载和层级挂载
             // 当前为简化实现，假设UI已经存在
-            if (_layerRoots.ContainsKey(controller.Layer))
+            if (controller.IsInitialized)
             {
-                var layerRoot = _layerRoots[controller.Layer];
-                // TODO: 实际项目中需要在这里加载和实例化UI prefab
                 if (_enableDebugLogging)
                 {
-                    Debug.Log($"MVCManager: UI {controller.GetType().Name} attached to layer {controller.Layer}");
+                    Debug.Log($"MVCManager: UI {controller.GetType().Name} is already initialized, skipping attach.");
                 }
+
+                callback?.Invoke();
+            }
+            else
+            {
+                if (!_layerRoots.TryGetValue(controller.Layer, out var layerRoot))
+                {
+                    Debug.LogError($"MVCManager: Layer root for {controller.Layer} not found!");
+                    callback?.Invoke();
+                    return;
+                }
+
+                if (_enableDebugLogging)
+                {
+                    Debug.Log($"MVCManager: UI {controller.GetType().Name} attache to layer {controller.Layer}");
+                }
+
+                var targetView = await AssetSystem.Instance.Provider.InstantiateAsync(viewKey, layerRoot,
+                    AssetsScopeLabel.Frontend);
+                controller.Initialize(targetView, args);
+                callback?.Invoke();
             }
         }
 

@@ -6,9 +6,14 @@ namespace UI.Game
     /// <summary>
     /// 示例主菜单UI控制器 - 演示如何使用MVC框架
     /// </summary>
-    [UILayer(UILayer.Window, blockInput: false, allowStack: false)]
+    [UILayer(UILayer.Window, "ui", blockInput: false, allowStack: false)]
     public class MainMenuUIController : BaseUIController<MainMenuModel, MainMenuView>
     {
+        public override bool Initialize(GameObject targetView, object args = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override void OnBeforeOpen(object args)
         {
             // 打开前的逻辑，比如初始化数据
@@ -52,8 +57,7 @@ namespace UI.Game
     /// </summary>
     public class MainMenuView : MonoBehaviour
     {
-        [Header("UI Components")]
-        public UnityEngine.UI.Text playerNameText;
+        [Header("UI Components")] public UnityEngine.UI.Text playerNameText;
         public UnityEngine.UI.Text playerLevelText;
         public UnityEngine.UI.Text currencyText;
         public UnityEngine.UI.Button startGameButton;
@@ -65,10 +69,10 @@ namespace UI.Game
             // 绑定按钮事件
             if (startGameButton != null)
                 startGameButton.onClick.AddListener(OnStartGameClicked);
-            
+
             if (settingsButton != null)
                 settingsButton.onClick.AddListener(OnSettingsClicked);
-                
+
             if (exitButton != null)
                 exitButton.onClick.AddListener(OnExitClicked);
         }
@@ -77,10 +81,10 @@ namespace UI.Game
         {
             if (playerNameText != null)
                 playerNameText.text = model.PlayerName;
-                
+
             if (playerLevelText != null)
                 playerLevelText.text = $"Level: {model.PlayerLevel}";
-                
+
             if (currencyText != null)
                 currencyText.text = $"Coins: {model.Currency}";
         }
@@ -120,9 +124,14 @@ namespace UI.Game
     /// <summary>
     /// 示例设置UI控制器 - 演示弹窗层级
     /// </summary>
-    [UILayer(UILayer.Popup, blockInput: true, allowStack: true)]
+    [UILayer(UILayer.Popup, "settings", blockInput: true, allowStack: true)]
     public class SettingsUIController : BaseUIController<SettingsModel, SettingsView>
     {
+        public override bool Initialize(GameObject targetView, object args = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override void OnAfterOpen(object args)
         {
             Debug.Log("SettingsUI: Popup opened, input blocked");
@@ -149,8 +158,7 @@ namespace UI.Game
     /// </summary>
     public class SettingsView : MonoBehaviour
     {
-        [Header("Settings UI")]
-        public UnityEngine.UI.Slider masterVolumeSlider;
+        [Header("Settings UI")] public UnityEngine.UI.Slider masterVolumeSlider;
         public UnityEngine.UI.Slider sfxVolumeSlider;
         public UnityEngine.UI.Toggle vsyncToggle;
         public UnityEngine.UI.Button closeButton;
@@ -158,20 +166,17 @@ namespace UI.Game
         private void Start()
         {
             if (closeButton != null)
-                closeButton.onClick.AddListener(() => 
-                {
-                    MVCManager.Instance.Close<SettingsUIController>();
-                });
+                closeButton.onClick.AddListener(() => { MVCManager.Instance.Close<SettingsUIController>(); });
         }
 
         public void UpdateView(SettingsModel model)
         {
             if (masterVolumeSlider != null)
                 masterVolumeSlider.value = model.MasterVolume;
-                
+
             if (sfxVolumeSlider != null)
                 sfxVolumeSlider.value = model.SfxVolume;
-                
+
             if (vsyncToggle != null)
                 vsyncToggle.isOn = model.EnableVSync;
         }
