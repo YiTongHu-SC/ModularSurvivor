@@ -1,5 +1,4 @@
-﻿using System;
-using UI.Framework;
+﻿using UI.Framework;
 using UnityEngine;
 
 namespace UI.Loading
@@ -43,6 +42,7 @@ namespace UI.Loading
             var loadingModel = new LoadingModel();
             _loadingController.Initialize(loadingModel, _loadingView);
             MVCManager.Instance.RegisterController(_loadingController);
+            Debug.Log("LoadingMVC Initialized");
         }
     }
 }

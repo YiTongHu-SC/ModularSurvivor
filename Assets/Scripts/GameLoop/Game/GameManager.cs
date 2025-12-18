@@ -178,7 +178,7 @@ namespace GameLoop.Game
             // 初始化场景加载器
             _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
             DontDestroyOnLoad(_sceneLoader.gameObject);
-            _sceneLoader.Initialize(GlobalConfig.StaticSceneName, GlobalConfig.SceneMap);
+            _sceneLoader.Initialize(GlobalConfig.SystemSceneName, GlobalConfig.LoadingSceneName, GlobalConfig.SceneMap);
             // 加载完成
             Initialized = true;
             OnGameInitialized?.Invoke();
@@ -239,8 +239,7 @@ namespace GameLoop.Game
         {
             Debug.Log("Loading main process...");
             var loadSceneRequest = new LoadSceneRequest(GameTransition.FinishLoadMain,
-                GlobalConfig.GlobalManifest,
-                GlobalConfig.GlobalScopeLabel);
+                GlobalConfig.GlobalManifest);
             _sceneLoader.LoadScene(loadSceneRequest);
         }
 
@@ -251,8 +250,7 @@ namespace GameLoop.Game
         {
             Debug.Log("Loading game process...");
             var loadSceneRequest = new LoadSceneRequest(GameTransition.FinishLoadGame,
-                GlobalConfig.GlobalManifest,
-                GlobalConfig.GlobalScopeLabel);
+                GlobalConfig.GlobalManifest);
             _sceneLoader.LoadScene(loadSceneRequest);
         }
 

@@ -8,6 +8,7 @@ namespace UI.Loading
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            View.BindModel(Model);
             EventManager.Instance.Subscribe<GameLoopEvents.LoadingProgressEvent>(UpdateLoading);
         }
 

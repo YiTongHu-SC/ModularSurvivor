@@ -18,11 +18,15 @@ namespace GameLoop.Game
         private GameLoopEvents.LoadingProgressEvent _loadingProgressEvent = new(0.5f, 0.5f);
         private float _loadingSceneTimer;
         private float _minLoadingSceneTime = 3.0f;
+        private string _loadingSceneName = "LoadingScene";
 
-        public void Initialize(string systemSceneName, List<LoadSceneMap> sceneMaps, float minLoadingSceneTime = 3.0f)
+        public void Initialize(string systemSceneName, string loadingSceneName,
+            List<LoadSceneMap> sceneMaps,
+            float minLoadingSceneTime = 3.0f)
         {
-            _minLoadingSceneTime = minLoadingSceneTime;
             _systemSceneName = systemSceneName;
+            _loadingSceneName = loadingSceneName;
+            _minLoadingSceneTime = minLoadingSceneTime;
             _transitions ??= new Dictionary<GameTransition, string>();
             _transitions.Clear();
 
@@ -45,6 +49,10 @@ namespace GameLoop.Game
             {
                 yield return UnloadCurrentLevel();
             }
+
+            // 加载Loading场景
+            SceneManager.LoadSceneAsync(_loadingSceneName, LoadSceneMode.Additive);
+            yield return null;
 
             // load assets
             var loadTask = AssetSystem.Instance.LoadManifestAsync(sceneRequest.Manifest,
@@ -92,6 +100,7 @@ namespace GameLoop.Game
                 yield return new WaitForSeconds(0.2f);
                 operation.allowSceneActivation = true;
                 yield return new WaitUntil(() => operation.isDone);
+                UnloadLoadingScene();
             }
 
             yield return null;
@@ -99,6 +108,15 @@ namespace GameLoop.Game
             _hasScene = _currentScene.IsValid() && _currentScene.isLoaded;
             // Simulate loading delay
             GameManager.Instance.PerformTransition(sceneRequest.GameTransition);
+        }
+
+        private void UnloadLoadingScene()
+        {
+            var loadingScene = SceneManager.GetSceneByName(_loadingSceneName);
+            if (loadingScene.IsValid() && loadingScene.isLoaded)
+            {
+                SceneManager.UnloadSceneAsync(loadingScene);
+            }
         }
 
         private void TestProgress(float progress)
