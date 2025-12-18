@@ -12,6 +12,7 @@ namespace DebugTools.DebugMVC
             var model = new DebugModel();
             var view = targetView.TryGetComponent(out DebugView viewComponent);
             if (!view) return false;
+            viewComponent.BindModel(model);
             Initialize(model, viewComponent);
             return true;
         }
