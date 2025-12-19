@@ -13,14 +13,6 @@ MonoBehaviour:
   m_Name: AssetCatalogGlobal
   m_EditorClassIdentifier: Core::Core.Assets.AssetCatalog
   EntriesConfig:
-  - _key: ActorConfigs:Actor_100000
-    _resourcesPath: ActorConfigs/Actor_100000
-    _assetType: 1
-    _tags: []
-  - _key: ActorConfigs:Actor_100001
-    _resourcesPath: ActorConfigs/Actor_100001
-    _assetType: 1
-    _tags: []
   - _key: Debug:UI:DebugView
     _resourcesPath: Debug/UI/DebugView
     _assetType: 0
@@ -29,8 +21,16 @@ MonoBehaviour:
     _resourcesPath: DOTweenSettings
     _assetType: 1
     _tags: []
-  - _key: EffectConfigs:PresentationConfig
-    _resourcesPath: EffectConfigs/PresentationConfig
+  - _key: Level:ActorConfigs:Actor_100000
+    _resourcesPath: Level/ActorConfigs/Actor_100000
+    _assetType: 1
+    _tags: []
+  - _key: Level:ActorConfigs:Actor_100001
+    _resourcesPath: Level/ActorConfigs/Actor_100001
+    _assetType: 1
+    _tags: []
+  - _key: Level:EffectConfigs:PresentationConfig
+    _resourcesPath: Level/EffectConfigs/PresentationConfig
     _assetType: 1
     _tags: []
   - _key: UI:Prefab:GameMenuView

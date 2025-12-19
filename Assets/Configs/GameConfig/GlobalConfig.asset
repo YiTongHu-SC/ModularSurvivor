@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: GlobalConfig
   m_EditorClassIdentifier: GameLoop::GameLoop.Config.GlobalConfig
   CreateMemoryMaintenanceService: 1
-  GlobalScopeLabel: 0
   AssetCatalog: {fileID: 11400000, guid: 8467e15f2c577064d832a16b87e46dcf, type: 2}
   GlobalManifest: {fileID: 11400000, guid: 9362274eaba94b142ac700365d2f3790, type: 2}
   DebugManifest: {fileID: 11400000, guid: a9fc89208350af347bf280e8e19db6d7, type: 2}
+  LevelManifest: {fileID: 11400000, guid: 59e5619a03e452e4395792b26a6cf6b2, type: 2}
   SceneMap:
   - GameTransition: 1
     SceneName: Scenes/FrontendScene
   - GameTransition: 2
     SceneName: Scenes/LevelScene
-  StaticSceneName: Scenes/SystemScene
+  SystemSceneName: Scenes/SystemScene
   LoadingSceneName: Scenes/LoadingScene
+  MinLoadingTime: 1

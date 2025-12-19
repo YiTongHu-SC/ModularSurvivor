@@ -10,70 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25c88af8bb9b4b49a6e2d9e505a98851, type: 3}
-  m_Name: AssetManifestGlobal
-  m_EditorClassIdentifier: Core::Core.Assets.AssetManifest
+  m_Name: AssetManifestLevel
+  m_EditorClassIdentifier: Core::Core.AssetsTool.AssetManifest
   Catalog: {fileID: 11400000, guid: 8467e15f2c577064d832a16b87e46dcf, type: 2}
   Rules:
-  - Name: Rule
+  - Name: Level
     Enabled: 1
-    IncludeKeyPrefixes: []
-    ExcludeKeyPrefixes:
-    - Debug
+    IncludeKeyPrefixes:
+    - Level
+    ExcludeKeyPrefixes: []
     IncludeTags: []
     ExcludeTags: []
     IncludeTypes: []
     ExcludeTypes: []
     DefaultRequired: 1
-    RequiredTags:
-    - required
+    RequiredTags: []
     TagWeights: []
     TypeWeights: []
-    DefaultWeight: 1
+    DefaultWeight: 0
   Overrides: []
   _generatedEntries:
-  - _key: DOTweenSettings
-    _assetType: 1
-    _weight: 1
-    _isRequired: 1
-    _tags: []
   - _key: Level:ActorConfigs:Actor_100000
     _assetType: 1
-    _weight: 1
+    _weight: 0
     _isRequired: 1
     _tags: []
   - _key: Level:ActorConfigs:Actor_100001
     _assetType: 1
-    _weight: 1
+    _weight: 0
     _isRequired: 1
     _tags: []
   - _key: Level:EffectConfigs:PresentationConfig
     _assetType: 1
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:GameMenuView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:HpBarView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:LevelHudView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:MainMenuView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: WaveConfigs:WaveConfig
-    _assetType: 1
-    _weight: 1
+    _weight: 0
     _isRequired: 1
     _tags: []
   _failureStrategy: 2

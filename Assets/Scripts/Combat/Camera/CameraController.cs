@@ -1,22 +1,27 @@
-﻿using Combat.Systems;
+﻿using Combat.Config;
+using Combat.Systems;
 using Core.Input;
 using Core.Units;
-using GameLoop.Config;
 using UnityEngine;
 
-namespace GameLoop.Game
+namespace Combat.Camera
 {
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private CameraConfig _config;
-        private Camera _camera;
+        private UnityEngine.Camera _camera;
         private Vector3 _desiredPosition;
         private UnitData _playerUnit;
         private Transform _playerTarget;
 
         private void Awake()
         {
-            _camera = GetComponent<Camera>();
+            _camera = GetComponent<UnityEngine.Camera>();
+        }
+
+        private void Start()
+        {
+            SetGlobalMainCamera();
         }
 
         private void LateUpdate()

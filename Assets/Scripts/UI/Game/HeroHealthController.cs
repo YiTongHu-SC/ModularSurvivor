@@ -77,6 +77,7 @@ namespace UI.Game
         /// </summary>
         public void Update()
         {
+            if (!IsInitialized || !IsOpen) return;
             var heroData = GetHeroUnitData();
             if (heroData == null)
                 return;

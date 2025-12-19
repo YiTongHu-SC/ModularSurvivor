@@ -12,6 +12,7 @@ namespace GameLoop.Config
         public AssetCatalog AssetCatalog;
         public AssetManifest GlobalManifest;
         public AssetManifest DebugManifest;
+        public AssetManifest LevelManifest;
         public List<LoadSceneMap> SceneMap = new();
         public string SystemSceneName = "Scenes/SystemScene";
         public string LoadingSceneName = "Scenes/LoadingScene";

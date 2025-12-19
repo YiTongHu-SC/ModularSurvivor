@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GameLoop.Config
+namespace Combat.Config
 {
     [CreateAssetMenu(fileName = "CameraConfig", menuName = "GamePlay Config/CameraConfig", order = 0)]
     public class CameraConfig : ScriptableObject

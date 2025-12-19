@@ -253,7 +253,7 @@ namespace GameLoop.Game
         {
             Debug.Log("Loading game process...");
             var loadSceneRequest = new LoadSceneRequest(GameTransition.FinishLoadGame,
-                GlobalConfig.GlobalManifest);
+                GlobalConfig.LevelManifest, AssetsScopeLabel.Level);
             _sceneLoader.LoadScene(loadSceneRequest);
         }
 
