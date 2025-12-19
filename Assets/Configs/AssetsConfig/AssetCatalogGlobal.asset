@@ -13,39 +13,39 @@ MonoBehaviour:
   m_Name: AssetCatalogGlobal
   m_EditorClassIdentifier: Core::Core.Assets.AssetCatalog
   EntriesConfig:
-  - _key: actor_configs:actor_100000
+  - _key: ActorConfigs:Actor_100000
     _resourcesPath: ActorConfigs/Actor_100000
     _assetType: 1
     _tags: []
-  - _key: actor_configs:actor_100001
+  - _key: ActorConfigs:Actor_100001
     _resourcesPath: ActorConfigs/Actor_100001
     _assetType: 1
     _tags: []
-  - _key: debug:ui:debug_view
+  - _key: Debug:UI:DebugView
     _resourcesPath: Debug/UI/DebugView
     _assetType: 0
     _tags: []
-  - _key: dotween_settings
+  - _key: DOTweenSettings
     _resourcesPath: DOTweenSettings
     _assetType: 1
     _tags: []
-  - _key: effect_configs:presentation_config
+  - _key: EffectConfigs:PresentationConfig
     _resourcesPath: EffectConfigs/PresentationConfig
     _assetType: 1
     _tags: []
-  - _key: ui:prefab:game_menu_view
+  - _key: UI:Prefab:GameMenuView
     _resourcesPath: UI/Prefab/GameMenuView
     _assetType: 0
     _tags: []
-  - _key: ui:prefab:level_hud_view
+  - _key: UI:Prefab:LevelHudView
     _resourcesPath: UI/Prefab/LevelHudView
     _assetType: 0
     _tags: []
-  - _key: ui:prefab:main_menu_view
+  - _key: UI:Prefab:MainMenuView
     _resourcesPath: UI/Prefab/MainMenuView
     _assetType: 0
     _tags: []
-  - _key: wave_configs:wave_config
+  - _key: WaveConfigs:WaveConfig
     _resourcesPath: WaveConfigs/WaveConfig
     _assetType: 1
     _tags: []

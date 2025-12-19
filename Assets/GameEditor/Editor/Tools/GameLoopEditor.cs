@@ -3,7 +3,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GameEditor.Tools
+namespace GameEditor.Editor.Tools
 {
     [InitializeOnLoad]
     public class GameLoopEditor : EditorWindow

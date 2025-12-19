@@ -30,6 +30,7 @@ namespace Combat.Systems
             AbilitySystem.UpdateAbilities(deltaTime);
             BuffSystem.UpdateBuffs(deltaTime);
             MovementSystem.UpdateMovement(deltaTime);
+            CombatClock.UpdateClock(deltaTime);
         }
     }
 }

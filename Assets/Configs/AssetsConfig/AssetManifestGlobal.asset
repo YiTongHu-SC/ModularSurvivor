@@ -17,7 +17,8 @@ MonoBehaviour:
   - Name: Rule
     Enabled: 1
     IncludeKeyPrefixes: []
-    ExcludeKeyPrefixes: []
+    ExcludeKeyPrefixes:
+    - Debug
     IncludeTags: []
     ExcludeTags: []
     IncludeTypes: []
@@ -30,14 +31,44 @@ MonoBehaviour:
     DefaultWeight: 1
   Overrides: []
   _generatedEntries:
-  - _key: actor_configs:actor_100000
+  - _key: ActorConfigs:Actor_100000
     _assetType: 1
-    _weight: 0
+    _weight: 1
     _isRequired: 1
     _tags: []
-  - _key: actor_configs:actor_100001
+  - _key: ActorConfigs:Actor_100001
     _assetType: 1
-    _weight: 0
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  - _key: DOTweenSettings
+    _assetType: 1
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  - _key: EffectConfigs:PresentationConfig
+    _assetType: 1
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  - _key: UI:Prefab:GameMenuView
+    _assetType: 0
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  - _key: UI:Prefab:LevelHudView
+    _assetType: 0
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  - _key: UI:Prefab:MainMenuView
+    _assetType: 0
+    _weight: 1
+    _isRequired: 1
+    _tags: []
+  - _key: WaveConfigs:WaveConfig
+    _assetType: 1
+    _weight: 1
     _isRequired: 1
     _tags: []
   _failureStrategy: 2

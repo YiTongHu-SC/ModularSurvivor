@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UI.Game
 {
-    [UILayer(UILayer.HUD, "ui:prefab:level_hud_view", blockInput: false, allowStack: false)]
+    [UILayer(UILayer.HUD, "UI:Prefab:LevelHudView", blockInput: false, allowStack: false)]
     public class LevelHudController : BaseUIController<LevelHudModel, LevelHudView>
     {
         public override bool Initialize(GameObject targetView, object args = null)
@@ -24,6 +24,7 @@ namespace UI.Game
             if (targetView.TryGetComponent<LevelHudView>(out var view))
             {
                 var model = new LevelHudModel();
+                view.BindModel(model);
                 Initialize(model, view);
                 return true;
             }

@@ -17,7 +17,7 @@ MonoBehaviour:
   - Name: all debug
     Enabled: 1
     IncludeKeyPrefixes:
-    - debug
+    - Debug
     ExcludeKeyPrefixes: []
     IncludeTags: []
     ExcludeTags: []
@@ -31,7 +31,7 @@ MonoBehaviour:
     DefaultWeight: 1
   Overrides: []
   _generatedEntries:
-  - _key: debug:ui:debug_view
+  - _key: Debug:UI:DebugView
     _assetType: 0
     _weight: 1
     _isRequired: 1

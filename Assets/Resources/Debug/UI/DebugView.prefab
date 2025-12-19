@@ -460,8 +460,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f772317cf84d53917fd209df6c43ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugTools.DebugMVC.DebugView
-  _autoUpdate: 1
-  _enableDebugLogging: 0
+  AutoUpdate: 1
+  EnableDebugLogging: 1
   StartGameButton: {fileID: 7611691583510918743}
   ReturnMainButton: {fileID: 9032702447270792769}
   ExitGameButton: {fileID: 6089157702365982394}

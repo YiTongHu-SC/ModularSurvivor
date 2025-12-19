@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using Debug = UnityEngine.Debug;
 
-namespace GameEditor.Tools
+namespace GameEditor.Editor.Tools
 {
     public static class BatchScriptRunner
     {

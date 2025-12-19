@@ -6,10 +6,10 @@ using Core.AssetsTool;
 using UnityEditor;
 using UnityEngine;
 
-namespace GameEditor.RunTime.AssetsEditor
+namespace GameEditor.Editor.AssetsEditor
 {
     [CustomEditor(typeof(AssetManifest))]
-    public class AssetManifestEditor : Editor
+    public class AssetManifestEditor : UnityEditor.Editor
     {
         private AssetManifest Manifest => (AssetManifest)target;
 

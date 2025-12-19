@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UI.Menus
 {
-    [UILayer(UILayer.Window, "ui:prefab:main_menu_view", blockInput: true, allowStack: true)]
+    [UILayer(UILayer.Window, "UI:Prefab:MainMenuView", blockInput: true, allowStack: true)]
     public class MainMenuController : BaseUIController<MainMenuModel, MainMenuView>
     {
         public override bool Initialize(GameObject targetView, object args = null)

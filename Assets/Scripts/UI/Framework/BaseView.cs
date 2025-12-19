@@ -10,9 +10,9 @@ namespace UI.Framework
     public abstract class BaseView<T> : MonoBehaviour, IView<T>
     {
         [Header("View Settings")] [SerializeField]
-        private bool _autoUpdate = true;
+        private bool AutoUpdate = true;
 
-        [SerializeField] private bool _enableDebugLogging = false;
+        [SerializeField] private bool EnableDebugLogging = false;
 
         /// <summary>
         /// 绑定的数据模型
@@ -59,7 +59,7 @@ namespace UI.Framework
 
             IsInitialized = true;
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseView<{typeof(T).Name}>: View initialized on {gameObject.name}");
             }
@@ -73,7 +73,7 @@ namespace UI.Framework
             UnbindModel();
             IsInitialized = false;
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseView<{typeof(T).Name}>: View disposed on {gameObject.name}");
             }
@@ -103,12 +103,12 @@ namespace UI.Framework
             Model.OnValueChanged += OnModelValueChanged;
 
             // 立即更新视图
-            if (_autoUpdate)
+            if (AutoUpdate)
             {
                 UpdateView(Model.GetValue());
             }
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseView<{typeof(T).Name}>: Model bound to {gameObject.name}");
             }
@@ -124,7 +124,7 @@ namespace UI.Framework
                 Model.OnValueChanged -= OnModelValueChanged;
                 Model = null;
 
-                if (_enableDebugLogging)
+                if (EnableDebugLogging)
                 {
                     Debug.Log($"BaseView<{typeof(T).Name}>: Model unbound from {gameObject.name}");
                 }
@@ -137,12 +137,12 @@ namespace UI.Framework
         /// <param name="newValue">新值</param>
         protected virtual void OnModelValueChanged(T newValue)
         {
-            if (_autoUpdate)
+            if (AutoUpdate)
             {
                 UpdateView(newValue);
             }
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseView<{typeof(T).Name}>: Model value changed to {newValue} on {gameObject.name}");
             }
@@ -165,7 +165,7 @@ namespace UI.Framework
         {
             ViewObject.SetActive(true);
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseView<{typeof(T).Name}>: View shown on {gameObject.name}");
             }
@@ -178,7 +178,7 @@ namespace UI.Framework
         {
             ViewObject.SetActive(false);
 
-            if (_enableDebugLogging)
+            if (EnableDebugLogging)
             {
                 Debug.Log($"BaseView<{typeof(T).Name}>: View hidden on {gameObject.name}");
             }
@@ -205,7 +205,7 @@ namespace UI.Framework
         /// <param name="enabled">是否启用自动更新</param>
         public void SetAutoUpdate(bool enabled)
         {
-            _autoUpdate = enabled;
+            AutoUpdate = enabled;
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace UI.Framework
         /// <param name="enabled">是否启用调试日志</param>
         public void SetDebugLogging(bool enabled)
         {
-            _enableDebugLogging = enabled;
+            EnableDebugLogging = enabled;
         }
 
         /// <summary>
