@@ -8,12 +8,10 @@ namespace UI.Game
     /// <summary>
     /// 英雄血量条视图 - MVC模式的血量显示组件
     /// </summary>
-    public class HeroHpBarView : BaseView<HeroHealthData>
+    public class HeroHealthView : BaseView<HeroHealthData>
     {
-        [Header("UI References")] [SerializeField]
-        private Image _barImage;
-
-        [SerializeField] private TextMeshProUGUI _healthText;
+        public Image BarImage;
+        public TextMeshProUGUI HealthText;
         [SerializeField] private Gradient _healthColorGradient;
 
         [Header("Animation Settings")] [SerializeField]
@@ -33,24 +31,24 @@ namespace UI.Game
             base.InitializeView();
 
             // 验证必需组件
-            if (_barImage == null)
+            if (BarImage == null)
             {
-                _barImage = GetComponentInChildren<Image>();
-                if (_barImage == null)
+                BarImage = GetComponentInChildren<Image>();
+                if (BarImage == null)
                 {
                     Debug.LogError($"HeroHpBarView: BarImage not found on {gameObject.name}!");
                 }
             }
 
             // 初始化动画状态
-            _targetFillAmount = _barImage != null ? _barImage.fillAmount : 1f;
+            _targetFillAmount = BarImage != null ? BarImage.fillAmount : 1f;
             _currentFillAmount = _targetFillAmount;
         }
 
         private void Update()
         {
             // 处理血量条动画
-            if (_enableAnimation && _isAnimating && _barImage != null)
+            if (_enableAnimation && _isAnimating && BarImage != null)
             {
                 UpdateAnimation();
             }
@@ -66,7 +64,7 @@ namespace UI.Game
         /// <param name="data">血量数据</param>
         public override void UpdateView(HeroHealthData data)
         {
-            if (_barImage == null) return;
+            if (BarImage == null) return;
 
             // 更新血量条填充
             _targetFillAmount = Mathf.Clamp01(data.HealthPercentage);
@@ -78,7 +76,7 @@ namespace UI.Game
             else
             {
                 // 更新血量条填充量
-                _barImage.fillAmount = _targetFillAmount;
+                BarImage.fillAmount = _targetFillAmount;
                 _currentFillAmount = _targetFillAmount;
             }
 
@@ -94,9 +92,9 @@ namespace UI.Game
         /// <param name="healthPercentage">血量百分比</param>
         private void UpdateHealthColor(float healthPercentage)
         {
-            if (_barImage != null && _healthColorGradient != null)
+            if (BarImage != null && _healthColorGradient != null)
             {
-                _barImage.color = _healthColorGradient.Evaluate(healthPercentage);
+                BarImage.color = _healthColorGradient.Evaluate(healthPercentage);
             }
         }
 
@@ -106,9 +104,9 @@ namespace UI.Game
         /// <param name="data">血量数据</param>
         private void UpdateHealthText(HeroHealthData data)
         {
-            if (_healthText != null)
+            if (HealthText != null)
             {
-                _healthText.text = $"{data.CurrentHealth:F0}/{data.MaxHealth:F0}";
+                HealthText.text = $"{data.CurrentHealth:F0}/{data.MaxHealth:F0}";
             }
         }
 
@@ -136,13 +134,13 @@ namespace UI.Game
             _currentFillAmount = Mathf.MoveTowards(_currentFillAmount, _targetFillAmount, animationStep);
 
             // 应用到UI
-            _barImage.fillAmount = _currentFillAmount;
+            BarImage.fillAmount = _currentFillAmount;
 
             // 检查动画是否完成
             if (Mathf.Abs(_currentFillAmount - _targetFillAmount) < 0.001f)
             {
                 _currentFillAmount = _targetFillAmount;
-                _barImage.fillAmount = _targetFillAmount;
+                BarImage.fillAmount = _targetFillAmount;
                 _isAnimating = false;
             }
         }
@@ -160,9 +158,9 @@ namespace UI.Game
             _enableAnimation = enable;
 
             // 如果禁用动画，立即设置到目标值
-            if (!enable && _barImage != null)
+            if (!enable && BarImage != null)
             {
-                _barImage.fillAmount = _targetFillAmount;
+                BarImage.fillAmount = _targetFillAmount;
                 _currentFillAmount = _targetFillAmount;
                 _isAnimating = false;
             }
@@ -186,9 +184,9 @@ namespace UI.Game
             _targetFillAmount = Mathf.Clamp01(healthPercentage);
             _currentFillAmount = _targetFillAmount;
 
-            if (_barImage != null)
+            if (BarImage != null)
             {
-                _barImage.fillAmount = _targetFillAmount;
+                BarImage.fillAmount = _targetFillAmount;
             }
 
             _isAnimating = false;

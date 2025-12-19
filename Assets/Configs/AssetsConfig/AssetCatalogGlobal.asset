@@ -37,6 +37,10 @@ MonoBehaviour:
     _resourcesPath: UI/Prefab/GameMenuView
     _assetType: 0
     _tags: []
+  - _key: UI:Prefab:HpBarView
+    _resourcesPath: UI/Prefab/HpBarView
+    _assetType: 0
+    _tags: []
   - _key: UI:Prefab:LevelHudView
     _resourcesPath: UI/Prefab/LevelHudView
     _assetType: 0
