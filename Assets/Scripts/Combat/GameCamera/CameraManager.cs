@@ -28,10 +28,11 @@ namespace Combat.GameCamera
             baseCamera.cameraStack.Add(UICamera);
         }
 
-        public void SetBattleCamera(Camera cam)
+        public void SetBattleCamera(BattleCameraController battleCameraController)
         {
-            BattleCamera = cam;
-            InputManager.Instance.RegisterBattleCamera( BattleCamera);
+            BattleCameraController = battleCameraController;
+            BattleCamera = BattleCameraController.Camera;
+            InputManager.Instance.RegisterBattleCamera(BattleCamera);
             // battle camera setting
             BattleCamera.enabled = true;
             var battleCamera = BattleCamera.GetUniversalAdditionalCameraData();

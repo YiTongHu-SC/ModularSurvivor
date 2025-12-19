@@ -1,6 +1,5 @@
 ﻿using Combat.Config;
 using Combat.Systems;
-using Core.Input;
 using UnityEngine;
 
 namespace Combat.GameCamera
@@ -8,19 +7,15 @@ namespace Combat.GameCamera
     public class BattleCameraController : MonoBehaviour
     {
         [SerializeField] private CameraConfig Config;
-        private Camera _camera;
+        public Camera Camera { get; private set; }
         private Vector3 _desiredPosition;
         private Transform _playerTarget;
         private float _offset;
 
         private void Awake()
         {
-            _camera = GetComponent<Camera>();
-        }
-
-        private void Start()
-        {
-            CombatManager.Instance.CameraManager.SetBattleCamera(_camera);
+            Camera = GetComponent<Camera>();
+            CombatManager.Instance.CameraManager.SetBattleCamera(this);
         }
 
         public void SetTarget(Transform target, float offset)
@@ -35,9 +30,9 @@ namespace Combat.GameCamera
 
             // 更新相机参数
             // TODO: 后面可以放到一个初始化中，只更新一次
-            _camera.fieldOfView = Config.FieldOfView;
-            _camera.nearClipPlane = Config.NearClip;
-            _camera.farClipPlane = Config.FarClip;
+            Camera.fieldOfView = Config.FieldOfView;
+            Camera.nearClipPlane = Config.NearClip;
+            Camera.farClipPlane = Config.FarClip;
             // 计算目标位置
             // 相机俯视角：向上 CameraHeight，向后偏移（根据 Pitch 计算）
             float horizontalDist = Config.CameraHeight / Mathf.Tan(Config.PitchAngle * Mathf.Deg2Rad);

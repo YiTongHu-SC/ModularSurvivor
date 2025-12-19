@@ -21,6 +21,10 @@ MonoBehaviour:
     _resourcesPath: DOTweenSettings
     _assetType: 1
     _tags: []
+  - _key: Global:CameraManager
+    _resourcesPath: Global/CameraManager
+    _assetType: 0
+    _tags: []
   - _key: Level:ActorConfigs:Actor_100000
     _resourcesPath: Level/ActorConfigs/Actor_100000
     _assetType: 1

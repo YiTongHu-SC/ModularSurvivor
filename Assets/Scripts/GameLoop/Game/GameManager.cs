@@ -132,7 +132,6 @@ namespace GameLoop.Game
 
         IEnumerator DelayedGameInitialization()
         {
-            Debug.Assert(CameraManager.Instance, "CameraManager instance is null during Game Initialization");
             // 初始化核心单例
             new GameObject("EventManager").AddComponent<EventManager>();
             new GameObject("InputManager").AddComponent<InputManager>();
@@ -145,7 +144,6 @@ namespace GameLoop.Game
             EventManager.Instance.Initialize();
             InputManager.Instance.Initialize();
             MvcManager.Instance.Initialize(UIConfig);
-            CameraManager.Instance.Initialization();
             yield return null;
             if (SystemRootSocket)
             {
@@ -168,14 +166,27 @@ namespace GameLoop.Game
                 Debug.LogError("GlobalConfig or AssetCatalog is not assigned!");
             }
 
-            var loadDebugAssetsTask = AssetSystem.LoadManifestAsync(GlobalConfig.DebugManifest, AssetsScopeLabel.Debug);
-            yield return new WaitUntil(() => loadDebugAssetsTask.IsCompleted);
-            if (loadDebugAssetsTask.IsFaulted)
+            var loadGlobalTask = AssetSystem.LoadManifestAsync(GlobalConfig.GlobalManifest, AssetsScopeLabel.Global);
+            yield return new WaitUntil(() => loadGlobalTask.IsCompleted);
+            if (loadGlobalTask.IsFaulted)
             {
-                Debug.LogError($"Failed to load debug assets: {loadDebugAssetsTask.Exception}");
+                Debug.LogError($"Failed to load global assets: {loadGlobalTask.Exception}");
             }
 
+            // 加载摄像机管理器
+            var handleCameraManager = AssetSystem.Instance.GlobalScope.Acquire<GameObject>("Global:CameraManager");
+            Instantiate(handleCameraManager.Asset);
+            // 加载调试资源
+            var loadDebugTask = AssetSystem.LoadManifestAsync(GlobalConfig.DebugManifest, AssetsScopeLabel.Debug);
+            yield return new WaitUntil(() => loadDebugTask.IsCompleted);
+            if (loadDebugTask.IsFaulted)
+            {
+                Debug.LogError($"Failed to load debug assets: {loadDebugTask.Exception}");
+            }
+
+            CameraManager.Instance.Initialization();
             // 初始化场景加载器
+            // TODO: 优化场景加载器,加一个前置异步调用
             _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
             DontDestroyOnLoad(_sceneLoader.gameObject);
             _sceneLoader.Initialize(GlobalConfig.SystemSceneName,

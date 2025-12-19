@@ -66,7 +66,7 @@ namespace GameLoop.GameDebug
                     heroData.GUID);
 
                 // set actor as hero
-                CombatManager.Instance.HeroActor = actor as Actor;
+                CombatManager.Instance.HeroActor = actor;
                 CombatManager.Instance.CameraManager.BattleCameraController.SetTarget(
                     actor.transform,
                     heroData.ModelView.CenterOffset

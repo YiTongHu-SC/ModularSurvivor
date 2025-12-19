@@ -16,7 +16,8 @@ MonoBehaviour:
   Rules:
   - Name: Rule
     Enabled: 1
-    IncludeKeyPrefixes: []
+    IncludeKeyPrefixes:
+    - Global
     ExcludeKeyPrefixes:
     - Debug
     IncludeTags: []
@@ -31,48 +32,8 @@ MonoBehaviour:
     DefaultWeight: 1
   Overrides: []
   _generatedEntries:
-  - _key: DOTweenSettings
-    _assetType: 1
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: Level:ActorConfigs:Actor_100000
-    _assetType: 1
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: Level:ActorConfigs:Actor_100001
-    _assetType: 1
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: Level:EffectConfigs:PresentationConfig
-    _assetType: 1
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:GameMenuView
+  - _key: Global:CameraManager
     _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:HpBarView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:LevelHudView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: UI:Prefab:MainMenuView
-    _assetType: 0
-    _weight: 1
-    _isRequired: 1
-    _tags: []
-  - _key: WaveConfigs:WaveConfig
-    _assetType: 1
     _weight: 1
     _isRequired: 1
     _tags: []
