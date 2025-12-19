@@ -163,6 +163,12 @@ namespace UI.Framework
         /// </summary>
         public virtual void Show()
         {
+            if (Model == null)
+            {
+                Debug.LogWarning(
+                    $"BaseView<{typeof(T).Name}>: Attempting to show view on {gameObject.name} without a bound model.");
+            }
+
             ViewObject.SetActive(true);
 
             if (EnableDebugLogging)
