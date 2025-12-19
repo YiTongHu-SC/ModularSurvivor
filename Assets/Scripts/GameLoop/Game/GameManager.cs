@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Combat.GameCamera;
 using Combat.Systems;
 using Core.Assets;
 using Core.Events;
@@ -131,6 +132,8 @@ namespace GameLoop.Game
 
         IEnumerator DelayedGameInitialization()
         {
+            Debug.Assert(CameraManager.Instance, "CameraManager instance is null during Game Initialization");
+            // 初始化核心单例
             new GameObject("EventManager").AddComponent<EventManager>();
             new GameObject("InputManager").AddComponent<InputManager>();
             new GameObject("TimeManager").AddComponent<TimeManager>();
@@ -141,11 +144,8 @@ namespace GameLoop.Game
             yield return null; // 等待一帧，确保所有单例都已初始化
             EventManager.Instance.Initialize();
             InputManager.Instance.Initialize();
-            TimeManager.Instance.Initialize();
-            UnitManager.Instance.Initialize();
-            CombatManager.Instance.Initialize();
-            WaveManager.Instance.Initialize();
             MvcManager.Instance.Initialize(UIConfig);
+            CameraManager.Instance.Initialization();
             yield return null;
             if (SystemRootSocket)
             {
@@ -252,6 +252,7 @@ namespace GameLoop.Game
         private void LoadingGameProcess()
         {
             Debug.Log("Loading game process...");
+            // 加载关卡
             var loadSceneRequest = new LoadSceneRequest(GameTransition.FinishLoadGame,
                 GlobalConfig.LevelManifest, AssetsScopeLabel.Level);
             _sceneLoader.LoadScene(loadSceneRequest);
@@ -262,6 +263,14 @@ namespace GameLoop.Game
             StateMachine.PerformTransition(transition);
         }
 
+        public void InitializeCombat()
+        {
+            TimeManager.Instance.Initialize();
+            UnitManager.Instance.Initialize();
+            WaveManager.Instance.Initialize();
+            CombatManager.Instance.Initialize();
+            CameraManager.Instance.Initialize();
+        }
 
         private void Update()
         {
@@ -353,6 +362,7 @@ namespace GameLoop.Game
                         Context.LoadingMainProcess();
                         break;
                     case LoadSceneType.Game:
+                        Context.InitializeCombat();
                         Context.LoadingGameProcess();
                         break;
                 }
@@ -379,7 +389,7 @@ namespace GameLoop.Game
 
             public override void Enter()
             {
-                CombatManager.Instance.CombatClock.SetBattleClock(300f); // 设置默认战斗时间为300秒
+                CombatManager.Instance.InGameEnter();
             }
 
             public override void Exit()

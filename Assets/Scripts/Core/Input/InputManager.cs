@@ -22,8 +22,24 @@ namespace Core.Input
         private bool _isAttackPressed;
         private bool _isCrouchPressed;
         private bool _isSprintPressed;
+        public Camera BaseCamera { get; private set; }
+        public Camera UiCamera { get; private set; }
+        public Camera BattleCamera { get; private set; }
 
-        public Camera MainCamera { get; private set; }
+        public void RegisterUICamera(Camera uiCamera)
+        {
+            UiCamera = uiCamera;
+        }
+
+        public void RegisterBaseCamera(Camera baseCamera)
+        {
+            BaseCamera = baseCamera;
+        }
+
+        public void RegisterBattleCamera(Camera battleCamera)
+        {
+            BattleCamera = battleCamera;
+        }
 
         #region Camera Relative Input
 
@@ -35,7 +51,7 @@ namespace Core.Input
         /// <returns>转换为相机相对的 2D 方向</returns>
         private Vector2 GetCameraRelativeInput(Vector2 input)
         {
-            if (MainCamera == null)
+            if (BattleCamera == null)
             {
                 // 如果没有相机，返回原始输入
                 Debug.LogWarning("[InputManager] MainCamera is null, using raw input");
@@ -43,8 +59,8 @@ namespace Core.Input
             }
 
             // 获取相机的前向和右向（忽略 Y 轴，保持在水平面）
-            var cameraForward = MainCamera.transform.forward;
-            var cameraRight = MainCamera.transform.right;
+            var cameraForward = BattleCamera.transform.forward;
+            var cameraRight = BattleCamera.transform.right;
 
             // 将相机方向投影到水平面（Y = 0）
             cameraForward.y = 0;
@@ -63,12 +79,6 @@ namespace Core.Input
 
         #endregion
 
-        public void SetMainCamera(Camera mainCamera)
-        {
-            MainCamera = mainCamera;
-            Debug.Log("[InputManager] MainCamera set to: " + mainCamera.name);
-        }
-
         public void Tick(float deltaTime)
         {
         }
@@ -78,7 +88,6 @@ namespace Core.Input
         public override void Initialize()
         {
             base.Initialize();
-
             // 创建输入动作实例
             _inputActions = new InputSystem_Actions();
 

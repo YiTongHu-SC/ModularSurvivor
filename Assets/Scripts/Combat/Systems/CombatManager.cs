@@ -1,5 +1,6 @@
 ﻿using Combat.Actors;
 using Combat.Data;
+using Combat.GameCamera;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UnityEngine;
@@ -35,17 +36,14 @@ namespace Combat.Systems
         public ActorFactory ActorFactory { get; set; } = new();
         public CombatClockData CombatClock { get; set; }
         public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
+        public CameraManager CameraManager { get; set; }
 
         public override void Initialize()
         {
-            AbilitySystem.Initialize();
-            BuffSystem.Initialize();
-            MovementSystem.Initialize();
-            ViewSystem.Initialize();
-            CombatClock = new CombatClockData(300f); // 默认战斗时间300秒
+            InitializeCombatState();
         }
 
-        public void InitializeCombatState()
+        private void InitializeCombatState()
         {
             StateMachine = new StateMachine<CombatManager, CombatState, CombatTransition>(this);
             var initState = new CombatStateInit();
@@ -70,10 +68,18 @@ namespace Combat.Systems
         public void Tick(float deltaTime)
         {
             // 更新所有战斗系统
-            AbilitySystem.UpdateAbilities(deltaTime);
-            BuffSystem.UpdateBuffs(deltaTime);
-            MovementSystem.UpdateMovement(deltaTime);
-            CombatClock.UpdateClock(deltaTime);
+            if (StateMachine.CurrentStateID == CombatState.InCombat)
+            {
+                AbilitySystem.UpdateAbilities(deltaTime);
+                BuffSystem.UpdateBuffs(deltaTime);
+                MovementSystem.UpdateMovement(deltaTime);
+                CombatClock.UpdateClock(deltaTime);
+            }
+        }
+
+        public void InGameEnter()
+        {
+            StateMachine.PerformTransition(CombatTransition.StartCombat);
         }
 
         private class CombatStateInit : FsmState<CombatManager, CombatState, CombatTransition>
@@ -84,22 +90,23 @@ namespace Combat.Systems
 
             public override void Enter()
             {
-                throw new System.NotImplementedException();
+                Context.AbilitySystem.Initialize();
+                Context.BuffSystem.Initialize();
+                Context.MovementSystem.Initialize();
+                Context.ViewSystem.Initialize();
+                Context.CombatClock = new CombatClockData(300f); // 默认战斗时间300秒
             }
 
             public override void Exit()
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Reason(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Act(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
         }
 
@@ -111,22 +118,18 @@ namespace Combat.Systems
 
             public override void Enter()
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Exit()
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Reason(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Act(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
         }
 
