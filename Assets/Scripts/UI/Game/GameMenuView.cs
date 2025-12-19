@@ -2,6 +2,7 @@
 using Core.Input;
 using UI.Framework;
 using UI.Utils;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Game
@@ -13,16 +14,22 @@ namespace UI.Game
 
         private void Start()
         {
-            if (UiTool.TryBind<Button>(transform, "ButtonContinueGame", out var btnContinueGame))
+            if (ButtonContinueGame)
             {
-                ButtonContinueGame = btnContinueGame;
                 ButtonContinueGame.onClick.AddListener(ContinueGame);
             }
-
-            if (UiTool.TryBind<Button>(transform, "ButtonReturnToMainMenu", out var btnReturnMain))
+            else
             {
-                ButtonReturnToMainMenu = btnReturnMain;
+                Debug.LogWarning("GameMenuView: ButtonContinueGame is not assigned in the inspector!", this);
+            }
+
+            if (ButtonContinueGame)
+            {
                 ButtonReturnToMainMenu.onClick.AddListener(OnReturnToMainMenuClicked);
+            }
+            else
+            {
+                Debug.LogWarning("GameMenuView: ButtonReturnToMainMenu is not assigned in the inspector!", this);
             }
         }
 

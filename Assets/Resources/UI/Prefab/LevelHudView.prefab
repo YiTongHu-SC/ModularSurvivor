@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efd6b5d6470d4ec996c257e74a2bdfc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UI::UI.Game.LevelHudView
-  _autoUpdate: 1
-  _enableDebugLogging: 1
+  AutoUpdate: 1
+  EnableDebugLogging: 0
   ClockText: {fileID: 6654311117984773466}
 --- !u!1 &5033699090735181546
 GameObject:

@@ -47,6 +47,7 @@ namespace UI.Game
         private void OnDestroy()
         {
             MvcManager.Instance.DisposeUI<GameMenuController>();
+            MvcManager.Instance.DisposeUI<LevelHudController>();
         }
 
         private void CloseMenu()

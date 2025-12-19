@@ -1,6 +1,6 @@
 ﻿using Core.Events;
 using UI.Framework;
-using UI.Utils;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Menus
@@ -12,16 +12,22 @@ namespace UI.Menus
 
         private void Start()
         {
-            if (UiTool.TryBind<Button>(transform, "ButtonStartGame", out var startButton))
+            if (ButtonStartGame)
             {
-                ButtonStartGame = startButton;
                 ButtonStartGame.onClick.AddListener(OnStartButtonClicked);
             }
-
-            if (UiTool.TryBind<Button>(transform, "ButtonExitGame", out var exitButton))
+            else
             {
-                ButtonExitGame = exitButton;
+                Debug.LogWarning("MainMenuView: ButtonStartGame is not assigned in the inspector!", this);
+            }
+
+            if (ButtonExitGame)
+            {
                 ButtonExitGame.onClick.AddListener(OnExitButtonClicked);
+            }
+            else
+            {
+                Debug.LogWarning("MainMenuView: ButtonExitGame is not assigned in the inspector!", this);
             }
         }
 

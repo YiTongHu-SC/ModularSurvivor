@@ -596,10 +596,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5da2403c77c41c0ac268afe99ed8f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UI::UI.Menus.MainMenuView
-  _autoUpdate: 1
-  _enableDebugLogging: 1
-  ButtonStartGame: {fileID: 0}
-  ButtonExitGame: {fileID: 0}
+  AutoUpdate: 1
+  EnableDebugLogging: 0
+  ButtonStartGame: {fileID: 3507122295456934861}
+  ButtonExitGame: {fileID: 386052741282745150}
 --- !u!1 &9121885829709870026
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,11 +1,21 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UI.Framework;
+using UnityEngine;
 
 namespace UI.Game
 {
     public class LevelHudView : BaseView<LevelHudModelData>
     {
         public TextMeshProUGUI ClockText;
+
+        private void Start()
+        {
+            if (!ClockText)
+            {
+                Debug.LogWarning("LevelHudView: ClockText is not assigned in the inspector!", this);
+            }
+        }
 
         public override void UpdateView(LevelHudModelData data)
         {
