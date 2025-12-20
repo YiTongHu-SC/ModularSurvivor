@@ -3,6 +3,7 @@ using Combat.Ability.Data;
 using Combat.Buff;
 using Combat.Data;
 using Combat.Systems;
+using Core.Assets;
 using Core.Units;
 using UnityEngine;
 using Waves.Data;
@@ -86,9 +87,10 @@ namespace Waves.Spawners
 
         private ActorData GetActorDataById(int enemyID)
         {
-            // TODO: 暂时通过Resources加载，后续可以考虑资源管理器
-            var actorData = Resources.Load<ActorData>($"ActorConfigs/Actor_{enemyID}");
-            return actorData;
+            // TODO: 后面改成从配置表读取
+            var levelScope = AssetSystem.Instance.GetScope(AssetsScopeLabel.Level);
+            var assetHandle = levelScope.Acquire<ActorData>($"Level:ActorConfigs:Actor_{enemyID}");
+            return assetHandle.Asset;
         }
     }
 }

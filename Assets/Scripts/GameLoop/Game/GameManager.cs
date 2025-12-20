@@ -274,15 +274,6 @@ namespace GameLoop.Game
             StateMachine.PerformTransition(transition);
         }
 
-        public void InitializeCombat()
-        {
-            TimeManager.Instance.Initialize();
-            UnitManager.Instance.Initialize();
-            WaveManager.Instance.Initialize();
-            CombatManager.Instance.Initialize();
-            CameraManager.Instance.Initialize();
-        }
-
         private void Update()
         {
             if (!StateMachine.IsInitialized) return;
@@ -298,10 +289,10 @@ namespace GameLoop.Game
             switch (CurrentState)
             {
                 case GameState.InGame:
-                    WaveManager.Instance.Tick(deltaTime);
-                    CombatManager.Instance.Tick(deltaTime);
-                    UnitManager.Instance.Tick(deltaTime);
                     TimeManager.Instance.Tick(deltaTime);
+                    UnitManager.Instance.Tick(deltaTime);
+                    CombatManager.Instance.Tick(deltaTime);
+                    WaveManager.Instance.Tick(deltaTime);
                     break;
             }
         }
@@ -373,7 +364,11 @@ namespace GameLoop.Game
                         Context.LoadingMainProcess();
                         break;
                     case LoadSceneType.Game:
-                        Context.InitializeCombat();
+                        TimeManager.Instance.Initialize();
+                        UnitManager.Instance.Initialize();
+                        WaveManager.Instance.Initialize();
+                        CameraManager.Instance.Initialize();
+                        CombatManager.Instance.Initialize();
                         Context.LoadingGameProcess();
                         break;
                 }

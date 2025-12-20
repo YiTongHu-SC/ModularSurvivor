@@ -220,7 +220,7 @@ namespace Core.Assets
                     100f,
                     async progress =>
                     {
-                        await AssetSystem.Instance.LoadManifestAsync(globalManifest, AssetSystem.GlobalScopeLabel,
+                        await AssetSystem.Instance.LoadManifestAsync(globalManifest, AssetsScopeLabel.Global,
                             progress);
                     }
                 )

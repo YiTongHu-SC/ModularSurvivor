@@ -40,5 +40,9 @@
         public class ReturnToMainMenuEvent : EventData
         {
         }
+
+        public class CombatInitCompleteEvent : EventData
+        {
+        }
     }
 }

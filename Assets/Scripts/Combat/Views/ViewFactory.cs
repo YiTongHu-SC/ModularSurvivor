@@ -1,4 +1,5 @@
-﻿using Core.Units;
+﻿using Core.Assets;
+using Core.Units;
 using Lean.Pool;
 using UnityEngine;
 
@@ -9,15 +10,16 @@ namespace Combat.Views
         public BaseUnitPresentation CreateUnitPresentation(int presentationId, ViewBaseData viewData)
         {
             // 加载PresentationData和Prefab
-            // TODO: 优化资源加载方式，避免直接使用Resources.Load
-            var presentationConfig =
-                Resources.Load<PresentationConfig>($"EffectConfigs/PresentationConfig");
-            if (presentationConfig == null)
+            var handler =
+                AssetSystem.Instance.LevelScope.Acquire<PresentationConfig>("Level:EffectConfigs:PresentationConfig");
+
+            if (!handler.Asset)
             {
                 Debug.LogError($"PresentationData with ID {presentationId} not found.");
                 return null;
             }
 
+            var presentationConfig = handler.Asset;
             if (!presentationConfig.PresentationPrefab)
             {
                 Debug.LogError($"UnitPresentation prefab with ID {presentationId} not found.");

@@ -493,7 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d1ac9c3de284beaa67375ac2fd140dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameLoop::GameLoop.Game.CameraController
-  _config: {fileID: 11400000, guid: e6aafc5c57593a349872e4c23007ee7c, type: 2}
+  Config: {fileID: 0}
 --- !u!1 &348532824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,8 +1631,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b8b665236a42ab9a5d8d2b5c406033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameLoop::GameLoop.GameDebug.CreateHeroOnStart
-  HeroID: 100000
-  SpawnPosition: {x: 0, y: 0, z: 0}
+  HeroConfigKey: DefaultHero
+  SpawnPositionOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &1675427733
 Transform:
   m_ObjectHideFlags: 0
@@ -1771,6 +1771,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86810f005e61416fbd4690b8d08b76ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameBase::GameLoop.Game.GameManager
+  GlobalConfig: {fileID: 0}
+  UIConfig: {fileID: 0}
   OnGameInitialized:
     m_PersistentCalls:
       m_Calls:
@@ -1810,18 +1812,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 330585548}
-        m_TargetAssemblyTypeName: GameLoop.Game.CameraController, GameLoop
-        m_MethodName: SetGlobalMainCamera
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  SystemRootSocket: {fileID: 0}
+  ShowGameState: 0
 --- !u!1 &2137599307
 GameObject:
   m_ObjectHideFlags: 0

@@ -45,4 +45,9 @@ MonoBehaviour:
     _weight: 0
     _isRequired: 1
     _tags: []
+  - _key: Level:Prefabs:WaveConfigsHandler
+    _assetType: 0
+    _weight: 0
+    _isRequired: 1
+    _tags: []
   _failureStrategy: 2

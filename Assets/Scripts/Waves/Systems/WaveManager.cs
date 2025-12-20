@@ -1,4 +1,7 @@
-﻿using StellarCore.Singleton;
+﻿using System.Collections.Generic;
+using Combat.Systems;
+using StellarCore.Singleton;
+using Waves.Data;
 
 namespace Waves.Systems
 {
@@ -14,9 +17,9 @@ namespace Waves.Systems
             _initialized = true;
         }
 
-        public void CreateWaves(WaveConfigsHandler waveConfigsHandler)
+        public void CreateWaves(List<WaveConfig> waves)
         {
-            foreach (var waveConfig in waveConfigsHandler.Waves)
+            foreach (var waveConfig in waves)
             {
                 WaveSystem.AddWave(waveConfig);
             }
@@ -24,7 +27,10 @@ namespace Waves.Systems
 
         public void Tick(float deltaTime)
         {
-            WaveSystem.UpdateWaves(deltaTime);
+            if (CombatManager.Instance.CurrentState == CombatState.InCombat)
+            {
+                WaveSystem.UpdateWaves(deltaTime);
+            }
         }
     }
 }

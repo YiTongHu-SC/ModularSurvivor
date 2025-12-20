@@ -1,6 +1,8 @@
 ﻿using Combat.Actors;
 using Combat.Data;
 using Combat.GameCamera;
+using Core.Assets;
+using Core.Events;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UnityEngine;
@@ -37,6 +39,7 @@ namespace Combat.Systems
         public CombatClockData CombatClock { get; set; }
         public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
         public CameraManager CameraManager { get; set; }
+        public CombatState CurrentState => StateMachine.CurrentStateID;
 
         public override void Initialize()
         {
@@ -99,6 +102,7 @@ namespace Combat.Systems
 
             public override void Exit()
             {
+                EventManager.Instance.Publish(new GameLoopEvents.CombatInitCompleteEvent());
             }
 
             public override void Reason(float deltaTime = 0)

@@ -66,7 +66,7 @@ namespace Core.Assets
         {
             Debug.Log("[AssetSystem] Loading global assets...");
 
-            var result = await AssetSystem.LoadManifestAsync(_globalManifest, AssetSystem.GlobalScopeLabel);
+            var result = await AssetSystem.LoadManifestAsync(_globalManifest, AssetsScopeLabel.Global);
 
             if (result.HasFailures)
                 Debug.LogWarning(

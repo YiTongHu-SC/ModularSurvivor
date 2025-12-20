@@ -37,6 +37,10 @@ MonoBehaviour:
     _resourcesPath: Level/EffectConfigs/PresentationConfig
     _assetType: 1
     _tags: []
+  - _key: Level:Prefabs:WaveConfigsHandler
+    _resourcesPath: Level/Prefabs/WaveConfigsHandler
+    _assetType: 0
+    _tags: []
   - _key: UI:Prefab:GameMenuView
     _resourcesPath: UI/Prefab/GameMenuView
     _assetType: 0

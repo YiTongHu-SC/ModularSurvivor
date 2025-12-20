@@ -1,6 +1,4 @@
-﻿using System;
-using Combat.Ability.Data;
-using Combat.Actors;
+﻿using Combat.Ability.Data;
 using Combat.Data;
 using Combat.Systems;
 using Core.Assets;

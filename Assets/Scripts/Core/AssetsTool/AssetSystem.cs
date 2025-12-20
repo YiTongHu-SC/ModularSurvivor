@@ -13,8 +13,6 @@ namespace Core.Assets
     public class AssetSystem : IDisposable
     {
         // 预定义的作用域名称
-        public const AssetsScopeLabel GlobalScopeLabel = AssetsScopeLabel.Global;
-        public const AssetsScopeLabel FrontendScopeLabel = AssetsScopeLabel.Frontend;
         private readonly object _lockObject = new();
         private readonly Dictionary<AssetsScopeLabel, AssetScope> _scopes;
         private bool _disposed;
@@ -24,12 +22,14 @@ namespace Core.Assets
         /// <summary>
         ///     获取全局作用域
         /// </summary>
-        public AssetScope GlobalScope => GetScope(GlobalScopeLabel);
+        public AssetScope GlobalScope => GetScope(AssetsScopeLabel.Global);
 
         /// <summary>
         ///     获取前端作用域
         /// </summary>
-        public AssetScope FrontendScope => GetScope(FrontendScopeLabel);
+        public AssetScope FrontendScope => GetScope(AssetsScopeLabel.Frontend);
+
+        public AssetScope LevelScope => GetScope(AssetsScopeLabel.Level);
 
         /// <summary>
         ///     直接通过提供者访问（绕过作用域）
@@ -45,7 +45,7 @@ namespace Core.Assets
             _scopes = new Dictionary<AssetsScopeLabel, AssetScope>();
 
             // 创建全局作用域
-            CreateScope(GlobalScopeLabel);
+            CreateScope(AssetsScopeLabel.Global);
 
             Instance = this;
         }
@@ -138,7 +138,7 @@ namespace Core.Assets
         /// </summary>
         public AssetScope EnsureFrontendScope()
         {
-            return GetScope(FrontendScopeLabel) ?? CreateScope(FrontendScopeLabel);
+            return GetScope(AssetsScopeLabel.Frontend) ?? CreateScope(AssetsScopeLabel.Frontend);
         }
 
         /// <summary>
