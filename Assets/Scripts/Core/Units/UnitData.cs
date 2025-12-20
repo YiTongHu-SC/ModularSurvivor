@@ -43,7 +43,7 @@ namespace Core.Units
         /// </summary>
         public float Rotation;
 
-        public UnitData(Vector2 position, float rotation, UnitCollisionData collisionData = default,
+        public UnitData(Vector2 position = default, float rotation = 0, UnitCollisionData collisionData = default,
             UnitModelView modelView = default)
         {
             Position = position;
