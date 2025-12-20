@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4872096266858635593}
   - component: {fileID: 9146983658919152006}
-  - component: {fileID: 7261003915893607306}
   m_Layer: 0
   m_Name: ActorDragon
   m_TagString: Untagged
@@ -46,18 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916191a6e9b34c01be27f11b515c0e37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Combat::Combat.Actors.Actor
---- !u!114 &7261003915893607306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 240105959614190555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f6c95dc6fc3405a92a8552e995080ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Combat::Combat.Views.UnitView
 --- !u!1 &3805283869481633744
 GameObject:
   m_ObjectHideFlags: 0

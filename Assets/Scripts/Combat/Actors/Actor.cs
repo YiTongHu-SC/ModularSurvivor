@@ -1,4 +1,6 @@
-﻿using Combat.Systems;
+﻿using System;
+using Combat.Systems;
+using Core.Coordinates;
 using Core.Events;
 using Core.Units;
 using Lean.Pool;
@@ -65,6 +67,7 @@ namespace Combat.Actors
             UnitData.IsActive = true;
             UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
             Initialized = true;
+            UpdatePosView(data.Position, data.Rotation);
         }
 
         private void Start()
@@ -72,7 +75,16 @@ namespace Combat.Actors
             if (!Initialized) return;
             Debug.Log("Unit Start");
             OnInitialize?.Invoke();
-            OnUpdateView?.Invoke(UnitData.Position, UnitData.Rotation);
+        }
+
+        private void OnEnable()
+        {
+            OnUpdateView.AddListener(UpdatePosView);
+        }
+
+        private void OnDisable()
+        {
+            OnUpdateView.AddListener(UpdatePosView);
         }
 
         public virtual void OnSpawn()
@@ -109,6 +121,13 @@ namespace Combat.Actors
             if (eventData.GUID != GUID) return;
             // 处理角色死亡逻辑
             KillSelf();
+        }
+
+        private void UpdatePosView(Vector2 position, float rotation)
+        {
+            transform.position = CoordinateConverter.ToWorldPosition(position);
+            // Y轴取反, 因为逻辑坐标系是x-y平面, 而Unity是x-z平面
+            transform.rotation = Quaternion.Euler(0, -rotation, 0);
         }
     }
 }
