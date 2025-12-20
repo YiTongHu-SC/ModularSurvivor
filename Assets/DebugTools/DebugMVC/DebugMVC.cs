@@ -40,6 +40,10 @@ namespace DebugTools.DebugMVC
                         MvcManager.Instance.Open<DebugController>();
                     }
                 }
+                else
+                {
+                    MvcManager.Instance.Open<DebugController>();
+                }
             }
         }
 
