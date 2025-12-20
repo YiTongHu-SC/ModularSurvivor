@@ -15,19 +15,34 @@ namespace Waves.Spawners
         private float _spawnRadius;
         private float _timer;
         const float DeathDelayTime = 10f;
+        private int _count;
+        private bool _isWaveEnd;
 
         public SimpleSpawner(WaveConfig config) : base(config)
         {
             _spawnRadius = config.SpawnRadius;
             _timer = 0;
+            _count = 0;
+            _isWaveEnd = false;
         }
 
         public override void UpdateSpawner(float deltaTime)
         {
+            if (_isWaveEnd) return;
             _timer += deltaTime;
             if (_timer >= Config.SpawnInterval)
             {
-                SpawnEnemy();
+                for (var i = 0; i < Config.EnemyCountEachSubWave; i++)
+                {
+                    SpawnEnemy();
+                    _count += 1;
+                    if (_count >= Config.TotalEnemies)
+                    {
+                        _isWaveEnd = true;
+                        break;
+                    }
+                }
+
                 _timer = 0f;
             }
         }
@@ -44,12 +59,7 @@ namespace Waves.Spawners
             var unitData = new UnitData(spawnPosition, 0)
             {
                 Group = GroupType.Enemy,
-                MaxHealth = 10,
-                MoveSpeed = 1,
-                MoveDirection = default,
-                IsActive = false,
-                Health = 0,
-                MovementStrategy = "StraightChase",
+
                 ModelView = new UnitModelView()
                 {
                     Height = 1,
@@ -60,8 +70,12 @@ namespace Waves.Spawners
                 {
                     AreaType = CollisionAreaType.Circle,
                     Radius = 0.5f
-                }
+                },
+                MoveSpeed = 1,
+                MovementStrategy = "StraightChase",
             };
+
+            unitData.SetHealth(10);
             // Spawn unit
             Spawn(actorData, unitData);
             // apply ability

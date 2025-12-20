@@ -27,15 +27,24 @@ namespace GameLoop.GameDebug
                 var heroData = new UnitData(SpawnPositionOffset + transform.position, 0)
                 {
                     Group = GroupType.Ally,
+
                     ModelView = new UnitModelView()
                     {
                         Height = 1,
                         CenterOffset = 0.5f,
                         Radius = 0.5f
                     },
-                    MovementStrategy = "SimpleMove",
+
+                    CollisionData = new UnitCollisionData()
+                    {
+                        AreaType = CollisionAreaType.Circle,
+                        Radius = 0.5f
+                    },
+
                     MoveSpeed = 2f,
+                    MovementStrategy = "SimpleMove",
                 };
+
                 heroData.SetHealth(100);
                 var actor = CombatManager.Instance.ActorFactory.Spawn(assetHandle.Asset.ActorPrefab, heroData);
                 EventManager.Instance.Publish(new GameEvents.HeroCreated(heroData.GUID));

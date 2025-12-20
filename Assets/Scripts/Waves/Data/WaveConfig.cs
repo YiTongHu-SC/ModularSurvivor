@@ -16,7 +16,7 @@ namespace Waves.Data
         /// <summary>
         /// 敌人数量
         /// </summary>
-        public int EnemyCount;
+        public int EnemyCountEachSubWave = 1;
 
         /// <summary>
         /// 生成间隔
@@ -28,6 +28,7 @@ namespace Waves.Data
         /// </summary>
         public float Duration;
 
+        public int TotalEnemies = 100;
 
         // TODO: 暂时都配置在这里，后续可以考虑拆分
         public float SpawnRadius;

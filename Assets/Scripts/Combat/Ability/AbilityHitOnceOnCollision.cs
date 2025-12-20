@@ -2,6 +2,7 @@
 using Combat.Systems;
 using Core.Events;
 using Core.Units;
+using UnityEngine;
 
 namespace Combat.Ability
 {
@@ -44,16 +45,17 @@ namespace Combat.Ability
         public void OnEventReceived(GameEvents.OverlapEvent eventData)
         {
             if (_hasHit) return;
+            if (eventData.UnitAGuid != UnitId) return;
 
-            if (eventData.UnitAGuid == UnitId)
-            {
-                int otherUnitId = eventData.UnitBGuid;
-                var otherUnit = UnitManager.Instance.Units[otherUnitId];
-                if (otherUnit.Group == UnitData.Group) return; // 忽略友军
-                // 这里可以添加命中逻辑，例如造成伤害或应用效果
-                CombatManager.Instance.DamageSystem.TryApplyDamage(otherUnit, AbilityAbilityData.DamageAmount, UnitData);
-                _hasHit = true; // 只命中一次后失效
-            }
+            var otherUnitId = eventData.UnitBGuid;
+            var otherUnit = UnitManager.Instance.Units[otherUnitId];
+            if (otherUnit.Group == UnitData.Group) return; // 忽略友军
+            // 这里可以添加命中逻辑，例如造成伤害或应用效果
+            CombatManager.Instance.DamageSystem.TryApplyDamage(
+                otherUnit, AbilityAbilityData.DamageAmount, UnitData);
+
+            Debug.Log($"{UnitId} apply {AbilityAbilityData.DamageAmount} damage to {otherUnitId}");
+            _hasHit = true; // 只命中一次后失效
         }
     }
 }
