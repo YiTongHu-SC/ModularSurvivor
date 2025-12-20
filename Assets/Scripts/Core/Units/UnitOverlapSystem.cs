@@ -81,15 +81,19 @@ namespace Combat.Systems
         /// <summary>
         ///     检测所有单位重叠对
         /// </summary>
-        public List<(UnitData unitA, UnitData unitB)> GetAllOverlappingPairs()
+        public List<(UnitData, UnitData)> GetAllOverlappingPairs()
         {
             var overlappingPairs = new List<(UnitData, UnitData)>();
             var unitList = _units.Values.Where(u => u.IsActive).ToList();
 
-            for (var i = 0; i < unitList.Count; i++)
-            for (var j = i + 1; j < unitList.Count; j++)
-                if (IsOverlapping(unitList[i], unitList[j]))
-                    overlappingPairs.Add((unitList[i], unitList[j]));
+            foreach (var unitA in unitList)
+            {
+                foreach (var unitB in unitList)
+                {
+                    if (IsOverlapping(unitA, unitB))
+                        overlappingPairs.Add((unitA, unitB));
+                }
+            }
 
             return overlappingPairs;
         }

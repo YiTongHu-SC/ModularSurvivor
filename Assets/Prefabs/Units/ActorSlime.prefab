@@ -129,6 +129,14 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ae5face8ca855354380107e8d94a7582, type: 2}
     - target: {fileID: 919132149155446097, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
       propertyPath: m_Name
       value: Blue_Stone_Buddy_1204160349_texture

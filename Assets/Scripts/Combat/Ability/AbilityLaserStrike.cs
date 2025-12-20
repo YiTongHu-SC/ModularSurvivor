@@ -47,6 +47,7 @@ namespace Combat.Ability
 
         public override void UpdateAbility(float deltaTime)
         {
+            if (!IsActive) return;
             if (_hasHit || _isCoolingDown) return;
             _tempAbilityUnitData.Position = UnitData.Position;
             FindTargetUnit();
@@ -88,6 +89,7 @@ namespace Combat.Ability
 
         public override void PerformAbility()
         {
+            if (!IsActive) return;
             if (_targetUnitId == -1) return;
             _hasHit = true;
             _isCoolingDown = true;
@@ -101,7 +103,10 @@ namespace Combat.Ability
 
         private void HitTarget()
         {
-            if (UnitManager.Instance.Units.TryGetValue(_targetUnitId, out var targetUnit))
+            if (!IsActive) return;
+            if (!UnitManager.Instance.CheckUnitAvailability(UnitId)) return;
+
+            if (UnitManager.Instance.Units.TryGetValue(_targetUnitId, out var targetUnit) && targetUnit.IsActive)
             {
                 CombatManager.Instance.DamageSystem.TryApplyDamage(targetUnit, _abilityData.DamageAmount, UnitData);
             }
