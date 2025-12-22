@@ -1,4 +1,5 @@
 ﻿using Core.Units;
+using UnityEngine;
 
 namespace Core.Events
 {
@@ -11,7 +12,7 @@ namespace Core.Events
         {
             public UnitMovementEvent(UnitData unitData)
             {
-                GUID = unitData.GUID;
+                GUID = unitData.RuntimeId;
                 UnitData = unitData;
             }
 
@@ -157,12 +158,15 @@ namespace Core.Events
 
         public class HeroCreated : EventData
         {
-            public HeroCreated(int heroDataGuid)
-            {
-                UnitGuid = heroDataGuid;
-            }
+            public Transform HeroTransform;
 
-            public int UnitGuid { get; }
+            public int HeroId { get; }
+
+            public HeroCreated(int heroDataGuid, Transform heroTransform)
+            {
+                HeroId = heroDataGuid;
+                HeroTransform = heroTransform;
+            }
         }
 
         public class UpdatePreferenceEvent : EventData
@@ -176,7 +180,5 @@ namespace Core.Events
             public int PreferenceId { get; }
             public ViewBaseData ViewData { get; }
         }
-
-
     }
 }

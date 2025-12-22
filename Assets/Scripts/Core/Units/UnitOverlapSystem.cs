@@ -28,7 +28,7 @@ namespace Combat.Systems
             if (!unitA.IsActive || !unitB.IsActive)
                 return false;
 
-            if (unitA.GUID == unitB.GUID)
+            if (unitA.RuntimeId == unitB.RuntimeId)
                 return false;
 
             var areaA = unitA.GetCollisionArea();
@@ -64,11 +64,11 @@ namespace Combat.Systems
         /// </summary>
         public bool IsPositionOccupied(Vector2 position, UnitCollisionData collisionData, int excludeUnitId = -1)
         {
-            var tempUnit = new UnitData(position, 0, collisionData) { GUID = -1 };
+            var tempUnit = new UnitData(position, 0, collisionData) { RuntimeId = -1 };
 
             foreach (var unit in _units.Values)
             {
-                if (unit.GUID == excludeUnitId)
+                if (unit.RuntimeId == excludeUnitId)
                     continue;
 
                 if (IsOverlapping(tempUnit, unit))
@@ -112,7 +112,7 @@ namespace Combat.Systems
             // 只检测附近网格内的单位
             foreach (var unit in _units.Values)
             {
-                if (!unit.IsActive || unit.GUID == targetUnit.GUID)
+                if (!unit.IsActive || unit.RuntimeId == targetUnit.RuntimeId)
                     continue;
 
                 // 粗略距离检测
@@ -141,7 +141,7 @@ namespace Combat.Systems
             var overlappingPairs = GetAllOverlappingPairs();
             foreach (var (unitA, unitB) in overlappingPairs)
                 // Debug.Log($"Units {unitA.GUID} and {unitB.GUID} are overlapping.");
-                EventManager.Instance.Publish(new GameEvents.OverlapEvent(unitA.GUID, unitB.GUID));
+                EventManager.Instance.Publish(new GameEvents.OverlapEvent(unitA.RuntimeId, unitB.RuntimeId));
         }
     }
 }

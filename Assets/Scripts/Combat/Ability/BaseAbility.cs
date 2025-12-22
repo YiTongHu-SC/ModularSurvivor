@@ -1,20 +1,21 @@
 ﻿using Combat.Ability.Data;
-using Core.Units;
+using Combat.Effect;
+using Combat.Systems;
 
 namespace Combat.Ability
 {
-    public sealed class Ability
+    public abstract class BaseAbility
     {
         public int UnitId { get; private set; }
-        public UnitData UnitData => UnitManager.Instance.Units[UnitId];
         public AbilityData AbilityData { get; private set; }
         public bool IsActive { get; set; } = false;
+        public bool IsExpired => !IsActive;
 
-        public Ability(AbilityData abilityData, int targetUnitId)
+        public BaseAbility(AbilityData data)
         {
             IsActive = true;
-            UnitId = targetUnitId;
-            AbilityData = abilityData;
+            UnitId = data.TargetID;
+            AbilityData = data;
         }
 
         /// <summary>
@@ -22,6 +23,11 @@ namespace Combat.Ability
         /// </summary>
         public void ApplyAbility()
         {
+            foreach (var effectSpec in AbilityData.Effects)
+            {
+                var effect = EffectFactory.CreateEffectNode(effectSpec);
+                CombatManager.Instance.EffectSystem.ApplyEffect(effect);
+            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Combat.Ability;
 using Combat.Actors;
 using Combat.Data;
+using Combat.Effect;
 using Combat.GameCamera;
 using Core.Events;
 using StellarCore.FSM;
@@ -41,12 +42,13 @@ namespace Combat.Systems
         public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
         public CameraManager CameraManager { get; set; }
         public CombatState CurrentState => StateMachine.CurrentStateID;
-        public RuntimeIdAllocator RuntimeIdAllocator { get; set; } = new();
+        public RuntimeIdAllocator GlobalAllocator { get; set; } = new();
+        public EffectSystem EffectSystem { get; set; } = new();
 
         public override void Initialize()
         {
             base.Initialize();
-            RuntimeIdAllocator.Initialize();
+
             InitializeCombatState();
         }
 
@@ -77,7 +79,8 @@ namespace Combat.Systems
             // 更新所有战斗系统
             if (StateMachine.CurrentStateID == CombatState.InCombat)
             {
-                AbilitySystem.UpdateAbilities(deltaTime);
+                AbilitySystem.TickAbilities(deltaTime);
+                EffectSystem.TickEffects(deltaTime);
                 BuffSystem.UpdateBuffs(deltaTime);
                 MovementSystem.UpdateMovement(deltaTime);
                 CombatClock.UpdateClock(deltaTime);
@@ -97,6 +100,9 @@ namespace Combat.Systems
 
             public override void Enter()
             {
+                Context.GlobalAllocator.Initialize();
+                Context.ActorFactory.Initialize(Context.GlobalAllocator);
+                Context.EffectSystem.Initialize();
                 Context.AbilitySystem.Initialize();
                 Context.BuffSystem.Initialize();
                 Context.MovementSystem.Initialize();

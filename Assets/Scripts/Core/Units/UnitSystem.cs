@@ -8,7 +8,7 @@ namespace Core.Units
 
         public void RegisterUnit(UnitData data)
         {
-            Units[data.GUID] = data;
+            Units[data.RuntimeId] = data;
         }
 
         public void UnregisterUnit(int id)

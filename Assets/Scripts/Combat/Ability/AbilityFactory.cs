@@ -7,35 +7,35 @@ namespace Combat.Ability
     public static class AbilityFactory
     {
         // key: BuffId，value: 创建该 Buff 的委托
-        private static readonly Dictionary<TriggerType, Func<AbilityData, int, Ability>> _creators
+        private static readonly Dictionary<TriggerType, Func<AbilityData, BaseAbility>> _creators
             = new()
             {
                 {
+                    TriggerType.Active,
+                    (data) => new AbilityPassive(data)
+                },
+                {
+                    TriggerType.Passive,
+                    (data) => new AbilityPassive(data)
+                },
+                {
+                    TriggerType.Interval,
+                    (data) => new AbilityPassive(data)
+                },
+                {
                     TriggerType.HitOnceOnCollision,
-                    (data, targetId) => new Ability(data as HitOnceOnCollisionData, targetId)
-                },
-                {
-                    TriggerType.LaserStrike,
-                    (data, targetId) => new Ability(data as LaserStrikeData, targetId)
-                },
-                {
-                    TriggerType.PlayerInput,
-                    (data, targetId) => new Ability(data as PlayerInputData, targetId)
-                },
-                {
-                    TriggerType.ChaseHero,
-                    (data, targetId) => new Ability(data, targetId)
+                    (data) => new AbilityPassive(data)
                 },
             };
 
-        public static Ability CreateAbility(TriggerType triggerType, AbilityData abilityData, int unitId)
+        public static BaseAbility CreateAbility(TriggerType triggerType, AbilityData abilityData)
         {
             if (!_creators.TryGetValue(triggerType, out var creator))
             {
-                throw new ArgumentException($"未找到对应的 Ability 创建器: {triggerType} for unit {unitId}");
+                throw new ArgumentException($"未找到对应的 Ability 创建器: {triggerType} for {abilityData}");
             }
 
-            return creator(abilityData, unitId);
+            return creator(abilityData);
         }
     }
 }

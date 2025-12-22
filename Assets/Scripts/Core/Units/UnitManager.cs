@@ -39,5 +39,19 @@ namespace Core.Units
         {
             return Units.ContainsKey(unitId) && Units[unitId].IsActive;
         }
+        
+        public bool TryGetAvailableUnit(int unitId, out UnitData unitData)
+        {
+            unitData = null;
+            if (!Units.ContainsKey(unitId))
+                return false;
+
+            var data = Units[unitId];
+            if (!data.IsActive)
+                return false;
+
+            unitData = data;
+            return true;
+        }
     }
 }

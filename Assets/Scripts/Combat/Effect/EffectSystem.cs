@@ -7,15 +7,19 @@ namespace Combat.Effect
         private readonly Dictionary<int, IEffectNode> _effectNodes = new();
         private readonly List<int> _effectRemoveQueue = new();
 
-        public void ApplyEffect(int nodeId, IEffectNode effectNode)
+        public void Initialize()
         {
-            if (_effectNodes.TryAdd(nodeId, effectNode))
+        }
+
+        public void ApplyEffect(IEffectNode effectNode)
+        {
+            if (_effectNodes.TryAdd(effectNode.NodeId, effectNode))
             {
                 effectNode.Execute();
             }
         }
 
-        public void Tick(float deltaTime)
+        public void TickEffects(float deltaTime)
         {
             // 每帧更新效果系统逻辑
             foreach (var effectNode in _effectNodes.Values)

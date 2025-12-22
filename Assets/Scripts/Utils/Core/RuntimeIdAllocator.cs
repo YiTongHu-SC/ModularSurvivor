@@ -4,7 +4,7 @@
     {
         private int _nextId = -1;
 
-        private int Next()
+        public int Next()
         {
             return ++_nextId;
         }

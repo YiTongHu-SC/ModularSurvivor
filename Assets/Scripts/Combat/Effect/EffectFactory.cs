@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-using Combat.Effect.Effects;
+﻿using Combat.Effect.Effects;
 using UnityEngine;
 
 namespace Combat.Effect
 {
-    public class EffectFactory
+    public static class EffectFactory
     {
         /// <summary>
         /// 效果工厂方法，根据effectID创建对应的效果节点实例
@@ -22,7 +21,6 @@ namespace Combat.Effect
             {
                 case EffectNodeType.Damage:
                     return new DamageEffect();
-                    break;
             }
 
             Debug.LogError("EffectFactory: 未知的效果类型 " + spec.type);

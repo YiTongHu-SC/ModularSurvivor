@@ -35,7 +35,7 @@ namespace Tests.Unit
             _allUnits.Clear();
             var unit = new UnitData(new Vector2(0, 0))
             {
-                GUID = 1,
+                RuntimeId = 1,
                 IsActive = true,
                 CollisionData = new UnitCollisionData
                 {
@@ -46,7 +46,7 @@ namespace Tests.Unit
 
             var unit2 = new UnitData(new Vector2(0, 0))
             {
-                GUID = 2,
+                RuntimeId = 2,
                 IsActive = true,
                 CollisionData = new UnitCollisionData
                 {
@@ -55,8 +55,8 @@ namespace Tests.Unit
                 }
             };
 
-            _allUnits[unit.GUID] = unit;
-            _allUnits[unit2.GUID] = unit2;
+            _allUnits[unit.RuntimeId] = unit;
+            _allUnits[unit2.RuntimeId] = unit2;
             var isOverlapping = _unitOverlapSystem.IsOverlapping(unit, unit2);
 
             Assert.IsTrue(isOverlapping, "Units should be overlapping.");
@@ -69,7 +69,7 @@ namespace Tests.Unit
             _allUnits.Clear();
             var unit = new UnitData(new Vector2(0, 0))
             {
-                GUID = 1,
+                RuntimeId = 1,
                 IsActive = true,
                 CollisionData = new UnitCollisionData
                 {
@@ -80,7 +80,7 @@ namespace Tests.Unit
 
             var unit2 = new UnitData(new Vector2(0, 0))
             {
-                GUID = 2,
+                RuntimeId = 2,
                 IsActive = true,
                 CollisionData = new UnitCollisionData
                 {
@@ -89,8 +89,8 @@ namespace Tests.Unit
                 }
             };
 
-            _allUnits[unit.GUID] = unit;
-            _allUnits[unit2.GUID] = unit2;
+            _allUnits[unit.RuntimeId] = unit;
+            _allUnits[unit2.RuntimeId] = unit2;
             var isOverlapping = _unitOverlapSystem.IsOverlapping(unit, unit2);
 
             Assert.IsTrue(isOverlapping, "Units should be overlapping.");

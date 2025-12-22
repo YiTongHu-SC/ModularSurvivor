@@ -444,6 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b8b665236a42ab9a5d8d2b5c406033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameLoop::GameLoop.GameDebug.CreateHeroOnStart
+  PlayerControllerConfig: {fileID: 11400000, guid: 3f9ca4b86e2b9d645bd018bfbdd22251, type: 2}
   HeroConfigKey: Level:ActorConfigs:Actor_100000
   SpawnPositionOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &825581374

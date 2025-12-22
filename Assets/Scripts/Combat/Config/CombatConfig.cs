@@ -2,7 +2,7 @@
 
 namespace Combat.Config
 {
-    [CreateAssetMenu(fileName = "CombatConfig", menuName = "CombatConfig/CombatConfig", order = 0)]
+    [CreateAssetMenu(fileName = "CombatConfig", menuName = "Combat Config/CombatConfig", order = 0)]
     public class CombatConfig : ScriptableObject
     {
         [Tooltip("Maximum time allowed for a battle in seconds.")]

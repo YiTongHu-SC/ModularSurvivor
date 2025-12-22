@@ -1,10 +1,14 @@
-﻿using Combat.Config;
+﻿using System;
+using Combat.Config;
 using Combat.Systems;
+using Core.Events;
+using Core.Units;
 using UnityEngine;
 
 namespace Combat.GameCamera
 {
-    public class BattleCameraController : MonoBehaviour
+    public class BattleCameraController : MonoBehaviour,
+        IEventListener<GameEvents.HeroCreated>
     {
         [SerializeField] private CameraConfig Config;
         public Camera Camera { get; private set; }
@@ -18,7 +22,7 @@ namespace Combat.GameCamera
             CombatManager.Instance.CameraManager.SetBattleCamera(this);
         }
 
-        public void SetTarget(Transform target, float offset)
+        private void SetTarget(Transform target, float offset)
         {
             _playerTarget = target;
             _offset = offset;
@@ -56,6 +60,24 @@ namespace Combat.GameCamera
             else
             {
                 transform.position = _desiredPosition;
+            }
+        }
+
+        private void OnEnable()
+        {
+            EventManager.Instance.Subscribe<GameEvents.HeroCreated>(this);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Instance.Unsubscribe<GameEvents.HeroCreated>(this);
+        }
+
+        public void OnEventReceived(GameEvents.HeroCreated eventData)
+        {
+            if (UnitManager.Instance.TryGetAvailableUnit(eventData.HeroId, out var unitData))
+            {
+                SetTarget(eventData.HeroTransform, unitData.ModelView.CenterOffset);
             }
         }
     }

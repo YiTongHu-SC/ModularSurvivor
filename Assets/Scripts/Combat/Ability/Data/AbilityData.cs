@@ -7,6 +7,7 @@ namespace Combat.Ability.Data
         public int RuntimeID;
         public string GUID;
         public string Key;
+        public int TargetID = -1;
         public TriggerType TriggerType;
         public float Cost;
         public float Cooldown;

@@ -17,7 +17,7 @@ namespace Combat.Actors
         // 这里可以添加Actor特有的属性和方法
         public bool IsActive => UnitData.IsActive;
         public UnitData UnitData { get; protected set; }
-        public int GUID => UnitData.GUID;
+        public int RuntimeId => UnitData.RuntimeId;
         public bool Initialized { get; private set; }
         public Transform ModelTransform { get; set; }
 
@@ -100,7 +100,7 @@ namespace Combat.Actors
             UnitData.IsActive = false;
             EventManager.Instance.Unsubscribe<GameEvents.UnitDeathEvent>(this);
             EventManager.Instance.Unsubscribe<GameEvents.UnitMovementEvent>(this);
-            UnitManager.Instance.UnitSystem.UnregisterUnit(GUID);
+            UnitManager.Instance.UnitSystem.UnregisterUnit(RuntimeId);
         }
 
         public virtual void KillSelf()
@@ -112,13 +112,13 @@ namespace Combat.Actors
         public virtual void OnEventReceived(GameEvents.UnitMovementEvent eventData)
         {
             if (!IsActive) return;
-            if (eventData.GUID != GUID) return;
+            if (eventData.GUID != RuntimeId) return;
             OnUpdateView?.Invoke(UnitData.Position, UnitData.Rotation);
         }
 
         public virtual void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
-            if (eventData.GUID != GUID) return;
+            if (eventData.GUID != RuntimeId) return;
             // 处理角色死亡逻辑
             KillSelf();
         }

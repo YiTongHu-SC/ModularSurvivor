@@ -68,7 +68,7 @@ namespace Tests.Combat
             Assert.IsNotNull(_combatManager.BuffSystem);
             var testUnit = new UnitData(new Vector2(0, 0), 0)
             {
-                GUID = 1,
+                RuntimeId = 1,
             };
             testUnit.MoveSpeed = 10f;
             var actorGo = CreateGameObject();
@@ -79,7 +79,7 @@ namespace Tests.Combat
                 5f,
                 2.0f);
             // 应用Buff
-            var result = _combatManager.BuffSystem.ApplyBuff(BuffType.SpeedBoost, buffData, testUnit.GUID);
+            var result = _combatManager.BuffSystem.ApplyBuff(BuffType.SpeedBoost, buffData, testUnit.RuntimeId);
             Assert.IsTrue(result, "Buff apply should succeed.");
             // 验证Buff效果
             Assert.AreEqual(20f, testUnit.MoveSpeed, Tolerance, "Unit move speed should be boosted.");
@@ -93,7 +93,7 @@ namespace Tests.Combat
             Assert.IsNotNull(_combatManager.BuffSystem);
             var testUnit = new UnitData(new Vector2(0, 0), 0)
             {
-                GUID = 2,
+                RuntimeId = 2,
             };
             testUnit.MoveSpeed = 10f;
             var actorGo = CreateGameObject();
@@ -104,7 +104,7 @@ namespace Tests.Combat
                 BuffType.DelayDeath,
                 delayDuration); // 1秒后过期,过期时死亡
             // 应用Buff
-            var result = _combatManager.BuffSystem.ApplyBuff(buffData.BuffType, buffData, testUnit.GUID);
+            var result = _combatManager.BuffSystem.ApplyBuff(buffData.BuffType, buffData, testUnit.RuntimeId);
             Assert.IsTrue(result, "Buff apply should succeed.");
             // 等待Buff过期
             float elapsed = 0f;

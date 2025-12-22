@@ -82,20 +82,22 @@ namespace Waves.Spawners
             var abilityData = new HitOnceOnCollisionData
             {
                 DamageAmount = 10,
-                HitCooldown = 0.2f
+                HitCooldown = 0.2f,
+                TargetID = unitData.RuntimeId
             };
-            CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.HitOnceOnCollision, abilityData,
-                unitData.GUID);
+            // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.HitOnceOnCollision, abilityData);
             // chase hero
             var chaseAbilityData = new AbilityData
             {
                 Key = "ChaseHeroAbility",
-                TriggerType = TriggerType.ChaseHero
+                TriggerType = TriggerType.ChaseHero,
+                TargetID = unitData.RuntimeId
             };
-            CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.ChaseHero, chaseAbilityData, unitData.GUID);
+
+            // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.ChaseHero, chaseAbilityData);
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
-            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.GUID);
+            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }
 

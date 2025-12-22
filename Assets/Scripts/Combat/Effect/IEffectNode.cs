@@ -2,6 +2,11 @@
 {
     public interface IEffectNode
     {
+        /// <summary>
+        /// Runtime 唯一标识
+        /// </summary>
+        public int NodeId { get; }
+
         public EffectNodeType Type { get; }
         public AbilityContext Context { get; set; }
 

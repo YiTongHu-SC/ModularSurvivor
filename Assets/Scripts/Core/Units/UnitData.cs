@@ -13,6 +13,11 @@ namespace Core.Units
 
     public class UnitData
     {
+        /// <summary>
+        /// Runtime 唯一标识符
+        /// </summary>
+        public int RuntimeId { get; set; } = -1;
+
         //碰撞检测数据
         public UnitCollisionData CollisionData;
         public GroupType Group = GroupType.Ally;
@@ -52,7 +57,7 @@ namespace Core.Units
             ModelView = modelView;
         }
 
-        public int GUID { get; set; } = -1;
+
         public float MaxHealth { get; set; }
 
         /// <summary>
