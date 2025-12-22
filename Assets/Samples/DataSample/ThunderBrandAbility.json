@@ -1,0 +1,81 @@
+﻿{
+  "id": "ThunderBrand",
+  "name": "雷印连锁",
+  "tags": ["Spell", "Lightning", "Projectile"],
+
+  "triggerType": "Active",
+  "cooldown": 8.0,
+  "charges": 2,
+  "cost": { "type": "Mana", "value": 30 },
+
+  "targetingRule": {
+    "type": "NearestEnemy",
+    "range": 18,
+    "requireLineOfSight": false
+  },
+
+  "cast": {
+    "castTime": 0.25,
+    "animation": "Cast_OneHand",
+    "snapshotPolicy": "SnapshotAtCast"
+  },
+
+  "effects": [
+    {
+      "type": "Chain",
+      "children": [
+        {
+          "type": "SpawnProjectile",
+          "params": {
+            "projectileId": "LightningBolt_PJ",
+            "speed": 30,
+            "hitRadius": 0.4,
+            "maxDistance": 20,
+            "onHitEffects": [
+              {
+                "type": "Damage",
+                "params": {
+                  "base": 40,
+                  "scaleBy": "Source.SpellPower",
+                  "ratio": 0.6
+                },
+                "tags": ["Lightning"]
+              },
+              {
+                "type": "ApplyBuff",
+                "params": {
+                  "buffId": "ThunderBrand_Mark",
+                  "stacks": 1,
+                  "stackRule": "Add+Refresh"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "If",
+          "condition": {
+            "type": "TargetHasBuffStacksAtLeast",
+            "buffId": "ThunderBrand_Mark",
+            "stacks": 5
+          },
+          "children": [
+            {
+              "type": "ApplyBuff",
+              "params": { "buffId": "ThunderBrand_Overload", "stacks": 1 }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "scaling": {
+    "levelToParams": {
+      "1": { "damageBase": 40, "cooldown": 8.0 },
+      "2": { "damageBase": 52 },
+      "3": { "damageBase": 66, "cooldown": 7.0 },
+      "4": { "damageBase": 82, "charges": 3 }
+    }
+  }
+}

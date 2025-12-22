@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Combat.Ability;
 using Combat.Ability.Data;
 using Core.Events;
 using Core.Units;
 using UnityEngine;
 
-namespace Combat.Systems
+namespace Combat.Ability
 {
     public class AbilitySystem
     {
         // 按单位ID存储Buff列表
-        private readonly Dictionary<int, List<BaseAbility>> _unitAbilities = new();
+        private readonly Dictionary<int, List<Ability>> _unitAbilities = new();
 
         public void Initialize()
         {
         }
 
-        public bool ApplyAbility(AbilityType abilityType, AbilityData abilityData, int unitId)
+        public bool ApplyAbility(TriggerType triggerType, AbilityData abilityData, int unitId)
         {
             // 检查单位是否存在
             if (!UnitManager.Instance.Units.ContainsKey(unitId))
@@ -30,17 +29,17 @@ namespace Combat.Systems
             // // 确保单位有Buff列表
             if (!_unitAbilities.ContainsKey(unitId))
             {
-                _unitAbilities[unitId] = new List<BaseAbility>();
+                _unitAbilities[unitId] = new List<Ability>();
             }
 
             //
-            var ability = AbilityFactory.CreateAbility(abilityType, abilityData, unitId);
+            var ability = AbilityFactory.CreateAbility(triggerType, abilityData, unitId);
             var unitAbility = _unitAbilities[unitId];
 
             // 添加新Buff
             unitAbility.Add(ability);
             ability.ApplyAbility();
-            Debug.Log($"应用能力: {ability.AbilityData.AbilityType} 到单位 {unitId}");
+            Debug.Log($"应用能力: {ability.AbilityData.TriggerType} 到单位 {unitId}");
 
             return true;
         }
@@ -49,18 +48,18 @@ namespace Combat.Systems
         {
             if (!_unitAbilities.TryGetValue(unitId, out var unitBuffs))
                 return false;
-            var abilityRemove = unitBuffs.FirstOrDefault(b => b.AbilityData.ID == abilityId && b.IsActive);
+            var abilityRemove = unitBuffs.FirstOrDefault(b => b.AbilityData.RuntimeID == abilityId && b.IsActive);
             if (abilityRemove == null)
                 return false;
             abilityRemove.RemoveAbility();
             abilityRemove.IsActive = false;
-            Debug.Log($"移除能力: {abilityRemove.AbilityData.AbilityType} 从单位 {unitId}");
+            Debug.Log($"移除能力: {abilityRemove.AbilityData.TriggerType} 从单位 {unitId}");
             return true;
         }
 
         public void UpdateAbilities(float deltaTime)
         {
-            var expiredAbilities = new List<(int unitId, BaseAbility ability)>();
+            var expiredAbilities = new List<(int unitId, Ability ability)>();
             foreach (var unitAbilities in _unitAbilities)
             {
                 var unitId = unitAbilities.Key;
@@ -86,7 +85,7 @@ namespace Combat.Systems
                     }
                     else
                     {
-                        ability.UpdateAbility(deltaTime);
+                        ability.TickAbility(deltaTime);
                     }
                 }
             }
@@ -96,9 +95,9 @@ namespace Combat.Systems
             {
                 ability.RemoveAbility();
                 _unitAbilities[unitId].Remove(ability);
-                Debug.Log($"能力过期并移除: {ability.AbilityData.AbilityType} 单位 {unitId}");
+                Debug.Log($"能力过期并移除: {ability.AbilityData.TriggerType} 单位 {unitId}");
                 EventManager.Instance.Publish(
-                    new GameEvents.AbilityRemovedEvent(unitId, ability.AbilityData.ID));
+                    new GameEvents.AbilityRemovedEvent(unitId, ability.AbilityData.RuntimeID));
             }
         }
     }

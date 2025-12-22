@@ -62,14 +62,14 @@ namespace GameLoop.GameDebug
                         Radius = 5f
                     },
                 };
-                CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.LaserStrike, laserStrikeData,
+                CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.LaserStrike, laserStrikeData,
                     heroData.GUID);
                 // move ability
                 var playerInputData = new PlayerInputData
                 {
                     DeadZone = 0.1f,
                 };
-                CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.PlayerInput, playerInputData,
+                CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.PlayerInput, playerInputData,
                     heroData.GUID);
 
                 // set actor as hero

@@ -1,11 +1,12 @@
-﻿using Combat.Actors;
+﻿using Combat.Ability;
+using Combat.Actors;
 using Combat.Data;
 using Combat.GameCamera;
-using Core.Assets;
 using Core.Events;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UnityEngine;
+using Utils.Core;
 
 namespace Combat.Systems
 {
@@ -40,9 +41,12 @@ namespace Combat.Systems
         public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
         public CameraManager CameraManager { get; set; }
         public CombatState CurrentState => StateMachine.CurrentStateID;
+        public RuntimeIdAllocator RuntimeIdAllocator { get; set; } = new();
 
         public override void Initialize()
         {
+            base.Initialize();
+            RuntimeIdAllocator.Initialize();
             InitializeCombatState();
         }
 

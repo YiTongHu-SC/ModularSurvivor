@@ -6,7 +6,7 @@
 
         public PlayerInputData()
         {
-            AbilityType = AbilityType.PlayerInput;
+            TriggerType = TriggerType.PlayerInput;
         }
     }
 }

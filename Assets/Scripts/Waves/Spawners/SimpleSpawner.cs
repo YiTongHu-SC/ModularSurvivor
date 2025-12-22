@@ -84,15 +84,15 @@ namespace Waves.Spawners
                 DamageAmount = 10,
                 HitCooldown = 0.2f
             };
-            CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.HitOnceOnCollision, abilityData,
+            CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.HitOnceOnCollision, abilityData,
                 unitData.GUID);
             // chase hero
             var chaseAbilityData = new AbilityData
             {
-                ID = 3,
-                AbilityType = AbilityType.ChaseHero
+                Key = "ChaseHeroAbility",
+                TriggerType = TriggerType.ChaseHero
             };
-            CombatManager.Instance.AbilitySystem.ApplyAbility(AbilityType.ChaseHero, chaseAbilityData, unitData.GUID);
+            CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.ChaseHero, chaseAbilityData, unitData.GUID);
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
             CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.GUID);
