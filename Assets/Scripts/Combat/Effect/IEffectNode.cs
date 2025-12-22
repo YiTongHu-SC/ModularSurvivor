@@ -12,11 +12,11 @@ namespace Combat.Effect
         public EffectNodeType Type { get; }
         public AbilityContext Context { get; set; }
 
-        /// <summary>
-        /// 初始化效果节点
-        /// </summary>
-        /// <param name="effectSpec"></param>
-        public void Initialize(EffectSpec effectSpec);
+        // /// <summary>
+        // /// 初始化效果节点
+        // /// </summary>
+        // /// <param name="effectSpec"></param>
+        // public void OnInitialize(EffectSpec effectSpec);
 
 
         /// <summary>

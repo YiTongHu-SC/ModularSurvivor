@@ -12,13 +12,13 @@ namespace Combat.Effect
         /// <returns></returns>
         public static IEffectNode CreateEffectNode(EffectSpec effectSpec)
         {
-            switch (effectSpec.type)
+            switch (effectSpec.EffectNodeType)
             {
                 case EffectNodeType.Damage:
                     return new DamageEffect(effectSpec);
             }
 
-            Debug.LogError("EffectFactory: 未知的效果类型 " + effectSpec.type);
+            Debug.LogError("EffectFactory: 未知的效果类型 " + effectSpec.EffectNodeType);
             return null;
         }
     }

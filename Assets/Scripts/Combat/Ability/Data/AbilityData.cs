@@ -11,7 +11,7 @@ namespace Combat.Ability.Data
         public TriggerType TriggerType;
         public float Cost;
         public float Cooldown;
-        public EffectSpec[] Effects;
+        public EffectSpec EffectSpec;
     }
 
     public enum TriggerType
@@ -26,5 +26,10 @@ namespace Combat.Ability.Data
         LaserStrike, // 激光打击
         PlayerInput, // 玩家输入控制
         ChaseHero, // 追逐英雄
+    }
+
+    public enum TriggerEventType
+    {
+        OnCollideOtherUnit, // 击中其他单位时
     }
 }

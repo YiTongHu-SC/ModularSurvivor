@@ -23,16 +23,16 @@ namespace Combat.Ability
                     (data) => new AbilityPassive(data)
                 },
                 {
-                    TriggerType.HitOnceOnCollision,
-                    (data) => new AbilityPassive(data)
+                    TriggerType.ByEvent,
+                    (data) => new AbilityTriggerByEvent(data as AbilityTriggerByEventData)
                 },
             };
 
-        public static BaseAbility CreateAbility(TriggerType triggerType, AbilityData abilityData)
+        public static BaseAbility CreateAbility(AbilityData abilityData)
         {
-            if (!_creators.TryGetValue(triggerType, out var creator))
+            if (!_creators.TryGetValue(abilityData.TriggerType, out var creator))
             {
-                throw new ArgumentException($"未找到对应的 Ability 创建器: {triggerType} for {abilityData}");
+                throw new ArgumentException($"未找到对应的 Ability 创建器: {abilityData.TriggerType} for {abilityData}");
             }
 
             return creator(abilityData);

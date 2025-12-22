@@ -11,12 +11,7 @@ namespace Combat.Effect.Effects
         public EffectSpec Spec { get; set; }
         public bool IsComplete { get; protected set; } = false;
 
-        protected BaseEffect(EffectSpec spec)
-        {
-            Initialize(spec);
-        }
-        
-        public virtual void Initialize(EffectSpec effectSpec)
+        protected BaseEffect(EffectSpec effectSpec)
         {
             NodeId = CombatManager.Instance.GlobalAllocator.Next();
             Spec = effectSpec;
@@ -27,7 +22,6 @@ namespace Combat.Effect.Effects
         {
             Context = context;
         }
-
 
         // TODO: 实现效果逻辑, 例如造成伤害、治疗等, 后续重构为专门的处理管线
         public abstract void Execute();

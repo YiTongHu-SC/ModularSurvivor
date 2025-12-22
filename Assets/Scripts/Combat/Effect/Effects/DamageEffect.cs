@@ -17,7 +17,7 @@ namespace Combat.Effect.Effects
             base.SetContext(context);
             if (CheckValidContext())
             {
-                DamageAmount = (int)context.Extra[0];
+                DamageAmount = (float)context.Extra[0];
             }
         }
 

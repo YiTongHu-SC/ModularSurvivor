@@ -46,7 +46,7 @@ namespace DebugTools.DebugMVC
         {
             var effectSpec = new EffectSpec
             {
-                type = EffectNodeType.Damage,
+                EffectNodeType = EffectNodeType.Damage,
                 EffectParams = Array.Empty<object>()
             };
 

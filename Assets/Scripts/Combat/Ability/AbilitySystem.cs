@@ -14,12 +14,12 @@ namespace Combat.Ability
         {
         }
 
-        public bool ApplyAbility(TriggerType triggerType, AbilityData abilityData)
+        public bool ApplyAbility(AbilityData abilityData)
         {
-            var ability = AbilityFactory.CreateAbility(triggerType, abilityData);
+            var ability = AbilityFactory.CreateAbility(abilityData);
             _abilities.TryAdd(ability.AbilityData.RuntimeID, ability);
             ability.ApplyAbility();
-            Debug.Log($"应用能力: {ability.AbilityData.TriggerType} to unit {ability.UnitId}");
+            Debug.Log($"应用能力: {ability.AbilityData.Key} to unit {ability.UnitId}");
             return true;
         }
 
@@ -44,8 +44,6 @@ namespace Combat.Ability
                 Debug.Log($"能力过期并移除: {_abilities[abilityId].AbilityData.Key}");
                 _abilities[abilityId].RemoveAbility();
                 _abilities.Remove(abilityId);
-                // EventManager.Instance.Publish(
-                //     new GameEvents.AbilityRemovedEvent(unitId, ability.AbilityData.RuntimeID));
             }
         }
     }

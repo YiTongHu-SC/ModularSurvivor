@@ -9,7 +9,7 @@ namespace Combat.Effect
         public int RunTimeId; // 运行时唯一标识
         public string GUID; // 效果节点ID（配置用）
         public string Key; // 效果节点Key（配置用）
-        public EffectNodeType type;
+        public EffectNodeType EffectNodeType;
         public List<string> tags;
 
         // 通用：子节点

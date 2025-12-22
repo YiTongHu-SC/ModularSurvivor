@@ -2,6 +2,7 @@
 using Combat.Ability.Data;
 using Combat.Buff;
 using Combat.Data;
+using Combat.Effect;
 using Combat.Systems;
 using Core.Assets;
 using Core.Units;
@@ -79,25 +80,40 @@ namespace Waves.Spawners
             // Spawn unit
             Spawn(actorData, unitData);
             // apply ability
-            var abilityData = new HitOnceOnCollisionData
+            // TODO: 后面改成从配置表读取
+            var abilityData = new AbilityTriggerByEventData()
             {
-                DamageAmount = 10,
-                HitCooldown = 0.2f,
-                TargetID = unitData.RuntimeId
+                RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
+                Key = "HitOnCollision",
+                TargetID = unitData.RuntimeId,
+                TriggerType = TriggerType.ByEvent,
+                Cooldown = 0.2f,
             };
-            // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.HitOnceOnCollision, abilityData);
+            abilityData.EventTypes.Clear();
+            abilityData.EventTypes.Add(TriggerEventType.OnCollideOtherUnit);
+            // set effect
+            // TODO: 后面改成从配置表读取
+            var effectDamage = new EffectSpec()
+            {
+                Key = "DamageEffect",
+                EffectNodeType = EffectNodeType.Damage,
+                EffectParams = new object[] { 10f }
+            };
+            abilityData.EffectSpec = effectDamage;
+
+            CombatManager.Instance.AbilitySystem.ApplyAbility(abilityData);
             // chase hero
-            var chaseAbilityData = new AbilityData
-            {
-                Key = "ChaseHeroAbility",
-                TriggerType = TriggerType.ChaseHero,
-                TargetID = unitData.RuntimeId
-            };
+            // var chaseAbilityData = new AbilityData
+            // {
+            //     Key = "ChaseHeroAbility",
+            //     TriggerType = TriggerType.ChaseHero,
+            //     TargetID = unitData.RuntimeId
+            // };
 
             // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.ChaseHero, chaseAbilityData);
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
-            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
+            // CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }
 

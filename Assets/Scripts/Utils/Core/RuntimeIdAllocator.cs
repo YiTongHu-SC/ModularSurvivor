@@ -2,7 +2,7 @@
 {
     public sealed class RuntimeIdAllocator
     {
-        private int _nextId = -1;
+        private int _nextId = 0;
 
         public int Next()
         {

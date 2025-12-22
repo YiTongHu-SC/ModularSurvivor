@@ -11,7 +11,7 @@ namespace Combat.Effect
         {
         }
 
-        public void ApplyEffect(IEffectNode effectNode)
+        public void CastEffect(IEffectNode effectNode)
         {
             if (_effectNodes.TryAdd(effectNode.NodeId, effectNode))
             {
