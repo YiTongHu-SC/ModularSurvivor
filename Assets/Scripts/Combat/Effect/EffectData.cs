@@ -32,6 +32,7 @@ namespace Combat.Effect
         Stun = 10006,
         Slow = 10007,
         SpeedBoost = 10008,
+        ChaseTarget = 10009,
 
         /// 组合方式
         Chain = 20000,

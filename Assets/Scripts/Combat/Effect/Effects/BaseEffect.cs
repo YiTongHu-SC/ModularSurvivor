@@ -32,5 +32,10 @@ namespace Combat.Effect.Effects
         {
             return Context != null;
         }
+
+        protected virtual bool CheckValidTarget()
+        {
+            return Context.Targets != null && Context.Targets.TaregetUnits.Count > 0;
+        }
     }
 }

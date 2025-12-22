@@ -62,7 +62,7 @@ namespace GameLoop.GameDebug
                     DamageAmount = 25,
                     HitDuration = 0.2f,
                     HitCooldown = 1f,
-                    TargetID = heroData.RuntimeId, // TODO: change to RuntimeId
+                    SourceId = heroData.RuntimeId, // TODO: change to RuntimeId
                     collisionData = new UnitCollisionData()
                     {
                         AreaType = CollisionAreaType.Circle,
@@ -74,7 +74,7 @@ namespace GameLoop.GameDebug
                 var playerInputData = new PlayerInputData
                 {
                     DeadZone = 0.1f,
-                    TargetID = heroData.RuntimeId
+                    SourceId = heroData.RuntimeId
                 };
                 // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.PlayerInput, playerInputData);
 

@@ -24,7 +24,11 @@ namespace Combat.Effect.Effects
         public override void Execute()
         {
             var getSource = UnitManager.Instance.TryGetAvailableUnit(Context.SourceId, out var sourceUnit);
-            if (!getSource) return;
+            if (!getSource)
+            {
+                IsComplete = true;
+                return;
+            }
 
             foreach (var unitId in Context.Targets.TaregetUnits)
             {
@@ -33,6 +37,8 @@ namespace Combat.Effect.Effects
                     CombatManager.Instance.DamageSystem.TryApplyDamage(targetUnit, DamageAmount, sourceUnit);
                 }
             }
+
+            IsComplete = true;
         }
 
         public override void Tick(float deltaTime)

@@ -18,7 +18,7 @@ namespace Combat.Ability
         protected BaseAbility(AbilityData data)
         {
             IsActive = true;
-            UnitId = data.TargetID;
+            UnitId = data.SourceId;
             AbilityData = data;
             Targets = new TargetSet();
             Context = new AbilityContext(UnitId, Targets);
@@ -36,6 +36,7 @@ namespace Combat.Ability
         protected virtual void TryCastAbility()
         {
             if (!IsActive || IsOnCooldown) return;
+            FindTargets();
             Context.Extra = AbilityData.EffectSpec.EffectParams;
             var effect = EffectFactory.CreateEffectNode(AbilityData.EffectSpec);
             effect.SetContext(Context);
@@ -70,6 +71,17 @@ namespace Combat.Ability
                     IsOnCooldown = false;
                     CooldownTimer = 0;
                 }
+            }
+        }
+
+        public virtual void FindTargets()
+        {
+            switch (AbilityData.FindTargetType)
+            {
+                case FindTargetType.Specific:
+                    Targets.TaregetUnits.Clear();
+                    Targets.TaregetUnits.Add((int)AbilityData.ExtraParams[0]);
+                    break;
             }
         }
     }

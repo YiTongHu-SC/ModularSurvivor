@@ -26,6 +26,10 @@ namespace Combat.Ability
                     TriggerType.ByEvent,
                     (data) => new AbilityTriggerByEvent(data as AbilityTriggerByEventData)
                 },
+                {
+                    TriggerType.Once,
+                    (data) => new AbilityTriggerOnce(data)
+                },
             };
 
         public static BaseAbility CreateAbility(AbilityData abilityData)

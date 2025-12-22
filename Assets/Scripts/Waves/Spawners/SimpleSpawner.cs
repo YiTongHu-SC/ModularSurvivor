@@ -85,7 +85,7 @@ namespace Waves.Spawners
             {
                 RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
                 Key = "HitOnCollision",
-                TargetID = unitData.RuntimeId,
+                SourceId = unitData.RuntimeId,
                 TriggerType = TriggerType.ByEvent,
                 Cooldown = 0.2f,
             };
@@ -103,14 +103,25 @@ namespace Waves.Spawners
 
             CombatManager.Instance.AbilitySystem.ApplyAbility(abilityData);
             // chase hero
-            // var chaseAbilityData = new AbilityData
-            // {
-            //     Key = "ChaseHeroAbility",
-            //     TriggerType = TriggerType.ChaseHero,
-            //     TargetID = unitData.RuntimeId
-            // };
+            var chaseAbilityData = new AbilityData
+            {
+                RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
+                Key = "ChaseHeroAbility",
+                SourceId = unitData.RuntimeId,
+                TriggerType = TriggerType.Once,
+                FindTargetType = FindTargetType.Specific,
+                ExtraParams = new object[] { UnitManager.Instance.HeroUnitData.RuntimeId }
+            };
+            // set effect
+            var chaseEffect = new EffectSpec()
+            {
+                Key = "ChaseTargetEffect",
+                EffectNodeType = EffectNodeType.ChaseTarget,
+            };
+            chaseAbilityData.EffectSpec = chaseEffect;
 
-            // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.ChaseHero, chaseAbilityData);
+            CombatManager.Instance.AbilitySystem.ApplyAbility(chaseAbilityData);
+
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
             // CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
