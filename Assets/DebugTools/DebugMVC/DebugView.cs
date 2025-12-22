@@ -1,37 +1,32 @@
 ﻿using Core.Events;
+using Core.Units;
+using TMPro;
 using UI.Framework;
-using UnityEngine;
+using UI.Utils;
 using UnityEngine.UI;
 
 namespace DebugTools.DebugMVC
 {
     public class DebugView : BaseView<GameDebugData>
     {
-        [SerializeField] private Button StartGameButton;
-        [SerializeField] private Button ReturnMainButton;
-        [SerializeField] private Button ExitGameButton;
+        private TMP_InputField InputFieldDamageToHero;
+        private Button ButtonTryDamageToHero;
 
         protected override void Awake()
         {
             base.Awake();
-            StartGameButton.onClick.AddListener(OnStartGameClicked);
-            ReturnMainButton.onClick.AddListener(OnReturnMainClicked);
-            ExitGameButton.onClick.AddListener(OnExitGameClicked);
+            UiTool.TryBind(transform, "ButtonTryDamageToHero", out ButtonTryDamageToHero);
+            UiTool.TryBind(transform, "InputFieldDamageToHero", out InputFieldDamageToHero);
+            ButtonTryDamageToHero.onClick.AddListener(OnClickTryDamageToHero);
         }
 
-        private void OnExitGameClicked()
+        private void OnClickTryDamageToHero()
         {
-            EventManager.Instance.Publish(new GameLoopEvents.GameExitEvent());
-        }
-
-        private void OnReturnMainClicked()
-        {
-            EventManager.Instance.Publish(new GameLoopEvents.ReturnToMainMenuEvent());
-        }
-
-        private void OnStartGameClicked()
-        {
-            EventManager.Instance.Publish(new GameLoopEvents.GameStartEvent(0));
+            if (int.TryParse(InputFieldDamageToHero.text, out var damageAmount))
+            {
+                var heroId = UnitManager.Instance.HeroUnitData.RuntimeId;
+                EventManager.Instance.Publish(new DebugEvents.ApplyDamageEvent(heroId, damageAmount));
+            }
         }
 
         public override void UpdateView(GameDebugData data)

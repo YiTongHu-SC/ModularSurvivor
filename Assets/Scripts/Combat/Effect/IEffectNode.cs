@@ -1,4 +1,6 @@
-﻿namespace Combat.Effect
+﻿using Combat.Ability;
+
+namespace Combat.Effect
 {
     public interface IEffectNode
     {
@@ -13,8 +15,15 @@
         /// <summary>
         /// 初始化效果节点
         /// </summary>
+        /// <param name="effectSpec"></param>
+        public void Initialize(EffectSpec effectSpec);
+
+
+        /// <summary>
+        /// 设置效果节点的上下文
+        /// </summary>
         /// <param name="context"></param>
-        public void Initialize(AbilityContext context);
+        public void SetContext(AbilityContext context);
 
         /// <summary>
         /// 效果节点是否执行完成

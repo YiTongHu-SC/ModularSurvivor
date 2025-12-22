@@ -1,5 +1,10 @@
-﻿using UI.Framework;
+﻿using System;
+using Combat.Ability;
+using Combat.Effect;
+using Core.Events;
+using UI.Framework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DebugTools.DebugMVC
 {
@@ -14,13 +19,49 @@ namespace DebugTools.DebugMVC
             if (!view) return false;
             viewComponent.BindModel(model);
             Initialize(model, viewComponent);
+            SubscribeEvents();
             return true;
         }
 
         protected override void OnDispose()
         {
+            UnsubscribeEvents();
             Model.Dispose();
             Object.Destroy(View.gameObject);
+        }
+
+        protected override void SubscribeEvents()
+        {
+            base.SubscribeEvents();
+            EventManager.Instance.Subscribe<DebugEvents.ApplyDamageEvent>(ApplyDamage);
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            base.UnsubscribeEvents();
+            EventManager.Instance.Unsubscribe<DebugEvents.ApplyDamageEvent>(ApplyDamage);
+        }
+
+        private void ApplyDamage(DebugEvents.ApplyDamageEvent obj)
+        {
+            var effectSpec = new EffectSpec
+            {
+                type = EffectNodeType.Damage,
+                EffectParams = Array.Empty<object>()
+            };
+
+            var effect = EffectFactory.CreateEffectNode(effectSpec);
+            effect.SetContext(new AbilityContext(-1)
+            {
+                SourceId = 1,
+                Targets = new TargetSet
+                {
+                    TaregetUnits = { obj.TargetId }
+                },
+                Extra = new object[] { obj.DamageAmount }
+            });
+            effect.Execute();
+            MvcManager.Instance.Close<DebugController>();
         }
     }
 }

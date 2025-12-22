@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Combat.Effect
+namespace Combat.Ability
 {
     public sealed class AbilityContext
     {
@@ -11,14 +11,21 @@ namespace Combat.Effect
         // 当前“工作目标”（执行过程中可能被 Fork/Resolver 改写）
         public TargetSet Targets;
 
-        // public ContextExtra Extra;
+        public object[] Extra;
+
+        public AbilityContext(int sourceId, TargetSet targets = default, object[] extra = null)
+        {
+            SourceId = sourceId;
+            Targets = targets;
+            Extra = extra;
+        }
     }
 
-    public struct TargetSet
+    public class TargetSet
     {
-        public List<int> Units;
+        public readonly List<int> TaregetUnits = new();
 
-        public Vector3 Point;
+        public Vector3 Point = Vector3.zero;
         // 也可以扩展：HitResult / Collider / Area 等
     }
 }

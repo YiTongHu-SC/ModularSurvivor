@@ -273,6 +273,14 @@ namespace UI.Framework
         /// </summary>
         protected abstract void OnDispose();
 
+        protected virtual void SubscribeEvents()
+        {
+        }
+
+        protected virtual void UnsubscribeEvents()
+        {
+        }
+
         ~BaseUIController()
         {
             if (!IsDisposed)
