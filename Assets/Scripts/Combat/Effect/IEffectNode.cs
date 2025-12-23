@@ -11,6 +11,7 @@ namespace Combat.Effect
 
         public EffectNodeType Type { get; }
         public AbilityContext Context { get; set; }
+        public EffectSpec Spec { get; set; }
 
         // /// <summary>
         // /// 初始化效果节点
@@ -40,5 +41,7 @@ namespace Combat.Effect
         /// </summary>
         /// <param name="deltaTime"></param>
         public void Tick(float deltaTime);
+
+        public void Remove();
     }
 }

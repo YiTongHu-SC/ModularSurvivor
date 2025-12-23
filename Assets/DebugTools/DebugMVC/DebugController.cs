@@ -56,7 +56,7 @@ namespace DebugTools.DebugMVC
                 SourceId = 1,
                 Targets = new TargetSet
                 {
-                    TaregetUnits = { obj.TargetId }
+                    TargetUnits = { obj.TargetId }
                 },
                 Extra = new object[] { obj.DamageAmount }
             });

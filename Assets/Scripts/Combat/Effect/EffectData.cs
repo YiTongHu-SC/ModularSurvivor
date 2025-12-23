@@ -6,11 +6,12 @@ namespace Combat.Effect
     [Serializable]
     public class EffectSpec
     {
-        public int RunTimeId; // 运行时唯一标识
         public string GUID; // 效果节点ID（配置用）
         public string Key; // 效果节点Key（配置用）
         public EffectNodeType EffectNodeType;
         public List<string> tags;
+
+        public float Delay; // 效果执行延迟时间（秒）
 
         // 通用：子节点
         public List<EffectSpec> children;

@@ -1,4 +1,5 @@
-﻿using Combat.Ability.Data;
+﻿using System.Collections.Generic;
+using Combat.Ability.Data;
 using Combat.Controller;
 using Combat.Data;
 using Combat.Systems;
@@ -53,31 +54,38 @@ namespace GameLoop.GameDebug
                 var playerController = actor.gameObject.AddComponent<PlayerController>();
                 playerController.Config = PlayerControllerConfig;
                 playerController.SetTarget(heroData.RuntimeId);
-
                 UnitManager.Instance.SetHeroUnit(heroData.RuntimeId);
-                // Give the hero a Laser Strike ability for testing
-                var laserStrikeData = new LaserStrikeData
-                {
-                    PresentationId = 0,
-                    DamageAmount = 25,
-                    HitDuration = 0.2f,
-                    HitCooldown = 1f,
-                    SourceId = heroData.RuntimeId, // TODO: change to RuntimeId
-                    collisionData = new UnitCollisionData()
-                    {
-                        AreaType = CollisionAreaType.Circle,
-                        Radius = 5f
-                    },
-                };
-                // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.LaserStrike, laserStrikeData);
-                // move ability
-                var playerInputData = new PlayerInputData
-                {
-                    DeadZone = 0.1f,
-                    SourceId = heroData.RuntimeId
-                };
-                // CombatManager.Instance.AbilitySystem.ApplyAbility(TriggerType.PlayerInput, playerInputData);
 
+                // Give the hero a Laser Strike ability for testing
+                var laserStrikeData = new AbilityTriggerByIntervalData
+                {
+                    RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
+                    Key = "HeroLaserStrike",
+                    SourceId = heroData.RuntimeId,
+                    TriggerType = TriggerType.Interval,
+                    Interval = 0.5f,
+                    Cooldown = 0f,
+                    FindTargetType = FindTargetType.Enemy,
+                    EffectSpec = new Combat.Effect.EffectSpec()
+                    {
+                        Key = "DamageEffect",
+                        EffectNodeType = Combat.Effect.EffectNodeType.Damage,
+                        Delay = 0.2f,
+                        EffectParams = new object[] { 10f } // damage amount
+                    },
+                    ExtraParams = new Dictionary<string, object>()
+                    {
+                        {
+                            "CollisionData", new UnitCollisionData()
+                            {
+                                AreaType = CollisionAreaType.Circle,
+                                Radius = 5f,
+                            }
+                        }
+                    }
+                };
+
+                CombatManager.Instance.AbilitySystem.ApplyAbility(laserStrikeData);
                 // set actor as hero
                 CombatManager.Instance.HeroActor = actor;
                 // publish hero created event

@@ -1,4 +1,5 @@
-﻿using Combat.Effect;
+﻿using System.Collections.Generic;
+using Combat.Effect;
 
 namespace Combat.Ability.Data
 {
@@ -13,17 +14,18 @@ namespace Combat.Ability.Data
         public float Cost;
         public float Cooldown;
         public EffectSpec EffectSpec;
-        public object[] ExtraParams;
+        public Dictionary<string, object> ExtraParams;
     }
 
     public enum FindTargetType
     {
-        Self, // 自己
-        Ally, // 友方单位
-        Enemy, // 敌方单位
-        Area, // 区域内单位
-        Global, // 全局单位
-        Specific // 指定单位
+        None = 0, // 无目标
+        Self = 1, // 自己
+        Ally = 2, // 友方单位
+        Enemy = 3, // 敌方单位
+        Area = 4, // 区域内单位
+        Global = 5, // 全局单位
+        Specific = 6 // 指定单位
     }
 
     public enum TriggerType

@@ -35,7 +35,7 @@ namespace Combat.Effect.Effects
                 return;
             }
 
-            TargetId = Context.Targets.TaregetUnits[0];
+            TargetId = Context.Targets.TargetUnits[0];
             if (!UnitManager.Instance.CheckUnitAvailability(TargetId))
             {
                 IsComplete = true;

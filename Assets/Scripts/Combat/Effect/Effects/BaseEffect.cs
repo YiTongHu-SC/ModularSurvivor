@@ -28,6 +28,13 @@ namespace Combat.Effect.Effects
 
         public abstract void Tick(float deltaTime);
 
+        public virtual void Remove()
+        {
+            NodeId = 0;
+            Context = null;
+            Spec = null;
+        }
+
         protected virtual bool CheckValidContext()
         {
             return Context != null;
@@ -35,7 +42,7 @@ namespace Combat.Effect.Effects
 
         protected virtual bool CheckValidTarget()
         {
-            return Context.Targets != null && Context.Targets.TaregetUnits.Count > 0;
+            return Context.Targets != null && Context.Targets.TargetUnits.Count > 0;
         }
     }
 }

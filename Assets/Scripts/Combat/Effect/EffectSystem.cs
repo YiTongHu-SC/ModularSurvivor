@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core.Timer;
 
 namespace Combat.Effect
 {
@@ -9,9 +10,16 @@ namespace Combat.Effect
 
         public void Initialize()
         {
+            _effectNodes.Clear();
+            _effectRemoveQueue.Clear();
         }
 
         public void CastEffect(IEffectNode effectNode)
+        {
+            TimeManager.Instance.TimeSystem.CreateTimer(effectNode.Spec.Delay, () => CastEffectCall(effectNode));
+        }
+
+        private void CastEffectCall(IEffectNode effectNode)
         {
             if (_effectNodes.TryAdd(effectNode.NodeId, effectNode))
             {
@@ -21,24 +29,26 @@ namespace Combat.Effect
 
         public void TickEffects(float deltaTime)
         {
+            _effectRemoveQueue.Clear();
             // 每帧更新效果系统逻辑
             foreach (var effectNode in _effectNodes.Values)
             {
-                // 这里可以传入适当的上下文
-                effectNode.Tick(deltaTime);
                 if (effectNode.IsComplete)
                 {
-                    _effectRemoveQueue.Add(effectNode.GetHashCode());
+                    _effectRemoveQueue.Add(effectNode.NodeId);
+                }
+                else
+                {
+                    effectNode.Tick(deltaTime);
                 }
             }
 
             // 移除已完成的效果节点
             foreach (var nodeId in _effectRemoveQueue)
             {
+                _effectNodes[nodeId].Remove();
                 _effectNodes.Remove(nodeId);
             }
-
-            _effectRemoveQueue.Clear();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Combat.Ability
                 },
                 {
                     TriggerType.Interval,
-                    (data) => new AbilityPassive(data)
+                    (data) => new AbilityTriggerByInterval(data as AbilityTriggerByIntervalData)
                 },
                 {
                     TriggerType.ByEvent,

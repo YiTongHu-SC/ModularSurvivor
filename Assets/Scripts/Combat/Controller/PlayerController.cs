@@ -25,7 +25,7 @@ namespace Combat.Controller
             var moveDirection = InputManager.Instance.GetMoveDirection();
             if (moveDirection.magnitude < Config.DeadZone)
             {
-                Debug.Log($"Player is moving in direction: {moveDirection}");
+                moveDirection = Vector2.zero;
             }
             else
             {

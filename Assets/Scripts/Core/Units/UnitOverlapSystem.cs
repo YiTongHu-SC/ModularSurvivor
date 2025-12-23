@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
-using Core.Units;
 using UnityEngine;
 
-namespace Combat.Systems
+namespace Core.Units
 {
     /// <summary>
     ///     单位重叠检测系统

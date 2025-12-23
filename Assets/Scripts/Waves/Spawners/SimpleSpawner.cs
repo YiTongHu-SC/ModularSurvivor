@@ -88,6 +88,7 @@ namespace Waves.Spawners
                 SourceId = unitData.RuntimeId,
                 TriggerType = TriggerType.ByEvent,
                 Cooldown = 0.2f,
+                FindTargetType = FindTargetType.Ally,
             };
             abilityData.EventTypes.Clear();
             abilityData.EventTypes.Add(TriggerEventType.OnCollideOtherUnit);
@@ -110,7 +111,10 @@ namespace Waves.Spawners
                 SourceId = unitData.RuntimeId,
                 TriggerType = TriggerType.Once,
                 FindTargetType = FindTargetType.Specific,
-                ExtraParams = new object[] { UnitManager.Instance.HeroUnitData.RuntimeId }
+                ExtraParams = new System.Collections.Generic.Dictionary<string, object>()
+                {
+                    { "TargetUnitId", UnitManager.Instance.HeroUnitData.RuntimeId },
+                }
             };
             // set effect
             var chaseEffect = new EffectSpec()

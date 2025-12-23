@@ -16,5 +16,5 @@ MonoBehaviour:
   EnemyCountEachSubWave: 3
   SpawnInterval: 0.2
   Duration: 100
-  TotalEnemies: 1
+  TotalEnemies: 99
   SpawnRadius: 10

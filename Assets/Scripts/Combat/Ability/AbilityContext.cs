@@ -11,6 +11,8 @@ namespace Combat.Ability
         // 当前“工作目标”（执行过程中可能被 Fork/Resolver 改写）
         public TargetSet Targets;
 
+        // 延迟时间（用于调度执行）, 单位秒
+
         public object[] Extra;
 
         public AbilityContext(int sourceId, TargetSet targets = default, object[] extra = null)
@@ -23,7 +25,7 @@ namespace Combat.Ability
 
     public class TargetSet
     {
-        public readonly List<int> TaregetUnits = new();
+        public readonly List<int> TargetUnits = new();
 
         public Vector3 Point = Vector3.zero;
         // 也可以扩展：HitResult / Collider / Area 等

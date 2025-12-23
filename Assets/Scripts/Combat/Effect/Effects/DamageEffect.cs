@@ -17,7 +17,7 @@ namespace Combat.Effect.Effects
             base.SetContext(context);
             if (CheckValidContext())
             {
-                DamageAmount = (float)context.Extra[0];
+                DamageAmount = (float)Spec.EffectParams[0];
             }
         }
 
@@ -30,7 +30,7 @@ namespace Combat.Effect.Effects
                 return;
             }
 
-            foreach (var unitId in Context.Targets.TaregetUnits)
+            foreach (var unitId in Context.Targets.TargetUnits)
             {
                 if (UnitManager.Instance.TryGetAvailableUnit(unitId, out var targetUnit))
                 {
@@ -47,7 +47,7 @@ namespace Combat.Effect.Effects
 
         protected override bool CheckValidContext()
         {
-            return base.CheckValidContext() && Context.Extra != null && Context.Extra.Length > 0;
+            return base.CheckValidContext() && Spec.EffectParams is { Length: > 0 };
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Combat.Ability.Data;
 using Combat.Effect;
 using Combat.Systems;
+using Core.Units;
+using UnityEngine;
 
 namespace Combat.Ability
 {
@@ -14,6 +16,8 @@ namespace Combat.Ability
         protected TargetSet Targets { get; private set; }
         protected bool IsOnCooldown { get; set; } = false;
         private float CooldownTimer { get; set; } = 0;
+        private UnitData TempAbilityUnitData;
+        private GroupType TargetGroup { get; set; }
 
         protected BaseAbility(AbilityData data)
         {
@@ -31,13 +35,23 @@ namespace Combat.Ability
         {
             IsOnCooldown = false;
             CooldownTimer = 0;
+            TempAbilityUnitData = new UnitData(Vector2.zero)
+            {
+                IsActive = false,
+                RuntimeId = CombatManager.Instance.GlobalAllocator.Next(),
+            };
         }
 
         protected virtual void TryCastAbility()
         {
             if (!IsActive || IsOnCooldown) return;
+            if (!UnitManager.Instance.CheckUnitAvailability(UnitId))
+            {
+                IsActive = false;
+                return;
+            }
+
             FindTargets();
-            Context.Extra = AbilityData.EffectSpec.EffectParams;
             var effect = EffectFactory.CreateEffectNode(AbilityData.EffectSpec);
             effect.SetContext(Context);
             CombatManager.Instance.EffectSystem.CastEffect(effect);
@@ -60,8 +74,15 @@ namespace Combat.Ability
         /// 更新能力状态，每帧调用
         /// </summary>
         /// <param name="deltaTime">时间增量</param>
-        public void TickAbility(float deltaTime)
+        public virtual void TickAbility(float deltaTime)
         {
+            // 检查单位是否仍然存在,否则移除能力
+            if (!UnitManager.Instance.CheckUnitAvailability(UnitId))
+            {
+                IsActive = false;
+            }
+
+            if (!IsActive) return;
             // 更新冷却时间
             if (IsOnCooldown)
             {
@@ -79,10 +100,69 @@ namespace Combat.Ability
             switch (AbilityData.FindTargetType)
             {
                 case FindTargetType.Specific:
-                    Targets.TaregetUnits.Clear();
-                    Targets.TaregetUnits.Add((int)AbilityData.ExtraParams[0]);
+                    Targets.TargetUnits.Clear();
+                    Targets.TargetUnits.Add((int)AbilityData.ExtraParams["TargetUnitId"]);
+                    break;
+                case FindTargetType.Self:
+                    Targets.TargetUnits.Clear();
+                    Targets.TargetUnits.Add(UnitId);
+                    break;
+                case FindTargetType.Enemy:
+                    Targets.TargetUnits.Clear();
+                    FindTargetUnit(GroupType.Enemy);
+                    break;
+                case FindTargetType.Ally:
+                    Targets.TargetUnits.Clear();
+                    FindTargetUnit(GroupType.Ally);
+                    break;
+                default:
                     break;
             }
+        }
+
+        private void RefreshTempAbilityUnitData()
+        {
+            var unitData = UnitManager.Instance.Units[UnitId];
+            TempAbilityUnitData.IsActive = true;
+            TempAbilityUnitData.Group = unitData.Group;
+            TempAbilityUnitData.Position = unitData.Position;
+            TempAbilityUnitData.CollisionData = (UnitCollisionData)AbilityData.ExtraParams["CollisionData"];
+        }
+
+        protected virtual void FindTargetUnit(GroupType targetUnitGroup)
+        {
+            TargetGroup = targetUnitGroup;
+            var unitData = UnitManager.Instance.Units[UnitId];
+            RefreshTempAbilityUnitData();
+            var overlappingUnits =
+                UnitManager.Instance.OverlapSystem.GetOverlappingUnits(TempAbilityUnitData, FindTargetFilter);
+
+            if (overlappingUnits.Count <= 0) return;
+            // 选择距离最近的单位作为目标
+            UnitData closestUnit = null;
+            float closestDistanceSqr = float.MaxValue;
+            foreach (var unit in overlappingUnits)
+            {
+                float distanceSqr = (unit.Position - unitData.Position).sqrMagnitude;
+                if (distanceSqr < closestDistanceSqr)
+                {
+                    closestDistanceSqr = distanceSqr;
+                    closestUnit = unit;
+                }
+            }
+
+            if (closestUnit != null)
+            {
+                Targets.TargetUnits.Add(closestUnit.RuntimeId);
+            }
+
+            return;
+        }
+
+        protected virtual bool FindTargetFilter(UnitData targetUnit)
+        {
+            return (targetUnit.Group == TargetGroup) && (targetUnit.Position - TempAbilityUnitData.Position).magnitude <
+                TempAbilityUnitData.CollisionData.Radius;
         }
     }
 }
