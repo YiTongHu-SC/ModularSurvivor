@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     资源键，业务层只使用此键，不直接使用路径

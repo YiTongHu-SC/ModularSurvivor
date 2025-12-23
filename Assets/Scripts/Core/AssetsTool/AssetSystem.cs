@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetsTool;
+using Core.Assets;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     资源系统，管理资源提供者和作用域

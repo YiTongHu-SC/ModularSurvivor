@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Core.AssetsTool;
+using Core.Assets;
 using UnityEngine;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     资源系统实用工具

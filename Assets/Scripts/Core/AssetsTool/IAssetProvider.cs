@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     资源提供者接口，统一加载门面

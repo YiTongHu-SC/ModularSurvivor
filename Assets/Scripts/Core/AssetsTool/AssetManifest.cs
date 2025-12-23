@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Assets;
 using UnityEngine;
 
 namespace Core.AssetsTool

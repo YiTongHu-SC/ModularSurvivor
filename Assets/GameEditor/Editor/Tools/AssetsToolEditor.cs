@@ -1,4 +1,5 @@
 ﻿using Core.Assets;
+using Core.AssetsTool;
 using GameEditor.Editor.AssetsEditor;
 using GameEditor.Editor.Config;
 using UnityEditor;

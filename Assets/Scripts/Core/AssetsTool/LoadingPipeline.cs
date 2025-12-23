@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.AssetsTool;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     加载管线，编排资源加载流程

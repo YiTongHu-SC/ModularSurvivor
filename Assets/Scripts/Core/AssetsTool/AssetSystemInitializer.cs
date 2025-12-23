@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Core.AssetsTool;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     /// 资源系统初始化器，在游戏启动时初始化资源系统

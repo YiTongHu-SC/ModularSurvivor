@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     内存维护服务，管理资源卸载和垃圾回收策略

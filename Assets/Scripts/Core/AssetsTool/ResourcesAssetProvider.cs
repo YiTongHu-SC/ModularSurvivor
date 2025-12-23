@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using Core.AssetsTool;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Core.Assets
+namespace Core.AssetsTool
 {
     /// <summary>
     ///     基于 Resources 的资源提供者实现
