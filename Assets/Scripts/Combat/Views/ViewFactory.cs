@@ -1,5 +1,4 @@
-﻿using Core.Assets;
-using Core.AssetsTool;
+﻿using Core.AssetsTool;
 using Core.Units;
 using Lean.Pool;
 using UnityEngine;
@@ -8,22 +7,22 @@ namespace Combat.Views
 {
     public class ViewFactory
     {
-        public BaseUnitPresentation CreateUnitPresentation(string presentationKey, ViewBaseData eventDataViewData)
+        public BaseUnitPresentation CreateUnitView(string viewKey, ViewBaseData eventDataViewData)
         {
             // 加载PresentationData和Prefab
             var handler =
-                AssetSystem.Instance.LevelScope.Acquire<PresentationConfig>("Level:EffectConfigs:PresentationConfig");
+                AssetSystem.Instance.LevelScope.Acquire<PresentationConfig>(viewKey);
 
             if (!handler.Asset)
             {
-                Debug.LogError($"PresentationData with ID {presentationKey} not found.");
+                Debug.LogError($"PresentationData with ID {viewKey} not found.");
                 return null;
             }
 
             var presentationConfig = handler.Asset;
             if (!presentationConfig.PresentationPrefab)
             {
-                Debug.LogError($"UnitPresentation prefab with ID {presentationKey} not found.");
+                Debug.LogError($"UnitPresentation prefab with ID {viewKey} not found.");
                 return null;
             }
 
@@ -31,7 +30,7 @@ namespace Combat.Views
             var presentation = instance.GetComponent<BaseUnitPresentation>();
             if (presentation == null)
             {
-                Debug.LogError($"BaseUnitPresentation component not found on prefab with ID {presentationKey}.");
+                Debug.LogError($"BaseUnitPresentation component not found on prefab with ID {viewKey}.");
                 Object.Destroy(instance);
                 return null;
             }

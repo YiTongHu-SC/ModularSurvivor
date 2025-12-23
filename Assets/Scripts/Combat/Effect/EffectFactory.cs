@@ -17,6 +17,10 @@ namespace Combat.Effect
                 {
                     EffectNodeType.ChaseTarget,
                     (spec) => new ChaseTargetEffect(spec)
+                },
+                {
+                    EffectNodeType.DamageOnComplete,
+                    (spec) => new DamageOnCompleteEffect(spec)
                 }
             };
 

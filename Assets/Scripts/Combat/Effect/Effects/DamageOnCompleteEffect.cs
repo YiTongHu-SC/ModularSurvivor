@@ -5,13 +5,9 @@ using Core.Units;
 
 namespace Combat.Effect.Effects
 {
-    public class DamageEffect : BaseEffect
+    public class DamageOnCompleteEffect : BaseEffect
     {
         private float DamageAmount { get; set; } = 0;
-
-        public DamageEffect(EffectSpec spec) : base(spec)
-        {
-        }
 
         public override void SetContext(AbilityContext context)
         {
@@ -20,6 +16,14 @@ namespace Combat.Effect.Effects
             {
                 DamageAmount = (float)Spec.EffectParams["DamageAmount"];
             }
+        }
+
+        public DamageOnCompleteEffect(EffectSpec effectSpec) : base(effectSpec)
+        {
+        }
+
+        public override void Execute()
+        {
         }
 
         public override bool TryCast(Action onExecute = null)
@@ -33,15 +37,10 @@ namespace Combat.Effect.Effects
             return base.TryCast(onExecute);
         }
 
-        public override void Execute()
+        protected override void OnComplete()
         {
+            base.OnComplete();
             ApplyDamage();
-            OnComplete();
-        }
-
-        protected override bool CheckValidContext()
-        {
-            return base.CheckValidContext() && Spec.EffectParams.ContainsKey("DamageAmount");
         }
 
         private void ApplyDamage()

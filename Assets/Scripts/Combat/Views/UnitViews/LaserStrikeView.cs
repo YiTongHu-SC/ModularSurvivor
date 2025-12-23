@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Combat.Views.UnitViewData;
 using Core.Coordinates;
 using Core.Units;
 using Lean.Pool;
@@ -10,12 +9,12 @@ namespace Combat.Views.UnitViews
     public class LaserStrikeView : BaseUnitPresentation
     {
         public LineRenderer LineRenderer;
-        private OneStrikeViewData _laserStrikeViewData;
-        
+        private ViewBaseData _laserStrikeViewData;
+
         public override void SetViewData(ViewBaseData viewData)
         {
             base.SetViewData(viewData);
-            _laserStrikeViewData = viewData as OneStrikeViewData;
+            _laserStrikeViewData = viewData;
         }
 
         public override void Apply()
@@ -73,8 +72,8 @@ namespace Combat.Views.UnitViews
         private void UpdateLaserEffect()
         {
             LineRenderer.positionCount = 2;
-            var getUnitData = UnitManager.Instance.Units.TryGetValue(ViewData.UnitId, out var unit);
-            var getTargetData = UnitManager.Instance.Units.TryGetValue(ViewData.TargetId, out var target);
+            var getUnitData = UnitManager.Instance.Units.TryGetValue(ViewData.SourceId, out var unit);
+            var getTargetData = UnitManager.Instance.Units.TryGetValue(ViewData.TargetIds[0], out var target);
             // 单位有可能在激光持续时间内被移除
             // 如果任一单位数据不存在，直接返回
             if (!getUnitData || !getTargetData)
@@ -91,12 +90,6 @@ namespace Combat.Views.UnitViews
             targetPosition -= direction * unit.ModelView.Radius; // 激光终点稍微后移
             LineRenderer.SetPosition(0, originPosition);
             LineRenderer.SetPosition(1, targetPosition);
-        }
-
-        private void Remove()
-        {
-            // 清理和移除视图
-            LeanPool.Despawn(gameObject);
         }
     }
 }

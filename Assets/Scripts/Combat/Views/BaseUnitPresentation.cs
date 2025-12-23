@@ -20,6 +20,11 @@ namespace Combat.Views
         }
 
         public abstract void Apply();
+        
+        public virtual void Remove()
+        {
+            LeanPool.Despawn(gameObject);
+        }
 
         public virtual void OnSpawn()
         {

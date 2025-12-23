@@ -1,17 +1,20 @@
-﻿namespace Core.Units
+﻿using System.Collections.Generic;
+
+namespace Core.Units
 {
     [System.Serializable]
     public class ViewBaseData
     {
-        public PresentationEventType EventType = PresentationEventType.Add;
-        public int PresentationId;
-        public int TargetId;
-        public int UnitId;
+        public ViewEventType ViewEventType = ViewEventType.Add;
+        public int SourceId;
+        public List<int> TargetIds;
+        public float Delay;
+        public float Duration;
         public object[] ExtraParams;
     }
 
     [System.Serializable]
-    public enum PresentationEventType
+    public enum ViewEventType
     {
         Add,
         Remove,

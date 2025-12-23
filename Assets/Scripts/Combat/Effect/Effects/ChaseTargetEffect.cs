@@ -17,6 +17,7 @@ namespace Combat.Effect.Effects
 
         public override void Tick(float deltaTime)
         {
+            base.Tick(deltaTime);
             ChaseTarget();
         }
 

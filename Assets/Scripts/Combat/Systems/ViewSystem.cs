@@ -16,10 +16,10 @@ namespace Combat.Systems
 
         public void OnEventReceived(GameEvents.UpdatePreferenceEvent eventData)
         {
-            switch (eventData.ViewData.EventType)
+            switch (eventData.ViewData.ViewEventType)
             {
-                case PresentationEventType.Add:
-                    var view = ViewFactory.CreateUnitPresentation(eventData.PreferenceKey, eventData.ViewData);
+                case ViewEventType.Add:
+                    var view = ViewFactory.CreateUnitView(eventData.PreferenceKey, eventData.ViewData);
                     view.Apply();
                     break;
             }

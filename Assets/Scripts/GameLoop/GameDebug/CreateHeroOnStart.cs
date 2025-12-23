@@ -2,6 +2,7 @@
 using Combat.Ability.Data;
 using Combat.Controller;
 using Combat.Data;
+using Combat.Effect;
 using Combat.Systems;
 using Core.Assets;
 using Core.AssetsTool;
@@ -64,22 +65,26 @@ namespace GameLoop.GameDebug
                     Key = "HeroLaserStrike",
                     SourceId = heroData.RuntimeId,
                     TriggerType = TriggerType.Interval,
-                    Interval = 0.5f,
+                    Interval = 1,
                     Cooldown = 0f,
                     FindTargetType = FindTargetType.Enemy,
-                    EffectSpec = new Combat.Effect.EffectSpec()
+                    EffectSpec = new EffectSpec()
                     {
                         Key = "DamageEffect",
-                        EffectNodeType = Combat.Effect.EffectNodeType.Damage,
-                        Delay = 0.2f,
+                        EffectNodeType = EffectNodeType.DamageOnComplete,
+                        Delay = 0,
+                        Duration = 0.2f,
                         EffectParams = new Dictionary<string, object>()
                         {
                             { "DamageAmount", 20f },
                             {
-                                "VisualEffectKey", "LaserStrikeEffect"
+                                "ViewData", new ViewBaseData()
+                                {
+                                    ViewEventType = ViewEventType.Add,
+                                }
                             }
                         },
-                        PreferenceKey = "LaserStrikeEffect",
+                        PreferenceKey = "Level:EffectConfigs:PresentationConfig",
                     },
                     ExtraParams = new Dictionary<string, object>()
                     {

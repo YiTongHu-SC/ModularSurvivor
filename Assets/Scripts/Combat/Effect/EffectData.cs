@@ -12,6 +12,7 @@ namespace Combat.Effect
         public List<string> tags;
 
         public float Delay; // 效果执行延迟时间（秒）
+        public float Duration; // 效果持续时间（秒），0表示瞬时效果, -1表示无限持续
 
         // 通用：子节点
         public List<EffectSpec> children;
@@ -38,6 +39,7 @@ namespace Combat.Effect
         Slow = 10007,
         SpeedBoost = 10008,
         ChaseTarget = 10009,
+        DamageOnComplete = 10010,
 
         /// 组合方式
         Chain = 20000,

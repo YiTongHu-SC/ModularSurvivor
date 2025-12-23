@@ -1,4 +1,5 @@
-﻿using Combat.Ability;
+﻿using System;
+using Combat.Ability;
 
 namespace Combat.Effect
 {
@@ -35,6 +36,12 @@ namespace Combat.Effect
         /// 执行效果节点的逻辑，创建时执行
         /// </summary>
         public void Execute();
+
+        /// <summary>
+        /// 尝试施放效果节点，检查前置条件
+        /// 可能会失败
+        /// </summary>
+        public bool TryCast(Action onExecute = null);
 
         /// <summary>
         /// 每帧更新效果节点的逻辑

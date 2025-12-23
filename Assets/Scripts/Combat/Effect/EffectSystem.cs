@@ -18,28 +18,12 @@ namespace Combat.Effect
 
         public void CastEffect(IEffectNode effectNode)
         {
-            TimeManager.Instance.TimeSystem.CreateTimer(effectNode.Spec.Delay, () => CastEffectCall(effectNode));
-            // 发布视图更新事件
-            ViewBaseData viewData;
-            if (effectNode.Spec.EffectParams.TryGetValue("ViewData", out var param))
-            {
-                viewData = param as ViewBaseData;
-            }
-            else
-            {
-                viewData = null;
-            }
-
-            EventManager.Instance.Publish(
-                new GameEvents.UpdatePreferenceEvent(effectNode.Spec.PreferenceKey, viewData));
+            effectNode.TryCast((() => { CastEffectCall(effectNode); }));
         }
 
         private void CastEffectCall(IEffectNode effectNode)
         {
-            if (_effectNodes.TryAdd(effectNode.NodeId, effectNode))
-            {
-                effectNode.Execute();
-            }
+            _effectNodes.TryAdd(effectNode.NodeId, effectNode);
         }
 
         public void TickEffects(float deltaTime)
