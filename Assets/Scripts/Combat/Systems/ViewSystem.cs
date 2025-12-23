@@ -19,7 +19,7 @@ namespace Combat.Systems
             switch (eventData.ViewData.EventType)
             {
                 case PresentationEventType.Add:
-                    var view = ViewFactory.CreateUnitPresentation(eventData.PreferenceId, eventData.ViewData);
+                    var view = ViewFactory.CreateUnitPresentation(eventData.PreferenceKey, eventData.ViewData);
                     view.Apply();
                     break;
             }

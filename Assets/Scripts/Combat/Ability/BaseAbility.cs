@@ -1,6 +1,7 @@
 ﻿using Combat.Ability.Data;
 using Combat.Effect;
 using Combat.Systems;
+using Core.Events;
 using Core.Units;
 using UnityEngine;
 
@@ -42,6 +43,9 @@ namespace Combat.Ability
             };
         }
 
+        /// <summary>
+        /// 释放能力效果，满足条件时调用
+        /// </summary>
         protected virtual void TryCastAbility()
         {
             if (!IsActive || IsOnCooldown) return;

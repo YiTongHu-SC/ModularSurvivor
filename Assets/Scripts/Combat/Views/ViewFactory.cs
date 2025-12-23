@@ -7,7 +7,7 @@ namespace Combat.Views
 {
     public class ViewFactory
     {
-        public BaseUnitPresentation CreateUnitPresentation(int presentationId, ViewBaseData viewData)
+        public BaseUnitPresentation CreateUnitPresentation(string presentationKey, ViewBaseData eventDataViewData)
         {
             // 加载PresentationData和Prefab
             var handler =
@@ -15,14 +15,14 @@ namespace Combat.Views
 
             if (!handler.Asset)
             {
-                Debug.LogError($"PresentationData with ID {presentationId} not found.");
+                Debug.LogError($"PresentationData with ID {presentationKey} not found.");
                 return null;
             }
 
             var presentationConfig = handler.Asset;
             if (!presentationConfig.PresentationPrefab)
             {
-                Debug.LogError($"UnitPresentation prefab with ID {presentationId} not found.");
+                Debug.LogError($"UnitPresentation prefab with ID {presentationKey} not found.");
                 return null;
             }
 
@@ -30,13 +30,13 @@ namespace Combat.Views
             var presentation = instance.GetComponent<BaseUnitPresentation>();
             if (presentation == null)
             {
-                Debug.LogError($"BaseUnitPresentation component not found on prefab with ID {presentationId}.");
+                Debug.LogError($"BaseUnitPresentation component not found on prefab with ID {presentationKey}.");
                 Object.Destroy(instance);
                 return null;
             }
 
             presentation.SetConfig(presentationConfig);
-            presentation.SetViewData(viewData);
+            presentation.SetViewData(eventDataViewData);
             return presentation;
         }
     }

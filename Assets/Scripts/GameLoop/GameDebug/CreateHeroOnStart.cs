@@ -71,7 +71,14 @@ namespace GameLoop.GameDebug
                         Key = "DamageEffect",
                         EffectNodeType = Combat.Effect.EffectNodeType.Damage,
                         Delay = 0.2f,
-                        EffectParams = new object[] { 10f } // damage amount
+                        EffectParams = new Dictionary<string, object>()
+                        {
+                            { "DamageAmount", 20f },
+                            {
+                                "VisualEffectKey", "LaserStrikeEffect"
+                            }
+                        },
+                        PreferenceKey = "LaserStrikeEffect",
                     },
                     ExtraParams = new Dictionary<string, object>()
                     {

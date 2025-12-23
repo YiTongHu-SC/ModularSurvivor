@@ -11,7 +11,7 @@ namespace Combat.Views.UnitViews
     {
         public LineRenderer LineRenderer;
         private OneStrikeViewData _laserStrikeViewData;
-
+        
         public override void SetViewData(ViewBaseData viewData)
         {
             base.SetViewData(viewData);

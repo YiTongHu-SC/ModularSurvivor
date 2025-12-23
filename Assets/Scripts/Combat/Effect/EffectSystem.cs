@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Core.Events;
 using Core.Timer;
+using Core.Units;
 
 namespace Combat.Effect
 {
@@ -17,6 +19,19 @@ namespace Combat.Effect
         public void CastEffect(IEffectNode effectNode)
         {
             TimeManager.Instance.TimeSystem.CreateTimer(effectNode.Spec.Delay, () => CastEffectCall(effectNode));
+            // 发布视图更新事件
+            ViewBaseData viewData;
+            if (effectNode.Spec.EffectParams.TryGetValue("ViewData", out var param))
+            {
+                viewData = param as ViewBaseData;
+            }
+            else
+            {
+                viewData = null;
+            }
+
+            EventManager.Instance.Publish(
+                new GameEvents.UpdatePreferenceEvent(effectNode.Spec.PreferenceKey, viewData));
         }
 
         private void CastEffectCall(IEffectNode effectNode)

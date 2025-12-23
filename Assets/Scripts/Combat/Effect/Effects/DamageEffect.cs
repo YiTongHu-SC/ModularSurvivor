@@ -17,7 +17,7 @@ namespace Combat.Effect.Effects
             base.SetContext(context);
             if (CheckValidContext())
             {
-                DamageAmount = (float)Spec.EffectParams[0];
+                DamageAmount = (float)Spec.EffectParams["DamageAmount"];
             }
         }
 
@@ -47,7 +47,7 @@ namespace Combat.Effect.Effects
 
         protected override bool CheckValidContext()
         {
-            return base.CheckValidContext() && Spec.EffectParams is { Length: > 0 };
+            return base.CheckValidContext() && Spec.EffectParams.ContainsKey("DamageAmount");
         }
     }
 }

@@ -171,14 +171,14 @@ namespace Core.Events
 
         public class UpdatePreferenceEvent : EventData
         {
-            public UpdatePreferenceEvent(int preferenceId, ViewBaseData view)
+            public string PreferenceKey { get; }
+            public ViewBaseData ViewData { get; }
+
+            public UpdatePreferenceEvent(string preferenceKey, ViewBaseData view)
             {
-                PreferenceId = preferenceId;
+                PreferenceKey = preferenceKey;
                 ViewData = view;
             }
-
-            public int PreferenceId { get; }
-            public ViewBaseData ViewData { get; }
         }
     }
 }

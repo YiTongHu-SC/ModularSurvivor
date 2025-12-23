@@ -17,8 +17,12 @@ namespace Combat.Effect
         public List<EffectSpec> children;
 
         // 通用参数（最简可先用 Dictionary 或强类型 Params）
-        public object[] EffectParams;
+        public Dictionary<string, object> EffectParams;
+
         // public ConditionSpec condition;   // If 的条件/过滤（可选）
+
+        // 表现相关
+        public string PreferenceKey;
     }
 
     public enum EffectNodeType

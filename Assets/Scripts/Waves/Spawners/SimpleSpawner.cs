@@ -1,5 +1,4 @@
-﻿using Combat.Ability;
-using Combat.Ability.Data;
+﻿using Combat.Ability.Data;
 using Combat.Buff;
 using Combat.Data;
 using Combat.Effect;
@@ -98,8 +97,12 @@ namespace Waves.Spawners
             {
                 Key = "DamageEffect",
                 EffectNodeType = EffectNodeType.Damage,
-                EffectParams = new object[] { 10f }
+                EffectParams = new System.Collections.Generic.Dictionary<string, object>()
+                {
+                    { "DamageAmount", 5f }
+                }
             };
+
             abilityData.EffectSpec = effectDamage;
 
             CombatManager.Instance.AbilitySystem.ApplyAbility(abilityData);
@@ -128,7 +131,7 @@ namespace Waves.Spawners
 
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
-            // CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
+            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
             Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
         }
 

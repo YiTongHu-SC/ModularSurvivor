@@ -1,5 +1,4 @@
-﻿using System;
-using Combat.Ability;
+﻿using Combat.Ability;
 using Combat.Effect;
 using Core.Events;
 using UI.Framework;
@@ -47,7 +46,10 @@ namespace DebugTools.DebugMVC
             var effectSpec = new EffectSpec
             {
                 EffectNodeType = EffectNodeType.Damage,
-                EffectParams = Array.Empty<object>()
+                EffectParams =
+                {
+                    { "DamageAmount", 10f },
+                }
             };
 
             var effect = EffectFactory.CreateEffectNode(effectSpec);
@@ -58,7 +60,6 @@ namespace DebugTools.DebugMVC
                 {
                     TargetUnits = { obj.TargetId }
                 },
-                Extra = new object[] { obj.DamageAmount }
             });
             effect.Execute();
             MvcManager.Instance.Close<DebugController>();
