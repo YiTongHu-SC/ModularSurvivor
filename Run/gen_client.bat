@@ -7,5 +7,5 @@ dotnet %GEN_CLIENT% ^
     -c cs-simple-json ^
     -d json ^
     --conf %CONF_ROOT%\luban.conf ^
-    -x outputCodeDir=%WORKSPACE%\Assets\Scripts\Generate ^
-    -x outputDataDir=%WORKSPACE%\Assets\Configs\GenData
+    -x outputCodeDir=%WORKSPACE%\Assets\LubanGenerated\Generate ^
+    -x outputDataDir=%WORKSPACE%\Assets\LubanGenerated\GenData
