@@ -1,0 +1,30 @@
+[
+  {
+    "key": "actor_enemy_100",
+    "name": "史莱姆",
+    "desc": "测试普通敌人",
+    "base_strength": 10,
+    "strength_bonuses": 2
+  },
+  {
+    "key": "actor_enemy_101",
+    "name": "精英敌人",
+    "desc": "测试精英敌人",
+    "base_strength": 20,
+    "strength_bonuses": 3
+  },
+  {
+    "key": "actor_hero_1",
+    "name": "英雄1",
+    "desc": "测试英雄1",
+    "base_strength": 25,
+    "strength_bonuses": 3
+  },
+  {
+    "key": "actor_hero_2",
+    "name": "英雄2",
+    "desc": "测试英雄2",
+    "base_strength": 20,
+    "strength_bonuses": 2
+  }
+]

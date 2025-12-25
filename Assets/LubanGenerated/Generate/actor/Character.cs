@@ -11,27 +11,28 @@ using Luban;
 using SimpleJSON;
 
 
-namespace cfg
+namespace cfg.actor
 {
-public sealed partial class hero : Luban.BeanBase
+public sealed partial class Character : Luban.BeanBase
 {
-    public hero(JSONNode _buf) 
+    public Character(JSONNode _buf) 
     {
-        { if(!_buf["id"].IsNumber) { throw new SerializationException(); }  Id = _buf["id"]; }
+        { if(!_buf["key"].IsString) { throw new SerializationException(); }  Key = _buf["key"]; }
         { if(!_buf["name"].IsString) { throw new SerializationException(); }  Name = _buf["name"]; }
         { if(!_buf["desc"].IsString) { throw new SerializationException(); }  Desc = _buf["desc"]; }
-        { if(!_buf["max_hp"].IsNumber) { throw new SerializationException(); }  MaxHp = _buf["max_hp"]; }
+        { if(!_buf["base_strength"].IsNumber) { throw new SerializationException(); }  BaseStrength = _buf["base_strength"]; }
+        { if(!_buf["strength_bonuses"].IsNumber) { throw new SerializationException(); }  StrengthBonuses = _buf["strength_bonuses"]; }
     }
 
-    public static hero Deserializehero(JSONNode _buf)
+    public static Character DeserializeCharacter(JSONNode _buf)
     {
-        return new hero(_buf);
+        return new actor.Character(_buf);
     }
 
     /// <summary>
-    /// id
+    /// 索引键值
     /// </summary>
-    public readonly int Id;
+    public readonly string Key;
     /// <summary>
     /// 名称
     /// </summary>
@@ -41,11 +42,15 @@ public sealed partial class hero : Luban.BeanBase
     /// </summary>
     public readonly string Desc;
     /// <summary>
-    /// 数量
+    /// 基础力量
     /// </summary>
-    public readonly int MaxHp;
+    public readonly float BaseStrength;
+    /// <summary>
+    /// 力量成长
+    /// </summary>
+    public readonly float StrengthBonuses;
    
-    public const int __ID__ = 3198970;
+    public const int __ID__ = -704271792;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
@@ -55,10 +60,11 @@ public sealed partial class hero : Luban.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "id:" + Id + ","
+        + "key:" + Key + ","
         + "name:" + Name + ","
         + "desc:" + Desc + ","
-        + "maxHp:" + MaxHp + ","
+        + "baseStrength:" + BaseStrength + ","
+        + "strengthBonuses:" + StrengthBonuses + ","
         + "}";
     }
 }

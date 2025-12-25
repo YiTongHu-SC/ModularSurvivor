@@ -15,22 +15,28 @@ namespace cfg
 public partial class Tables
 {
     public demo.TbReward TbReward {get; }
+    /// <summary>
+    /// 目录下包含所有英雄和敌人角色
+    /// </summary>
+    public actor.TbCharacter TbCharacter {get; }
     public demo.Tbitem Tbitem {get; }
-    public Tbhero Tbhero {get; }
+    public game.Tbconfig Tbconfig {get; }
 
     public Tables(System.Func<string, JSONNode> loader)
     {
         TbReward = new demo.TbReward(loader("demo_tbreward"));
+        TbCharacter = new actor.TbCharacter(loader("actor_tbcharacter"));
         Tbitem = new demo.Tbitem(loader("demo_tbitem"));
-        Tbhero = new Tbhero(loader("tbhero"));
+        Tbconfig = new game.Tbconfig(loader("game_tbconfig"));
         ResolveRef();
     }
     
     private void ResolveRef()
     {
         TbReward.ResolveRef(this);
+        TbCharacter.ResolveRef(this);
         Tbitem.ResolveRef(this);
-        Tbhero.ResolveRef(this);
+        Tbconfig.ResolveRef(this);
     }
 }
 

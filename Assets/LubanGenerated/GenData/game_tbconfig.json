@@ -1,0 +1,14 @@
+[
+  {
+    "key": "strength_hp",
+    "name": "力量血量",
+    "desc": "每点力量提供基础血量",
+    "value": 22
+  },
+  {
+    "key": "strength_hpr",
+    "name": "力量血量回复",
+    "desc": "每点力量提供基础血量恢复",
+    "value": 0.1
+  }
+]
