@@ -10,7 +10,7 @@ namespace Combat.Actors
     public class ActorFactory
     {
         private RuntimeIdAllocator Allocator { get; set; }
-
+        private cfg.game.Tbconfig GameConfig => TableTool.Tables.Tbconfig;
         public void Initialize(RuntimeIdAllocator allocator)
         {
             Allocator = allocator;
@@ -41,19 +41,21 @@ namespace Combat.Actors
         public Actor SpawnCharacter(string characterId, Vector2 position = default, float rotation = 0)
         {
             // var heroData = UnitDataFactory.CreateHeroData(heroId);
-            var targetPrefabKey = TableTool.Tables.TbCharacter.Get(characterId).Prefab;
+            var table = TableTool.Tables.TbCharacter.Get(characterId);
+            var targetPrefabKey = table.Prefab;
             var handle = AssetSystem.Instance.LevelScope.Acquire<GameObject>(targetPrefabKey);
             var targetPrefab = handle.Asset;
-            var group = TableTool.Tables.TbCharacter.Get(characterId).Group;
+            var group = table.Group;
             var unitData = new UnitData(position, rotation)
             {
                 Group = (GroupType)(int)group,
-                MoveSpeed = 2f,
-                MovementStrategy = "SimpleMove",
+                MoveSpeed = table.MoveSpeed,
+                MovementStrategy = table.Movement,
                 ModelView = new UnitModelView(),
                 CollisionData = new UnitCollisionData()
             };
 
+            unitData.SetHealth(ActorAttributeUtils.GetMaxHp(table.BaseStrength, table.StrengthBonuses, 1));
             return Spawn(targetPrefab, unitData);
         }
     }

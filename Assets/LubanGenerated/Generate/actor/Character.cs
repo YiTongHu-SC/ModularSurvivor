@@ -21,6 +21,8 @@ public sealed partial class Character : Luban.BeanBase
         { if(!_buf["name"].IsString) { throw new SerializationException(); }  Name = _buf["name"]; }
         { if(!_buf["desc"].IsString) { throw new SerializationException(); }  Desc = _buf["desc"]; }
         { if(!_buf["group"].IsNumber) { throw new SerializationException(); }  Group = (unit.GroupType)_buf["group"].AsInt; }
+        { if(!_buf["move_speed"].IsNumber) { throw new SerializationException(); }  MoveSpeed = _buf["move_speed"]; }
+        { if(!_buf["movement"].IsString) { throw new SerializationException(); }  Movement = _buf["movement"]; }
         { if(!_buf["base_strength"].IsNumber) { throw new SerializationException(); }  BaseStrength = _buf["base_strength"]; }
         { if(!_buf["strength_bonuses"].IsNumber) { throw new SerializationException(); }  StrengthBonuses = _buf["strength_bonuses"]; }
         { if(!_buf["prefab"].IsString) { throw new SerializationException(); }  Prefab = _buf["prefab"]; }
@@ -48,6 +50,14 @@ public sealed partial class Character : Luban.BeanBase
     /// </summary>
     public readonly unit.GroupType Group;
     /// <summary>
+    /// 基础移动速度
+    /// </summary>
+    public readonly float MoveSpeed;
+    /// <summary>
+    /// 移动方式
+    /// </summary>
+    public readonly string Movement;
+    /// <summary>
     /// 基础力量
     /// </summary>
     public readonly float BaseStrength;
@@ -74,6 +84,8 @@ public sealed partial class Character : Luban.BeanBase
         + "name:" + Name + ","
         + "desc:" + Desc + ","
         + "group:" + Group + ","
+        + "moveSpeed:" + MoveSpeed + ","
+        + "movement:" + Movement + ","
         + "baseStrength:" + BaseStrength + ","
         + "strengthBonuses:" + StrengthBonuses + ","
         + "prefab:" + Prefab + ","

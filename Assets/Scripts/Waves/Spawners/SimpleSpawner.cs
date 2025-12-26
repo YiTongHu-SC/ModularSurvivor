@@ -56,36 +56,16 @@ namespace Waves.Spawners
             var spawnPosition = new Vector2(
                 Mathf.Cos(radian) * _spawnRadius,
                 Mathf.Sin(radian) * _spawnRadius);
-            var actorPrefab = GetActorPrefabById(Config.EnemyKey);
-            var unitData = new UnitData(spawnPosition, 0)
-            {
-                Group = GroupType.Enemy,
 
-                ModelView = new UnitModelView()
-                {
-                    Height = 1,
-                    CenterOffset = 0.5f,
-                    Radius = 0.5f
-                },
-                CollisionData = new UnitCollisionData()
-                {
-                    AreaType = CollisionAreaType.Circle,
-                    Radius = 0.5f
-                },
-                MoveSpeed = 1,
-                MovementStrategy = "StraightChase",
-            };
-
-            unitData.SetHealth(10);
+            var enemy = CombatManager.Instance.ActorFactory.SpawnCharacter("actor_enemy_100", spawnPosition);
             // Spawn unit
-            Spawn(actorPrefab, unitData);
             // apply ability
             // TODO: 后面改成从配置表读取
             var abilityData = new AbilityTriggerByEventData()
             {
                 RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
                 Key = "HitOnCollision",
-                SourceId = unitData.RuntimeId,
+                SourceId = enemy.UnitData.RuntimeId,
                 TriggerType = TriggerType.ByEvent,
                 Cooldown = 0.2f,
                 FindTargetType = FindTargetType.Ally,
@@ -112,7 +92,7 @@ namespace Waves.Spawners
             {
                 RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
                 Key = "ChaseHeroAbility",
-                SourceId = unitData.RuntimeId,
+                SourceId = enemy.UnitData.RuntimeId,
                 TriggerType = TriggerType.Once,
                 FindTargetType = FindTargetType.Specific,
                 ExtraParams = new System.Collections.Generic.Dictionary<string, object>()
@@ -132,15 +112,8 @@ namespace Waves.Spawners
 
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
-            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
-            Debug.Log($"Spawning enemy {actorPrefab.name} from SimpleSpawner");
-        }
-
-        private GameObject GetActorPrefabById(string enemyKey)
-        {
-            // TODO: 后面改成从配置表读取
-            var assetHandle = AssetSystem.Instance.LevelScope.Acquire<GameObject>($"Level:Characters:ActorSlime");
-            return assetHandle.Asset;
+            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, enemy.UnitData.RuntimeId);
+            Debug.Log($"Spawning enemy {enemy.name} from SimpleSpawner");
         }
     }
 }

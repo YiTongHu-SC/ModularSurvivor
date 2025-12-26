@@ -30,12 +30,12 @@ MonoBehaviour:
     DefaultWeight: 0
   Overrides: []
   _generatedEntries:
-  - _key: Level:ActorConfigs:Actor_100000
+  - _key: Level:ActorConfigs:ActorViewData_1
     _assetType: 1
     _weight: 0
     _isRequired: 1
     _tags: []
-  - _key: Level:ActorConfigs:Actor_100001
+  - _key: Level:ActorConfigs:ActorViewData_2
     _assetType: 1
     _weight: 0
     _isRequired: 1

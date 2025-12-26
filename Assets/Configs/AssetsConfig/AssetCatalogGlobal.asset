@@ -25,12 +25,12 @@ MonoBehaviour:
     _resourcesPath: Global/CameraManager
     _assetType: 0
     _tags: []
-  - _key: Level:ActorConfigs:Actor_100000
-    _resourcesPath: Level/ActorConfigs/Actor_100000
+  - _key: Level:ActorConfigs:ActorViewData_1
+    _resourcesPath: Level/ActorConfigs/ActorViewData_1
     _assetType: 1
     _tags: []
-  - _key: Level:ActorConfigs:Actor_100001
-    _resourcesPath: Level/ActorConfigs/Actor_100001
+  - _key: Level:ActorConfigs:ActorViewData_2
+    _resourcesPath: Level/ActorConfigs/ActorViewData_2
     _assetType: 1
     _tags: []
   - _key: Level:Characters:ActorDragon
