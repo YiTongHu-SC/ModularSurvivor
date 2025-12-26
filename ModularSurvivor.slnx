@@ -1,0 +1,18 @@
+﻿<Solution>
+  <Project Path="Utils.csproj" />
+  <Project Path="Combat.csproj" />
+  <Project Path="LeanCommon.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Tests.csproj" />
+  <Project Path="UI.csproj" />
+  <Project Path="Core.csproj" />
+  <Project Path="CW.Common.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="Waves.csproj" />
+  <Project Path="GameData.csproj" />
+  <Project Path="StellarCore.csproj" />
+  <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
+  <Project Path="GameLoop.csproj" />
+  <Project Path="LeanPool.csproj" />
+</Solution>
