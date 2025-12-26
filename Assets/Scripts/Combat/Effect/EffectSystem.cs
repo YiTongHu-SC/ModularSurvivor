@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Core.Events;
 using Core.Timer;
 using Core.Units;
@@ -16,6 +17,12 @@ namespace Combat.Effect
             _effectRemoveQueue.Clear();
         }
 
+        internal void Reset()
+        {
+            _effectNodes.Clear();
+            _effectRemoveQueue.Clear();
+        }
+        
         public void CastEffect(IEffectNode effectNode)
         {
             effectNode.TryCast((() => { CastEffectCall(effectNode); }));
@@ -49,5 +56,7 @@ namespace Combat.Effect
                 _effectNodes.Remove(nodeId);
             }
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Combat.Movement;
 using Core.Events;
 using Core.Units;
@@ -31,6 +32,11 @@ namespace Combat.Systems
                     EventManager.Instance.Publish(new GameEvents.UnitMovementEvent(unit));
                 }
             }
+        }
+
+        internal void Reset()
+        {
+            _movementStrategies.Clear();
         }
     }
 }

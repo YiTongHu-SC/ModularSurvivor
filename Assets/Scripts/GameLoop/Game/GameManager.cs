@@ -401,6 +401,7 @@ namespace GameLoop.Game
 
             public override void Exit()
             {
+                CombatManager.Instance.InGameExit();
             }
 
             public override void Reason(float deltaTime = 0)

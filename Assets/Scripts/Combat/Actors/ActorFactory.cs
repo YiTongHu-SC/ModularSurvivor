@@ -1,4 +1,5 @@
-﻿using Core.AssetsTool;
+﻿using System;
+using Core.AssetsTool;
 using Core.Units;
 using Lean.Pool;
 using LubanGenerated.TableTool;
@@ -14,6 +15,11 @@ namespace Combat.Actors
         public void Initialize(RuntimeIdAllocator allocator)
         {
             Allocator = allocator;
+        }
+
+        internal void Reset()
+        {
+            Allocator = null;
         }
 
         public Actor Spawn(Actor actorPrefab, UnitData data)
@@ -58,5 +64,7 @@ namespace Combat.Actors
             unitData.SetHealth(ActorAttributeUtils.GetMaxHp(table.BaseStrength, table.StrengthBonuses, 1));
             return Spawn(targetPrefab, unitData);
         }
+
+
     }
 }

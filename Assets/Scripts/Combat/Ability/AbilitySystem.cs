@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Combat.Ability.Data;
 using UnityEngine;
 
@@ -8,10 +9,16 @@ namespace Combat.Ability
     {
         // 按单位ID存储Buff列表
         private readonly Dictionary<int, BaseAbility> _abilities = new();
-        private readonly List<int> expiredAbilities = new();
+        private readonly List<int> _expiredAbilities = new();
 
         public void Initialize()
         {
+        }
+
+        internal void Reset()
+        {
+            _abilities.Clear();
+            _expiredAbilities.Clear();
         }
 
         public bool ApplyAbility(AbilityData abilityData)
@@ -25,12 +32,12 @@ namespace Combat.Ability
 
         public void TickAbilities(float deltaTime)
         {
-            expiredAbilities.Clear();
+            _expiredAbilities.Clear();
             foreach (var ability in _abilities.Values)
             {
                 if (ability.IsExpired)
                 {
-                    expiredAbilities.Add(ability.AbilityData.RuntimeID);
+                    _expiredAbilities.Add(ability.AbilityData.RuntimeID);
                 }
                 else
                 {
@@ -39,12 +46,14 @@ namespace Combat.Ability
             }
 
             // 移除过期的能力
-            foreach (var abilityId in expiredAbilities)
+            foreach (var abilityId in _expiredAbilities)
             {
                 Debug.Log($"能力过期并移除: {_abilities[abilityId].AbilityData.Key}");
                 _abilities[abilityId].RemoveAbility();
                 _abilities.Remove(abilityId);
             }
         }
+
+
     }
 }

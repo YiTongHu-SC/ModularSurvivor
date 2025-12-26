@@ -1,4 +1,5 @@
-﻿using Combat.Views;
+﻿using System;
+using Combat.Views;
 using Core.Events;
 using Core.Units;
 
@@ -14,6 +15,12 @@ namespace Combat.Systems
             EventManager.Instance.Subscribe<GameEvents.UpdatePreferenceEvent>(this);
         }
 
+        internal void Reset()
+        {
+            EventManager.Instance.Unsubscribe<GameEvents.UpdatePreferenceEvent>(this);
+            ViewFactory = null;
+        }
+
         public void OnEventReceived(GameEvents.UpdatePreferenceEvent eventData)
         {
             switch (eventData.ViewData.ViewEventType)
@@ -24,5 +31,7 @@ namespace Combat.Systems
                     break;
             }
         }
+
+
     }
 }

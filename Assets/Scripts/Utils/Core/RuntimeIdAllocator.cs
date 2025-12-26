@@ -1,4 +1,6 @@
-﻿namespace Utils.Core
+﻿using System;
+
+namespace Utils.Core
 {
     public sealed class RuntimeIdAllocator
     {
@@ -10,6 +12,11 @@
         }
 
         public void Initialize()
+        {
+            _nextId = 0;
+        }
+
+        public void Reset()
         {
             _nextId = 0;
         }

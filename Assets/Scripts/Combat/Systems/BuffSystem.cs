@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Combat.Buff;
 using Core.Events;
@@ -197,6 +198,11 @@ namespace Combat.Systems
             }
 
             buffs.Clear();
+        }
+
+        internal void Reset()
+        {
+            _unitBuffs.Clear();
         }
     }
 }

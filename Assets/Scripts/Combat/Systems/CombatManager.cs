@@ -1,4 +1,5 @@
-﻿using Combat.Ability;
+﻿using System;
+using Combat.Ability;
 using Combat.Actors;
 using Combat.Data;
 using Combat.Effect;
@@ -90,6 +91,18 @@ namespace Combat.Systems
         public void InGameEnter()
         {
             StateMachine.PerformTransition(CombatTransition.StartCombat);
+        }
+
+        public void InGameExit()
+        {
+            // 清理战斗相关数据
+            ActorFactory.Reset();
+            AbilitySystem.Reset();
+            EffectSystem.Reset();
+            BuffSystem.Reset();
+            MovementSystem.Reset();
+            ViewSystem.Reset();
+            GlobalAllocator.Reset();
         }
 
         private class CombatStateInit : FsmState<CombatManager, CombatState, CombatTransition>
