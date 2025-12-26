@@ -39,8 +39,9 @@ public class ActorViewEditor : Editor
                 actor.TryGetComponent<CapsuleCollider>(out CapsuleCollider capsuleCollider);
                 if (capsuleCollider != null)
                 {
-                    actor.ViewData.ViewHeight = capsuleCollider.height;
-                    actor.ViewData.CenterOffset = capsuleCollider.center.y;
+                    actor.ViewData.ModelView.Height = capsuleCollider.height;
+                    actor.ViewData.ModelView.CenterOffset = capsuleCollider.center.y;
+                    actor.ViewData.ModelView.Radius = capsuleCollider.radius;
                     actor.ViewData.UnitCollisionData.Radius = capsuleCollider.radius;
                     actor.ViewData.UnitCollisionData.Offset = new Vector2(capsuleCollider.center.x, capsuleCollider.center.z);
                 }
@@ -50,10 +51,12 @@ public class ActorViewEditor : Editor
                 actor.TryGetComponent<BoxCollider>(out BoxCollider boxCollider);
                 if (boxCollider != null)
                 {
-                    actor.ViewData.ViewHeight = boxCollider.size.y;
-                    actor.ViewData.CenterOffset = boxCollider.center.y;
+                    actor.ViewData.ModelView.Height = boxCollider.size.y;
+                    actor.ViewData.ModelView.CenterOffset = boxCollider.center.y;
+                    actor.ViewData.UnitCollisionData.Radius = 0f;
                     actor.ViewData.UnitCollisionData.Size = new Vector2(boxCollider.size.x, boxCollider.size.z);
                     actor.ViewData.UnitCollisionData.Offset = new Vector2(boxCollider.center.x, boxCollider.center.z);
+                    actor.ViewData.ModelView.Radius = (boxCollider.size.x + boxCollider.size.z) * 0.5f;
                 }
                 break;
             default:

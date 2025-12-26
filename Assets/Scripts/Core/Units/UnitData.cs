@@ -7,7 +7,7 @@ namespace Core.Units
 {
     public enum GroupType
     {
-        Ally,
+        Hero,
         Enemy
     }
 
@@ -20,7 +20,7 @@ namespace Core.Units
 
         //碰撞检测数据
         public UnitCollisionData CollisionData;
-        public GroupType Group = GroupType.Ally;
+        public GroupType Group = GroupType.Hero;
 
         /// <summary>
         ///     模型数据

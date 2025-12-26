@@ -20,6 +20,7 @@ public sealed partial class Character : Luban.BeanBase
         { if(!_buf["key"].IsString) { throw new SerializationException(); }  Key = _buf["key"]; }
         { if(!_buf["name"].IsString) { throw new SerializationException(); }  Name = _buf["name"]; }
         { if(!_buf["desc"].IsString) { throw new SerializationException(); }  Desc = _buf["desc"]; }
+        { if(!_buf["group"].IsNumber) { throw new SerializationException(); }  Group = (unit.GroupType)_buf["group"].AsInt; }
         { if(!_buf["base_strength"].IsNumber) { throw new SerializationException(); }  BaseStrength = _buf["base_strength"]; }
         { if(!_buf["strength_bonuses"].IsNumber) { throw new SerializationException(); }  StrengthBonuses = _buf["strength_bonuses"]; }
         { if(!_buf["prefab"].IsString) { throw new SerializationException(); }  Prefab = _buf["prefab"]; }
@@ -42,6 +43,10 @@ public sealed partial class Character : Luban.BeanBase
     /// 描述
     /// </summary>
     public readonly string Desc;
+    /// <summary>
+    /// 类型
+    /// </summary>
+    public readonly unit.GroupType Group;
     /// <summary>
     /// 基础力量
     /// </summary>
@@ -68,6 +73,7 @@ public sealed partial class Character : Luban.BeanBase
         + "key:" + Key + ","
         + "name:" + Name + ","
         + "desc:" + Desc + ","
+        + "group:" + Group + ","
         + "baseStrength:" + BaseStrength + ","
         + "strengthBonuses:" + StrengthBonuses + ","
         + "prefab:" + Prefab + ","

@@ -117,7 +117,7 @@ namespace Combat.Ability
                     break;
                 case FindTargetType.Ally:
                     Targets.TargetUnits.Clear();
-                    FindTargetUnit(GroupType.Ally);
+                    FindTargetUnit(GroupType.Hero);
                     break;
                 default:
                     break;

@@ -44,22 +44,14 @@ namespace Combat.Actors
             var targetPrefabKey = TableTool.Tables.TbCharacter.Get(characterId).Prefab;
             var handle = AssetSystem.Instance.LevelScope.Acquire<GameObject>(targetPrefabKey);
             var targetPrefab = handle.Asset;
+            var group = TableTool.Tables.TbCharacter.Get(characterId).Group;
             var unitData = new UnitData(position, rotation)
             {
-                Group = GroupType.Ally,
-                ModelView = new UnitModelView()
-                {
-                    Height = 1,
-                    CenterOffset = 0.5f,
-                    Radius = 0.5f
-                },
-                CollisionData = new UnitCollisionData()
-                {
-                    AreaType = CollisionAreaType.Circle,
-                    Radius = 0.5f
-                },
+                Group = (GroupType)(int)group,
                 MoveSpeed = 2f,
                 MovementStrategy = "SimpleMove",
+                ModelView = new UnitModelView(),
+                CollisionData = new UnitCollisionData()
             };
 
             return Spawn(targetPrefab, unitData);

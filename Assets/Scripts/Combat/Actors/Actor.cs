@@ -69,8 +69,11 @@ namespace Combat.Actors
             Debug.Log("Unit Initialize");
             UnitData = data;
             UnitData.IsActive = true;
-            UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
+            // UnitData.
+            UnitData.ModelView = ViewData.ModelView;
+            UnitData.CollisionData = ViewData.UnitCollisionData;
             Initialized = true;
+            UnitManager.Instance.UnitSystem.RegisterUnit(UnitData);
             UpdatePosView(data.Position, data.Rotation);
         }
 
