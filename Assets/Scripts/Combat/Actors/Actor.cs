@@ -1,4 +1,5 @@
 ﻿using System;
+using Combat.Data;
 using Combat.Systems;
 using Core.Coordinates;
 using Core.Events;
@@ -14,6 +15,9 @@ namespace Combat.Actors
         IEventListener<GameEvents.UnitDeathEvent>,
         IEventListener<GameEvents.UnitMovementEvent>
     {
+        public CollisionAreaType CollisionAreaType;
+        [Tooltip("视图数据")]
+        public ActorViewData ViewData;
         // 这里可以添加Actor特有的属性和方法
         public bool IsActive => UnitData.IsActive;
         public UnitData UnitData { get; protected set; }

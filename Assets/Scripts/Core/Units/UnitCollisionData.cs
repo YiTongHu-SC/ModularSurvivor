@@ -30,6 +30,7 @@ namespace Core.Units
         public Vector2 Offset;
     }
 
+    [Serializable]
     public enum CollisionAreaType
     {
         Circle,

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4872096266858635593}
   - component: {fileID: 9146983658919152006}
+  - component: {fileID: 6173607299639592862}
   m_Layer: 0
   m_Name: ActorDragon
   m_TagString: Untagged
@@ -45,6 +46,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916191a6e9b34c01be27f11b515c0e37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Combat::Combat.Actors.Actor
+  CollisionAreaType: 0
+  ViewData: {fileID: 11400000, guid: 64ae4bf9627c674479cb4ff7b464506e, type: 2}
+--- !u!136 &6173607299639592862
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240105959614190555}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1.46
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1 &3805283869481633744
 GameObject:
   m_ObjectHideFlags: 0

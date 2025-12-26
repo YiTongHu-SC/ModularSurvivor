@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2169e8ef6d3e4c9a93b3590c45cb6336, type: 3}
-  m_Name: Actor_100000
+  m_Name: ActorViewData_1
   m_EditorClassIdentifier: Combat::Combat.Data.ActorData
-  ActorId: 100000
-  ActorName: Dragon
-  ActorPrefab: {fileID: 9146983658919152006, guid: defd07031fb4205408fa1e90d6486b37, type: 3}
+  ViewHeight: 1.46
+  CenterOffset: 0.6
+  UnitCollisionData:
+    AreaType: 0
+    Radius: 0.5
+    Size: {x: 0, y: 0}
+    Offset: {x: 0, y: 0}

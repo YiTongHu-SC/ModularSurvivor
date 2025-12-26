@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2169e8ef6d3e4c9a93b3590c45cb6336, type: 3}
-  m_Name: Actor_100001
+  m_Name: ActorViewData_2
   m_EditorClassIdentifier: Combat::Combat.Data.ActorData
-  ActorId: 100001
-  ActorName: Enmey
-  ActorPrefab: {fileID: 6269420373531811641, guid: eea067295c1446740ab4a5ede550e4e3, type: 3}
+  ViewHeight: 1
+  CenterOffset: 0
+  UnitCollisionData:
+    AreaType: 1
+    Radius: 0
+    Size: {x: 1, y: 1}
+    Offset: {x: 0, y: 0}

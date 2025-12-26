@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1857361766822337955}
   - component: {fileID: 6269420373531811641}
+  - component: {fileID: 2369935223835813768}
   m_Layer: 0
   m_Name: ActorSlime
   m_TagString: Untagged
@@ -45,6 +46,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916191a6e9b34c01be27f11b515c0e37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Combat::Combat.Actors.Actor
+  CollisionAreaType: 0
+  ViewData: {fileID: 11400000, guid: 214ea0225f1ef1b43b9bf640629d7f40, type: 2}
+--- !u!136 &2369935223835813768
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279139668653319931}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!1 &2177623464159775581
 GameObject:
   m_ObjectHideFlags: 0
