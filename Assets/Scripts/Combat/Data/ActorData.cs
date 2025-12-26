@@ -1,13 +1,14 @@
 ﻿using Combat.Actors;
+using Core.Units;
 using UnityEngine;
 
 namespace Combat.Data
 {
-    [CreateAssetMenu(fileName = "ActorData", menuName = "Combat Config/ActorData", order = 0)]
-    public class ActorData : ScriptableObject
+    [CreateAssetMenu(fileName = "ActorViewData", menuName = "Combat Config/ActorViewData", order = 0)]
+    public class ActorViewData : ScriptableObject
     {
-        public int ActorId;
-        public string ActorName;
-        public Actor ActorPrefab;
+        public float ViewHeight = 2f;
+        public float CenterOffset = 1f;
+        public UnitCollisionData UnitCollisionData;
     }
 }

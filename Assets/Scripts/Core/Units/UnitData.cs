@@ -57,7 +57,6 @@ namespace Core.Units
             ModelView = modelView;
         }
 
-
         public float MaxHealth { get; set; }
 
         /// <summary>

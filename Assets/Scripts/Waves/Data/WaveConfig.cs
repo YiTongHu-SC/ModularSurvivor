@@ -11,7 +11,7 @@ namespace Waves.Data
         /// <summary>
         /// 敌人ID
         /// </summary>
-        public int EnemyID;
+        public string EnemyKey;
 
         /// <summary>
         /// 敌人数量

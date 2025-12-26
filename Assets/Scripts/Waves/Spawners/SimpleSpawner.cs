@@ -56,7 +56,7 @@ namespace Waves.Spawners
             var spawnPosition = new Vector2(
                 Mathf.Cos(radian) * _spawnRadius,
                 Mathf.Sin(radian) * _spawnRadius);
-            var actorData = GetActorDataById(Config.EnemyID);
+            var actorPrefab = GetActorPrefabById(Config.EnemyKey);
             var unitData = new UnitData(spawnPosition, 0)
             {
                 Group = GroupType.Enemy,
@@ -78,7 +78,7 @@ namespace Waves.Spawners
 
             unitData.SetHealth(10);
             // Spawn unit
-            Spawn(actorData, unitData);
+            Spawn(actorPrefab, unitData);
             // apply ability
             // TODO: 后面改成从配置表读取
             var abilityData = new AbilityTriggerByEventData()
@@ -133,14 +133,13 @@ namespace Waves.Spawners
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
             CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, unitData.RuntimeId);
-            Debug.Log($"Spawning enemy {actorData.ActorId} from SimpleSpawner");
+            Debug.Log($"Spawning enemy {actorPrefab.name} from SimpleSpawner");
         }
 
-        private ActorData GetActorDataById(int enemyID)
+        private GameObject GetActorPrefabById(string enemyKey)
         {
             // TODO: 后面改成从配置表读取
-            var levelScope = AssetSystem.Instance.GetScope(AssetsScopeLabel.Level);
-            var assetHandle = levelScope.Acquire<ActorData>($"Level:ActorConfigs:Actor_{enemyID}");
+            var assetHandle = AssetSystem.Instance.LevelScope.Acquire<GameObject>($"Level:Characters:ActorSlime");
             return assetHandle.Asset;
         }
     }

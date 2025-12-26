@@ -2,6 +2,7 @@
 using Combat.Data;
 using Combat.Systems;
 using Core.Units;
+using UnityEngine;
 using Waves.Data;
 
 namespace Waves.Spawners
@@ -15,10 +16,9 @@ namespace Waves.Spawners
             Config = config;
         }
 
-        protected virtual Actor Spawn(ActorData actorData, UnitData unitData)
+        protected virtual Actor Spawn(GameObject actorPrefab, UnitData unitData)
         {
-            var actor = CombatManager.Instance.ActorFactory.Spawn(actorData.ActorPrefab, unitData);
-            return actor;
+            return CombatManager.Instance.ActorFactory.Spawn(actorPrefab, unitData);
         }
 
         public abstract void UpdateSpawner(float deltaTime);

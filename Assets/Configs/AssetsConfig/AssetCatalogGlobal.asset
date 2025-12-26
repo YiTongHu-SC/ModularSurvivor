@@ -33,6 +33,18 @@ MonoBehaviour:
     _resourcesPath: Level/ActorConfigs/Actor_100001
     _assetType: 1
     _tags: []
+  - _key: Level:Characters:ActorDragon
+    _resourcesPath: Level/Characters/ActorDragon
+    _assetType: 0
+    _tags: []
+  - _key: Level:Characters:ActorSlime
+    _resourcesPath: Level/Characters/ActorSlime
+    _assetType: 0
+    _tags: []
+  - _key: Level:Characters:TestActor
+    _resourcesPath: Level/Characters/TestActor
+    _assetType: 0
+    _tags: []
   - _key: Level:EffectConfigs:PresentationConfig
     _resourcesPath: Level/EffectConfigs/PresentationConfig
     _assetType: 1

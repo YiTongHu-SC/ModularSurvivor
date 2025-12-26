@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Assets;
 using Core.AssetsTool;
 using Core.Events;
+using LubanGenerated.TableTool;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -44,16 +44,16 @@ namespace GameLoop.Game
 
         IEnumerator LoadSceneCoroutine(LoadSceneRequest sceneRequest)
         {
+            // 加载Loading场景
+            SceneManager.LoadSceneAsync(_loadingSceneName, LoadSceneMode.Additive);
+            yield return null;
             // 卸载当前场景
             if (_hasScene)
             {
                 yield return UnloadCurrentLevel();
             }
-
-            // 加载Loading场景
-            SceneManager.LoadSceneAsync(_loadingSceneName, LoadSceneMode.Additive);
-            yield return null;
-
+            // load Tables
+            TableTool.Initialize();
             // load assets
             var loadTask = AssetSystem.Instance.LoadManifestAsync(sceneRequest.Manifest,
                 sceneRequest.ScopeLabel,

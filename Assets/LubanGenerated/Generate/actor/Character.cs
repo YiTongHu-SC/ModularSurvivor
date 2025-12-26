@@ -22,6 +22,7 @@ public sealed partial class Character : Luban.BeanBase
         { if(!_buf["desc"].IsString) { throw new SerializationException(); }  Desc = _buf["desc"]; }
         { if(!_buf["base_strength"].IsNumber) { throw new SerializationException(); }  BaseStrength = _buf["base_strength"]; }
         { if(!_buf["strength_bonuses"].IsNumber) { throw new SerializationException(); }  StrengthBonuses = _buf["strength_bonuses"]; }
+        { if(!_buf["prefab"].IsString) { throw new SerializationException(); }  Prefab = _buf["prefab"]; }
     }
 
     public static Character DeserializeCharacter(JSONNode _buf)
@@ -49,6 +50,10 @@ public sealed partial class Character : Luban.BeanBase
     /// 力量成长
     /// </summary>
     public readonly float StrengthBonuses;
+    /// <summary>
+    /// prefab_asset_key
+    /// </summary>
+    public readonly string Prefab;
    
     public const int __ID__ = -704271792;
     public override int GetTypeId() => __ID__;
@@ -65,6 +70,7 @@ public sealed partial class Character : Luban.BeanBase
         + "desc:" + Desc + ","
         + "baseStrength:" + BaseStrength + ","
         + "strengthBonuses:" + StrengthBonuses + ","
+        + "prefab:" + Prefab + ","
         + "}";
     }
 }
