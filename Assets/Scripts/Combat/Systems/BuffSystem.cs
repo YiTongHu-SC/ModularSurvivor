@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Combat.Buff;
 using Core.Events;
+using Core.GameInterface;
 using Core.Units;
 using UnityEngine;
 
@@ -11,16 +12,12 @@ namespace Combat.Systems
     /// <summary>
     /// Buff系统，管理所有单位的增益和减益效果
     /// </summary>
-    public class BuffSystem
+    public class BuffSystem: ISystem
     {
         // 按单位ID存储Buff列表
         private readonly Dictionary<int, List<BaseBuff>> _unitBuffs = new();
 
-        public void Initialize()
-        {
-        }
-
-        internal void Reset()
+        public void Reset()
         {
             _unitBuffs.Clear();
         }
@@ -102,7 +99,7 @@ namespace Combat.Systems
         /// 更新所有Buff（每帧调用）
         /// </summary>
         /// <param name="deltaTime">时间增量</param>
-        public void UpdateBuffs(float deltaTime)
+        public void Tick(float deltaTime)
         {
             var expiredBuffs = new List<(int unitId, Combat.Buff.BaseBuff buff)>();
 

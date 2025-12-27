@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.GameInterface;
 using StellarCore.Singleton;
 
 namespace Core.Events
@@ -10,7 +11,7 @@ namespace Core.Events
     ///     支持监听器对象和委托两种订阅方式
     ///     使用延迟移除机制解决发布过程中取消订阅的并发修改问题
     /// </summary>
-    public class EventManager : BaseInstance<EventManager>
+    public class EventManager : BaseInstance<EventManager>, IManager
     {
         // 事件监听器字典，按事件类型分组
         private readonly Dictionary<Type, List<IEventListener<EventData>>> _eventListeners = new();
@@ -29,6 +30,8 @@ namespace Core.Events
 
         // 发布状态控制
         private bool _isPublishing;
+
+        public bool IsInitialized { get; private set; }
 
         protected void OnDestroy()
         {
@@ -290,8 +293,7 @@ namespace Core.Events
             // 重写 Equals 和 GetHashCode 以支持正确的比较
             public override bool Equals(object obj)
             {
-                return obj is CallbackAdapter<T> adapter &&
-                       Delegate.Equals(_originalCallback, adapter._originalCallback);
+                return obj is CallbackAdapter<T> adapter && Delegate.Equals(_originalCallback, adapter._originalCallback);
             }
 
             public override int GetHashCode()
@@ -349,6 +351,16 @@ namespace Core.Events
                 if (subscribers.Count == 0)
                     _eventSubscribers.Remove(eventType);
             }
+        }
+
+        public void Reset()
+        {
+            ClearAllListeners();
+            IsInitialized = false;
+        }
+
+        public void Tick(float deltaTime)
+        {
         }
 
         #endregion

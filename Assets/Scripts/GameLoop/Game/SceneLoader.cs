@@ -149,7 +149,7 @@ namespace GameLoop.Game
 
         private void CleanupLeanPool()
         {
-           Lean.Pool.LeanPool.DespawnAll();
+            Lean.Pool.LeanPool.DespawnAll();
         }
     }
 

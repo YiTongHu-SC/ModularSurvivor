@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using Combat.Ability.Data;
+using Core.GameInterface;
 using UnityEngine;
 
 namespace Combat.Ability
 {
-    public class AbilitySystem
+    public class AbilitySystem : ISystem
     {
-        // 按单位ID存储Buff列表
+        /// <summary>
+        /// 已应用的能力列表, key: AbilityData.RuntimeID
+        /// </summary>
         private readonly Dictionary<int, BaseAbility> _abilities = new();
         private readonly List<int> _expiredAbilities = new();
-
-        public void Initialize()
-        {
-        }
-
-        internal void Reset()
+        public void Reset()
         {
             _abilities.Clear();
             _expiredAbilities.Clear();
@@ -30,7 +28,11 @@ namespace Combat.Ability
             return true;
         }
 
-        public void TickAbilities(float deltaTime)
+        /// <summary>
+        /// 每帧更新能力系统逻辑
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        public void Tick(float deltaTime)
         {
             _expiredAbilities.Clear();
             foreach (var ability in _abilities.Values)
@@ -53,7 +55,5 @@ namespace Combat.Ability
                 _abilities.Remove(abilityId);
             }
         }
-
-
     }
 }

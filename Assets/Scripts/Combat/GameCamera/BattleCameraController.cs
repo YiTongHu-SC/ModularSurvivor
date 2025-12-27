@@ -19,7 +19,7 @@ namespace Combat.GameCamera
         private void Awake()
         {
             Camera = GetComponent<Camera>();
-            CombatManager.Instance.CameraManager.SetBattleCamera(this);
+            CameraManager.Instance.SetBattleCamera(this);
         }
 
         private void SetTarget(Transform target, float offset)

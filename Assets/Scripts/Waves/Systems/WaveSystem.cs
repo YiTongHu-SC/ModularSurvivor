@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Core.GameInterface;
 using Waves.Data;
 
 namespace Waves.Systems
 {
-    public class WaveSystem
+    public class WaveSystem : ISystem
     {
         private readonly List<Wave> _waves = new();
 
@@ -11,7 +12,7 @@ namespace Waves.Systems
         /// 波次更新
         /// </summary>
         /// <param name="deltaTime"></param>
-        public void UpdateWaves(float deltaTime)
+        public void Tick(float deltaTime)
         {
             foreach (var wave in _waves)
             {
@@ -23,6 +24,11 @@ namespace Waves.Systems
         {
             var wave = new Wave(waveConfig);
             _waves.Add(wave);
+        }
+
+        public void Reset()
+        {
+            _waves.Clear();
         }
     }
 }

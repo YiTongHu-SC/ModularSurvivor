@@ -110,13 +110,13 @@ namespace Tests.Combat
             float elapsed = 0f;
             while (elapsed < delayDuration)
             {
-                _combatManager.BuffSystem.UpdateBuffs(DeltaTime);
+                _combatManager.BuffSystem.Tick(DeltaTime);
                 elapsed += DeltaTime;
                 yield return null;
             }
 
             // 最后一次更新以确保Buff过期
-            _combatManager.BuffSystem.UpdateBuffs(DeltaTime);
+            _combatManager.BuffSystem.Tick(DeltaTime);
             // 验证单位已死亡
             Assert.IsFalse(testUnit.IsActive, "Unit should be dead after DelayDeath buff expires");
         }

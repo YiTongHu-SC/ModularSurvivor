@@ -1,11 +1,12 @@
 ﻿using System;
 using Combat.Views;
 using Core.Events;
+using Core.GameInterface;
 using Core.Units;
 
 namespace Combat.Systems
 {
-    public class ViewSystem : IEventListener<GameEvents.UpdatePreferenceEvent>
+    public class ViewSystem : IEventListener<GameEvents.UpdatePreferenceEvent>, ISystem
     {
         public ViewFactory ViewFactory { get; set; }
 
@@ -15,10 +16,10 @@ namespace Combat.Systems
             EventManager.Instance.Subscribe<GameEvents.UpdatePreferenceEvent>(this);
         }
 
-        internal void Reset()
+        public void Reset()
         {
-            EventManager.Instance.Unsubscribe<GameEvents.UpdatePreferenceEvent>(this);
             ViewFactory = null;
+            EventManager.Instance.Unsubscribe<GameEvents.UpdatePreferenceEvent>(this);
         }
 
         public void OnEventReceived(GameEvents.UpdatePreferenceEvent eventData)
@@ -30,6 +31,10 @@ namespace Combat.Systems
                     view.Apply();
                     break;
             }
+        }
+
+        public void Tick(float deltaTime)
+        {
         }
     }
 }

@@ -22,8 +22,9 @@ namespace Waves.Systems
 
         public void Reset()
         {
-            IsInitialized = false;
+            WaveSystem.Reset();
             WaveSystem = null;
+            IsInitialized = false;
         }
 
         public void CreateWaves(List<WaveConfig> waves)
@@ -38,7 +39,7 @@ namespace Waves.Systems
         {
             if (CombatManager.Instance.CurrentState == CombatState.InCombat)
             {
-                WaveSystem.UpdateWaves(deltaTime);
+                WaveSystem.Tick(deltaTime);
             }
         }
     }

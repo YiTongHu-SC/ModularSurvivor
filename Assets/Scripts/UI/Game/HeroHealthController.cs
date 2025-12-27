@@ -7,7 +7,7 @@ namespace UI.Game
     /// <summary>
     /// 英雄血量控制器 - 连接UnitManager和血量UI的桥梁
     /// </summary>
-    [UILayer(UILayer.HUD, "UI:Prefab:HpBarView", false, false)]
+    [UILayer(UILayer.HUD, "UI:Prefab:HpBarView", true, true)]
     public class HeroHealthController : BaseUIController<HeroHealthModel, HeroHealthView>
     {
         /// <summary>

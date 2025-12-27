@@ -49,6 +49,13 @@ namespace UI.Framework
         public bool AllowStack { get; }
         public string ViewKey { get; }
 
+        /// <summary>
+        /// UI Attribute for Open Controller
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="viewKey"></param>
+        /// <param name="blockInput"></param>
+        /// <param name="allowStack">can stack with other UI</param>
         public UILayerAttribute(UILayer layer, string viewKey, bool blockInput = false, bool allowStack = true)
         {
             Layer = layer;

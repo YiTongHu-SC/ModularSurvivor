@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using Combat.Movement;
 using Core.Events;
+using Core.GameInterface;
 using Core.Units;
 
 namespace Combat.Systems
 {
-    public class MovementSystem
+    public class MovementSystem : ISystem
     {
-        private static Dictionary<int, UnitData> MovingUnits => UnitManager.Instance.Units;
         private readonly Dictionary<string, IMovementStrategy> _movementStrategies = new();
+        private static Dictionary<int, UnitData> MovingUnits => UnitManager.Instance.Units;
 
         public void Initialize()
         {
@@ -17,7 +18,7 @@ namespace Combat.Systems
             _movementStrategies.Add("StraightChase", new StraightChaseStrategy());
         }
 
-        internal void Reset()
+        public void Reset()
         {
             _movementStrategies.Clear();
         }
@@ -26,7 +27,7 @@ namespace Combat.Systems
         /// 更新单位位置
         /// </summary>
         /// <param name="deltaTime"></param>
-        public void UpdateMovement(float deltaTime)
+        public void Tick(float deltaTime)
         {
             foreach (var unit in MovingUnits.Values)
             {
@@ -38,7 +39,5 @@ namespace Combat.Systems
                 }
             }
         }
-
-
     }
 }

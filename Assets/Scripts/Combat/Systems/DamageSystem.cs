@@ -1,11 +1,20 @@
 ﻿using Core.Events;
+using Core.GameInterface;
 using Core.Units;
 using UnityEngine;
 
 namespace Combat.Systems
 {
-    public class DamageSystem
+    public class DamageSystem : ISystem
     {
+        public void Reset()
+        {
+        }
+
+        public void Tick(float deltaTime)
+        {
+        }
+
         public bool TryApplyDamage(UnitData target, float damageAmount, UnitData source = null)
         {
             if (target == null || damageAmount <= 0)

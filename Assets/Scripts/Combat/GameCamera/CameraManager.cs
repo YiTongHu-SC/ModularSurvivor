@@ -1,5 +1,6 @@
 ﻿using System;
 using Combat.Systems;
+using Core.GameInterface;
 using Core.Input;
 using StellarCore.Singleton;
 using UnityEngine;
@@ -7,18 +8,20 @@ using UnityEngine.Rendering.Universal;
 
 namespace Combat.GameCamera
 {
-    public class CameraManager : BaseInstance<CameraManager>
+    public class CameraManager : BaseInstance<CameraManager>, IManager
     {
         public Camera UICamera;
         public Camera BaseCamera;
         public Camera BattleCamera { get; set; }
         public BattleCameraController BattleCameraController { get; set; }
 
-        public void Initialization()
+        public bool IsInitialized { get; private set; }
+
+        public override void Initialize()
         {
+            base.Initialize();
             Debug.Assert(UICamera != null, "UICamera is not assigned in CameraManager");
             Debug.Assert(BaseCamera != null, "BaseCamera is not assigned in CameraManager");
-            CombatManager.Instance.CameraManager = this;
             InputManager.Instance.RegisterUICamera(UICamera);
             InputManager.Instance.RegisterBaseCamera(BaseCamera);
             var uiCamera = UICamera.GetUniversalAdditionalCameraData();
@@ -27,6 +30,7 @@ namespace Combat.GameCamera
             baseCamera.renderType = CameraRenderType.Base;
             baseCamera.cameraStack.Clear();
             baseCamera.cameraStack.Add(UICamera);
+            IsInitialized = true;
         }
 
         public void Reset()
@@ -39,6 +43,7 @@ namespace Combat.GameCamera
             baseCamera.renderType = CameraRenderType.Base;
             baseCamera.cameraStack.Clear();
             baseCamera.cameraStack.Add(UICamera);
+            IsInitialized = false;
         }
 
         public void SetBattleCamera(BattleCameraController battleCameraController)
@@ -57,6 +62,11 @@ namespace Combat.GameCamera
             baseCamera.cameraStack.Clear();
             baseCamera.cameraStack.Add(BattleCamera);
             baseCamera.cameraStack.Add(UICamera);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            throw new NotImplementedException();
         }
     }
 }

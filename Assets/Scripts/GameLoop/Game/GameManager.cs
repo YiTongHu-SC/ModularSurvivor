@@ -5,6 +5,7 @@ using Combat.Systems;
 using Core.Assets;
 using Core.AssetsTool;
 using Core.Events;
+using Core.GameInterface;
 using Core.Input;
 using Core.Timer;
 using Core.Units;
@@ -40,7 +41,7 @@ namespace GameLoop.Game
         StartGame
     }
 
-    public class GameManager : BaseInstance<GameManager>
+    public class GameManager : BaseInstance<GameManager>, IManager
     {
         public GlobalConfig GlobalConfig;
         public UIConfig UIConfig;
@@ -49,12 +50,13 @@ namespace GameLoop.Game
         public GameState ShowGameState;
         private StateMachine<GameManager, GameState, GameTransition> StateMachine { get; set; }
         public GameState CurrentState => StateMachine.CurrentStateID;
-        public bool Initialized { get; private set; }
         private LoadSceneStruct CurrentLevelData { get; set; }
         private LoadSceneType CurrentLoadSceneType { get; set; }
         public AssetSystem AssetSystem { get; private set; }
         public MemoryMaintenanceService MemoryMaintenanceServiceInstance { get; private set; }
         private SceneLoader _sceneLoader;
+        public bool IsInitialized { get; private set; }
+
 
         protected override void Awake()
         {
@@ -73,7 +75,7 @@ namespace GameLoop.Game
         public override void Initialize()
         {
             base.Initialize();
-            Initialized = false;
+            IsInitialized = false;
             StateMachine = new StateMachine<GameManager, GameState, GameTransition>(this);
             var bootstrapState = new GameStateBootstrap();
             var mainMenuState = new GameStateMainMenu();
@@ -185,7 +187,7 @@ namespace GameLoop.Game
                 Debug.LogError($"Failed to load debug assets: {loadDebugTask.Exception}");
             }
 
-            CameraManager.Instance.Initialization();
+            CameraManager.Instance.Initialize();
             // 初始化场景加载器
             // TODO: 优化场景加载器,加一个前置异步调用
             _sceneLoader = new GameObject("SceneLoader").AddComponent<SceneLoader>();
@@ -195,7 +197,7 @@ namespace GameLoop.Game
                 GlobalConfig.SceneMap,
                 GlobalConfig.MinLoadingTime);
             // 加载完成
-            Initialized = true;
+            IsInitialized = true;
             OnGameInitialized?.Invoke();
             EventManager.Instance.Publish(new GameLoopEvents.BootComplete());
             Debug.Log("Game bootstrapping completed.");
@@ -298,6 +300,16 @@ namespace GameLoop.Game
             }
         }
 
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Tick(float deltaTime)
+        {
+            throw new NotImplementedException();
+        }
+
         private class GameStateBootstrap : FsmState<GameManager, GameState, GameTransition>
         {
             public GameStateBootstrap() : base(GameState.Bootstrap)
@@ -316,7 +328,7 @@ namespace GameLoop.Game
 
             public override void Reason(float deltaTime = 0)
             {
-                if (Context.Initialized)
+                if (Context.IsInitialized)
                 {
                     Context.StateMachine.PerformTransition(GameTransition.FinishBoot);
                 }
@@ -368,7 +380,6 @@ namespace GameLoop.Game
                         TimeManager.Instance.Initialize();
                         UnitManager.Instance.Initialize();
                         WaveManager.Instance.Initialize();
-                        CameraManager.Instance.Initialize();
                         CombatManager.Instance.Initialize();
                         Context.LoadingGameProcess();
                         break;
@@ -406,6 +417,7 @@ namespace GameLoop.Game
                 TimeManager.Instance.Reset();
                 UnitManager.Instance.Reset();
                 WaveManager.Instance.Reset();
+                AssetSystem.Instance.ReleaseScope(AssetsScopeLabel.Level);
             }
 
             public override void Reason(float deltaTime = 0)

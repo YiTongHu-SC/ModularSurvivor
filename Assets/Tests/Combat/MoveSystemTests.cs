@@ -73,7 +73,7 @@ namespace Tests.Combat
             var actorGo = CreateGameObject();
             var actor = _combatManager.ActorFactory.Spawn(actorGo, unitData);
             yield return null;
-            _combatManager.MovementSystem.UpdateMovement(DeltaTime);
+            _combatManager.MovementSystem.Tick(DeltaTime);
             var expectedPosition = initialPosition + unitData.MoveSpeed * DeltaTime * unitData.MoveDirection;
             Assert.AreEqual(expectedPosition.x, unitData.Position.x, Tolerance);
             Assert.AreEqual(expectedPosition.y, unitData.Position.y, Tolerance);

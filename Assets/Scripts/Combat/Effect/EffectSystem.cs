@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Core.Events;
+using Core.GameInterface;
 using Core.Timer;
 using Core.Units;
 
 namespace Combat.Effect
 {
-    public class EffectSystem
+    public class EffectSystem : ISystem
     {
         private readonly Dictionary<int, IEffectNode> _effectNodes = new();
         private readonly List<int> _effectRemoveQueue = new();
 
         public void Initialize()
         {
-            _effectNodes.Clear();
-            _effectRemoveQueue.Clear();
         }
 
-        internal void Reset()
+        public void Reset()
         {
             _effectNodes.Clear();
             _effectRemoveQueue.Clear();
@@ -33,7 +32,11 @@ namespace Combat.Effect
             _effectNodes.TryAdd(effectNode.NodeId, effectNode);
         }
 
-        public void TickEffects(float deltaTime)
+        /// <summary>
+        /// 每帧更新效果系统逻辑
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        public void Tick(float deltaTime)
         {
             _effectRemoveQueue.Clear();
             // 每帧更新效果系统逻辑

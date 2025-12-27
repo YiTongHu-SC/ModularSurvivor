@@ -40,7 +40,6 @@ namespace Combat.Systems
         public AbilitySystem AbilitySystem { get; set; }
         public ViewSystem ViewSystem { get; set; }
         public ActorFactory ActorFactory { get; set; }
-        public CameraManager CameraManager { get; set; }
         public EffectSystem EffectSystem { get; set; }
         public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
         public CombatState CurrentState => StateMachine.CurrentStateID;
@@ -51,21 +50,6 @@ namespace Combat.Systems
         public override void Initialize()
         {
             base.Initialize();
-            GlobalAllocator = new RuntimeIdAllocator();
-            DamageSystem = new DamageSystem();
-            MovementSystem = new MovementSystem();
-            BuffSystem = new BuffSystem();
-            AbilitySystem = new AbilitySystem();
-            ViewSystem = new ViewSystem();
-            ActorFactory = new ActorFactory();
-            CameraManager = new CameraManager();
-            EffectSystem = new EffectSystem();
-            InitializeCombatState();
-            IsInitialized = true;
-        }
-
-        private void InitializeCombatState()
-        {
             StateMachine = new StateMachine<CombatManager, CombatState, CombatTransition>(this);
             var initState = new CombatStateInit();
             var inCombatState = new CombatStateInCombat();
@@ -77,13 +61,32 @@ namespace Combat.Systems
             StateMachine.AddState(pauseState);
             StateMachine.AddState(victoryState);
             StateMachine.AddState(defeatState);
-
             // set up transitions
             initState.AddTransition(CombatTransition.StartCombat, CombatState.InCombat);
             if (!StateMachine.SetCurrent(CombatState.Init))
             {
                 Debug.LogError("Failed to set Bootstrap state");
             }
+            IsInitialized = true;
+        }
+
+        private void InitSystems()
+        {
+            // new systems
+            GlobalAllocator = new RuntimeIdAllocator();
+            DamageSystem = new DamageSystem();
+            MovementSystem = new MovementSystem();
+            BuffSystem = new BuffSystem();
+            AbilitySystem = new AbilitySystem();
+            ViewSystem = new ViewSystem();
+            ActorFactory = new ActorFactory();
+            EffectSystem = new EffectSystem();
+            // Initialize systems
+            GlobalAllocator.Initialize();
+            ActorFactory.Initialize(GlobalAllocator);
+            EffectSystem.Initialize();
+            MovementSystem.Initialize();
+            ViewSystem.Initialize();
         }
 
         public void Tick(float deltaTime)
@@ -91,10 +94,10 @@ namespace Combat.Systems
             // 更新所有战斗系统
             if (StateMachine.CurrentStateID == CombatState.InCombat)
             {
-                AbilitySystem.TickAbilities(deltaTime);
-                EffectSystem.TickEffects(deltaTime);
-                BuffSystem.UpdateBuffs(deltaTime);
-                MovementSystem.UpdateMovement(deltaTime);
+                AbilitySystem.Tick(deltaTime);
+                EffectSystem.Tick(deltaTime);
+                BuffSystem.Tick(deltaTime);
+                MovementSystem.Tick(deltaTime);
                 CombatClock.UpdateClock(deltaTime);
             }
         }
@@ -125,13 +128,7 @@ namespace Combat.Systems
 
             public override void Enter()
             {
-                Context.GlobalAllocator.Initialize();
-                Context.ActorFactory.Initialize(Context.GlobalAllocator);
-                Context.EffectSystem.Initialize();
-                Context.AbilitySystem.Initialize();
-                Context.BuffSystem.Initialize();
-                Context.MovementSystem.Initialize();
-                Context.ViewSystem.Initialize();
+                Context.InitSystems();
                 Context.CombatClock = new CombatClockData(300f); // 默认战斗时间300秒
             }
 
