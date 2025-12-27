@@ -1,4 +1,5 @@
 ﻿using System;
+using Combat.Systems;
 using Core.AssetsTool;
 using Core.Units;
 using Lean.Pool;
@@ -25,7 +26,7 @@ namespace Combat.Actors
         public Actor Spawn(Actor actorPrefab, UnitData data)
         {
             data.RuntimeId = Allocator.Next();
-            var unit = LeanPool.Spawn(actorPrefab);
+            var unit = GameObjectFactory.Spawn(actorPrefab);
             unit.Initialize(data);
             return unit;
         }
@@ -33,7 +34,7 @@ namespace Combat.Actors
         public Actor Spawn(GameObject actorPrefab, UnitData data)
         {
             data.RuntimeId = Allocator.Next();
-            var unitInstance = LeanPool.Spawn(actorPrefab);
+            var unitInstance = GameObjectFactory.Spawn(actorPrefab);
             var unit = unitInstance.GetComponent<Actor>();
             unit.Initialize(data);
             return unit;
@@ -41,7 +42,7 @@ namespace Combat.Actors
 
         public void Despawn(Actor unit)
         {
-            LeanPool.Despawn(unit);
+            GameObjectFactory.Despawn(unit.gameObject);
         }
 
         public Actor SpawnCharacter(string characterId, Vector2 position = default, float rotation = 0)
@@ -64,7 +65,5 @@ namespace Combat.Actors
             unitData.SetHealth(ActorAttributeUtils.GetMaxHp(table.BaseStrength, table.StrengthBonuses, 1));
             return Spawn(targetPrefab, unitData);
         }
-
-
     }
 }

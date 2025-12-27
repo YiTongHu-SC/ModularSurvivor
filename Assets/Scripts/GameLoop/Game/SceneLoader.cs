@@ -71,6 +71,7 @@ namespace GameLoop.Game
                 yield break;
             }
 
+            // 异步加载新场景    
             var loadMode = sceneRequest.IsAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             var operation = SceneManager.LoadSceneAsync(sceneName, loadMode);
             if (operation != null)
@@ -131,7 +132,8 @@ namespace GameLoop.Game
         {
             if (!_hasScene) yield break;
             if (!_currentScene.IsValid() || !_currentScene.isLoaded) yield break;
-
+            // 清理LeanPool对象池
+            CleanupLeanPool();
             // 关键点：卸载前先把 ActiveScene 切走（切回 System 或任意已加载场景）
             Scene systemScene = SceneManager.GetSceneByName(_systemSceneName);
             if (systemScene.IsValid() && systemScene.isLoaded)
@@ -143,6 +145,11 @@ namespace GameLoop.Game
 
             _hasScene = false;
             _currentScene = default;
+        }
+
+        private void CleanupLeanPool()
+        {
+           Lean.Pool.LeanPool.DespawnAll();
         }
     }
 

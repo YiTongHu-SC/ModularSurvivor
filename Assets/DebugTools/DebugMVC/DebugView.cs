@@ -22,6 +22,7 @@ namespace DebugTools.DebugMVC
 
         private void OnClickTryDamageToHero()
         {
+            if (!UnitManager.Instance.IsInitialized) return;
             if (int.TryParse(InputFieldDamageToHero.text, out var damageAmount))
             {
                 var heroId = UnitManager.Instance.HeroUnitData.RuntimeId;

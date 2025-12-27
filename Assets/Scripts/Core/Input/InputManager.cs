@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Core.GameInterface;
 using StellarCore.Singleton;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,7 +11,7 @@ namespace Core.Input
     ///     负责监听输入动作，发布输入事件，并提供当前输入状态查询
     ///     支持键盘、手柄、移动端等多平台输入
     /// </summary>
-    public class InputManager : BaseInstance<InputManager>
+    public class InputManager : BaseInstance<InputManager>, IManager
     {
         // 输入上下文状态
         private InputEvents.InputContext _currentContext = InputEvents.InputContext.Gameplay;
@@ -25,6 +26,8 @@ namespace Core.Input
         public Camera BaseCamera { get; private set; }
         public Camera UiCamera { get; private set; }
         public Camera BattleCamera { get; private set; }
+
+        public bool IsInitialized { get; private set; }
 
         public void RegisterUICamera(Camera uiCamera)
         {
@@ -83,6 +86,11 @@ namespace Core.Input
         {
         }
 
+        public void Reset()
+        {
+            IsInitialized = false;
+        }
+
         #region Lifecycle
 
         public override void Initialize()
@@ -99,6 +107,8 @@ namespace Core.Input
             EnableGameplayInput();
             EnableUIInput();
             EnableDebugInput();
+            IsInitialized = true;
+            Debug.Log("[InputManager] Initialized.");
         }
 
         private void OnDestroy()
@@ -525,7 +535,6 @@ namespace Core.Input
         {
             return _inputActions;
         }
-
         #endregion
     }
 }

@@ -401,7 +401,11 @@ namespace GameLoop.Game
 
             public override void Exit()
             {
-                CombatManager.Instance.InGameExit();
+                CombatManager.Instance.Reset();
+                CameraManager.Instance.Reset();
+                TimeManager.Instance.Reset();
+                UnitManager.Instance.Reset();
+                WaveManager.Instance.Reset();
             }
 
             public override void Reason(float deltaTime = 0)

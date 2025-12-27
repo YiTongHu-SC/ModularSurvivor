@@ -5,6 +5,7 @@ using Combat.Data;
 using Combat.Effect;
 using Combat.GameCamera;
 using Core.Events;
+using Core.GameInterface;
 using StellarCore.FSM;
 using StellarCore.Singleton;
 using UnityEngine;
@@ -30,27 +31,37 @@ namespace Combat.Systems
         LoseCombat
     }
 
-    public class CombatManager : BaseInstance<CombatManager>
+    public class CombatManager : BaseInstance<CombatManager>, IManager
     {
-        public DamageSystem DamageSystem { get; set; } = new();
-        public MovementSystem MovementSystem { get; set; } = new();
-        public BuffSystem BuffSystem { get; set; } = new();
-        public AbilitySystem AbilitySystem { get; set; } = new();
-        public ViewSystem ViewSystem { get; set; } = new();
-        public Actor HeroActor { get; set; }
-        public ActorFactory ActorFactory { get; set; } = new();
-        public CombatClockData CombatClock { get; set; }
-        public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
+        public RuntimeIdAllocator GlobalAllocator { get; set; }
+        public DamageSystem DamageSystem { get; set; }
+        public MovementSystem MovementSystem { get; set; }
+        public BuffSystem BuffSystem { get; set; }
+        public AbilitySystem AbilitySystem { get; set; }
+        public ViewSystem ViewSystem { get; set; }
+        public ActorFactory ActorFactory { get; set; }
         public CameraManager CameraManager { get; set; }
+        public EffectSystem EffectSystem { get; set; }
+        public StateMachine<CombatManager, CombatState, CombatTransition> StateMachine { get; private set; }
         public CombatState CurrentState => StateMachine.CurrentStateID;
-        public RuntimeIdAllocator GlobalAllocator { get; set; } = new();
-        public EffectSystem EffectSystem { get; set; } = new();
+        public CombatClockData CombatClock { get; set; }
+        public Actor HeroActor { get; set; }
+        public bool IsInitialized { get; private set; }
 
         public override void Initialize()
         {
             base.Initialize();
-
+            GlobalAllocator = new RuntimeIdAllocator();
+            DamageSystem = new DamageSystem();
+            MovementSystem = new MovementSystem();
+            BuffSystem = new BuffSystem();
+            AbilitySystem = new AbilitySystem();
+            ViewSystem = new ViewSystem();
+            ActorFactory = new ActorFactory();
+            CameraManager = new CameraManager();
+            EffectSystem = new EffectSystem();
             InitializeCombatState();
+            IsInitialized = true;
         }
 
         private void InitializeCombatState()
@@ -93,7 +104,7 @@ namespace Combat.Systems
             StateMachine.PerformTransition(CombatTransition.StartCombat);
         }
 
-        public void InGameExit()
+        public void Reset()
         {
             // 清理战斗相关数据
             ActorFactory.Reset();
@@ -103,6 +114,7 @@ namespace Combat.Systems
             MovementSystem.Reset();
             ViewSystem.Reset();
             GlobalAllocator.Reset();
+            GameObjectFactory.Cleanup();
         }
 
         private class CombatStateInit : FsmState<CombatManager, CombatState, CombatTransition>

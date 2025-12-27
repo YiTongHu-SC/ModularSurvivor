@@ -91,7 +91,7 @@ namespace Combat.Actors
 
         private void OnDisable()
         {
-            OnUpdateView.AddListener(UpdatePosView);
+            OnUpdateView.RemoveListener(UpdatePosView);
         }
 
         public virtual void OnSpawn()

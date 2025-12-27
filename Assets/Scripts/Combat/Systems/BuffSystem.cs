@@ -20,6 +20,11 @@ namespace Combat.Systems
         {
         }
 
+        internal void Reset()
+        {
+            _unitBuffs.Clear();
+        }
+
         /// <summary>
         /// 应用Buff到指定单位
         /// </summary>
@@ -198,11 +203,6 @@ namespace Combat.Systems
             }
 
             buffs.Clear();
-        }
-
-        internal void Reset()
-        {
-            _unitBuffs.Clear();
         }
     }
 }

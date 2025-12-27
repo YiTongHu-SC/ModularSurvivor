@@ -22,7 +22,7 @@ namespace Combat.Effect
             _effectNodes.Clear();
             _effectRemoveQueue.Clear();
         }
-        
+
         public void CastEffect(IEffectNode effectNode)
         {
             effectNode.TryCast((() => { CastEffectCall(effectNode); }));
@@ -56,7 +56,5 @@ namespace Combat.Effect
                 _effectNodes.Remove(nodeId);
             }
         }
-
-
     }
 }

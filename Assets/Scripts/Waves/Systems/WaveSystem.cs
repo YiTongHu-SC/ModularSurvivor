@@ -7,10 +7,6 @@ namespace Waves.Systems
     {
         private readonly List<Wave> _waves = new();
 
-        public void Initialize()
-        {
-        }
-
         /// <summary>
         /// 波次更新
         /// </summary>

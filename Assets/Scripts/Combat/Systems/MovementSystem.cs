@@ -17,6 +17,11 @@ namespace Combat.Systems
             _movementStrategies.Add("StraightChase", new StraightChaseStrategy());
         }
 
+        internal void Reset()
+        {
+            _movementStrategies.Clear();
+        }
+
         /// <summary>
         /// 更新单位位置
         /// </summary>
@@ -34,9 +39,6 @@ namespace Combat.Systems
             }
         }
 
-        internal void Reset()
-        {
-            _movementStrategies.Clear();
-        }
+
     }
 }

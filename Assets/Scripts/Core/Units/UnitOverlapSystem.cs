@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
+using Core.GameInterface;
 using UnityEngine;
 
 namespace Core.Units
@@ -10,15 +11,29 @@ namespace Core.Units
     ///     单位重叠检测系统
     ///     纯逻辑计算，不依赖MonoBehaviour
     /// </summary>
-    public class UnitOverlapSystem
+    public class UnitOverlapSystem : ISystem
     {
         private readonly Dictionary<int, UnitData> _units;
 
+        #region 生命周期
         public UnitOverlapSystem(Dictionary<int, UnitData> units)
         {
             _units = units;
         }
 
+        public void Tick(float deltaTime)
+        {
+            var overlappingPairs = GetAllOverlappingPairs();
+            foreach (var (unitA, unitB) in overlappingPairs)
+                // Debug.Log($"Units {unitA.GUID} and {unitB.GUID} are overlapping.");
+                EventManager.Instance.Publish(new GameEvents.OverlapEvent(unitA.RuntimeId, unitB.RuntimeId));
+        }
+
+        public void Reset()
+        {
+        }
+
+        #endregion
         /// <summary>
         ///     检测两个单位是否重叠
         /// </summary>
@@ -133,14 +148,6 @@ namespace Core.Units
                 CollisionAreaType.Rectangle => Mathf.Max(unit.CollisionData.Size.x, unit.CollisionData.Size.y) * 0.5f,
                 _ => 1f
             };
-        }
-
-        public void TickCheckOverlap(float deltaTime)
-        {
-            var overlappingPairs = GetAllOverlappingPairs();
-            foreach (var (unitA, unitB) in overlappingPairs)
-                // Debug.Log($"Units {unitA.GUID} and {unitB.GUID} are overlapping.");
-                EventManager.Instance.Publish(new GameEvents.OverlapEvent(unitA.RuntimeId, unitB.RuntimeId));
         }
     }
 }

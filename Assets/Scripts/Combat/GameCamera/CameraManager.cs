@@ -1,4 +1,5 @@
-﻿using Combat.Systems;
+﻿using System;
+using Combat.Systems;
 using Core.Input;
 using StellarCore.Singleton;
 using UnityEngine;
@@ -20,6 +21,18 @@ namespace Combat.GameCamera
             CombatManager.Instance.CameraManager = this;
             InputManager.Instance.RegisterUICamera(UICamera);
             InputManager.Instance.RegisterBaseCamera(BaseCamera);
+            var uiCamera = UICamera.GetUniversalAdditionalCameraData();
+            uiCamera.renderType = CameraRenderType.Overlay;
+            var baseCamera = BaseCamera.GetUniversalAdditionalCameraData();
+            baseCamera.renderType = CameraRenderType.Base;
+            baseCamera.cameraStack.Clear();
+            baseCamera.cameraStack.Add(UICamera);
+        }
+
+        public void Reset()
+        {
+            BattleCamera = null;
+            BattleCameraController = null;
             var uiCamera = UICamera.GetUniversalAdditionalCameraData();
             uiCamera.renderType = CameraRenderType.Overlay;
             var baseCamera = BaseCamera.GetUniversalAdditionalCameraData();

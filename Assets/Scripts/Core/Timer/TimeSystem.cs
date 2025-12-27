@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.GameInterface;
+using Utils.Core;
 
 namespace Core.Timer
 {
-    public class TimeSystem
+    public class TimeSystem : ISystem
     {
         private readonly Dictionary<int, Timer> timers = new();
-        private int nextTimerId = -1;
-
+        private int nextTimerId;
+        private RuntimeIdAllocator Allocator = new();
         public Timer CreateTimer(float duration, Action action)
         {
-            nextTimerId++;
+            nextTimerId = Allocator.Next();
             var timer = new Timer(duration, action);
             timer.SetId(nextTimerId);
             timers.Add(timer.ID, timer);
@@ -28,6 +30,12 @@ namespace Core.Timer
             }
 
             foreach (var timerId in timersToRemove) timers.Remove(timerId);
+        }
+
+        public void Reset()
+        {
+            timers.Clear();
+            Allocator.Reset();
         }
     }
 }

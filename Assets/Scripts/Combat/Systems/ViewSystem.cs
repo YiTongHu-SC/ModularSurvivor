@@ -31,7 +31,5 @@ namespace Combat.Systems
                     break;
             }
         }
-
-
     }
 }

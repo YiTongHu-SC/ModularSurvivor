@@ -84,5 +84,6 @@
     ],
     "omnisharp.sdkPath": "C:\\Program Files\\dotnet",
     "vstuc.displayBackgroundProcesses": true,
-    "vstuc.refreshOnSave": true
+    "vstuc.refreshOnSave": true,
+    "unity-code-snippets.autoComplete.experimentalAttributes": true
 }
