@@ -26,6 +26,7 @@ public sealed partial class Character : Luban.BeanBase
         { if(!_buf["base_strength"].IsNumber) { throw new SerializationException(); }  BaseStrength = _buf["base_strength"]; }
         { if(!_buf["strength_bonuses"].IsNumber) { throw new SerializationException(); }  StrengthBonuses = _buf["strength_bonuses"]; }
         { if(!_buf["prefab"].IsString) { throw new SerializationException(); }  Prefab = _buf["prefab"]; }
+        { var __json0 = _buf["abilities"]; if(!__json0.IsArray) { throw new SerializationException(); } int _n0 = __json0.Count; Abilities = new string[_n0]; int __index0=0; foreach(JSONNode __e0 in __json0.Children) { string __v0;  { if(!__e0.IsString) { throw new SerializationException(); }  __v0 = __e0; }  Abilities[__index0++] = __v0; }   }
     }
 
     public static Character DeserializeCharacter(JSONNode _buf)
@@ -69,6 +70,10 @@ public sealed partial class Character : Luban.BeanBase
     /// prefab_asset_key
     /// </summary>
     public readonly string Prefab;
+    /// <summary>
+    /// ability config key
+    /// </summary>
+    public readonly string[] Abilities;
    
     public const int __ID__ = -704271792;
     public override int GetTypeId() => __ID__;
@@ -89,6 +94,7 @@ public sealed partial class Character : Luban.BeanBase
         + "baseStrength:" + BaseStrength + ","
         + "strengthBonuses:" + StrengthBonuses + ","
         + "prefab:" + Prefab + ","
+        + "abilities:" + Luban.StringUtil.CollectionToString(Abilities) + ","
         + "}";
     }
 }

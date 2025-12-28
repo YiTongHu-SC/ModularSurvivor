@@ -8,7 +8,8 @@
     "movement": "StraightChase",
     "base_strength": 10,
     "strength_bonuses": 2,
-    "prefab": "Level:Characters:ActorSlime"
+    "prefab": "Level:Characters:ActorSlime",
+    "abilities": []
   },
   {
     "key": "actor_enemy_101",
@@ -19,7 +20,8 @@
     "movement": "StraightChase",
     "base_strength": 20,
     "strength_bonuses": 3,
-    "prefab": "Level:Characters:ActorSlime"
+    "prefab": "Level:Characters:ActorSlime",
+    "abilities": []
   },
   {
     "key": "actor_hero_1",
@@ -30,7 +32,10 @@
     "movement": "SimpleMove",
     "base_strength": 25,
     "strength_bonuses": 3,
-    "prefab": "Level:Characters:ActorDragon"
+    "prefab": "Level:Characters:ActorDragon",
+    "abilities": [
+      "Level:ActorConfigs:AbilityConfigHeroLaserStrike"
+    ]
   },
   {
     "key": "actor_hero_2",
@@ -41,6 +46,9 @@
     "movement": "SimpleMove",
     "base_strength": 20,
     "strength_bonuses": 2,
-    "prefab": "Level:Characters:ActorDragon"
+    "prefab": "Level:Characters:ActorDragon",
+    "abilities": [
+      "Level:ActorConfigs:AbilityConfigHeroLaserStrike"
+    ]
   }
 ]

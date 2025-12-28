@@ -25,6 +25,10 @@ MonoBehaviour:
     _resourcesPath: Global/CameraManager
     _assetType: 0
     _tags: []
+  - _key: Level:ActorConfigs:AbilityConfigHeroLaserStrike
+    _resourcesPath: Level/ActorConfigs/AbilityConfigHeroLaserStrike
+    _assetType: 1
+    _tags: []
   - _key: Level:ActorConfigs:ActorViewData_1
     _resourcesPath: Level/ActorConfigs/ActorViewData_1
     _assetType: 1

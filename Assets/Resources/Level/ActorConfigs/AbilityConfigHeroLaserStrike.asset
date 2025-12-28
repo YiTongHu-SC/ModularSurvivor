@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 653c28dd486da504f97ed196c28270c7, type: 3}
+  m_Name: AbilityConfigHeroLaserStrike
+  m_EditorClassIdentifier: Combat::Combat.Config.ActorAbilityConfig
+  Name: HeroLaserStrike
+  Description: "\u6BCF3\u79D2\uFF0C\u53D1\u5C04\u4E00\u9053\u6FC0\u5149\uFF0C\u6253\u51FB\u9644\u8FD1\u5355\u4F4D"
+  TriggerType: 2
+  FindTargetType: 3
+  Cooldown: 0
+  Interval: 3
+  Cost: 0
+  EffectConfig:
+    Key: Damage
+    PreferenceKey: Level:EffectConfigs:PresentationConfig
+    Delay: 0
+    Duration: 0.2
+    EffectNodeType: 10010
+    ExtraParams:
+    - ParamType: 6
+      Value: 20
+    - ParamType: 8
+      Value: Add
+    Children: []
+  ExtraParams:
+  - ParamType: 2
+    Value: Circle
+  - ParamType: 3
+    Value: 5

@@ -6,7 +6,6 @@ namespace Combat.Ability.Data
     public class AbilityData
     {
         public int RuntimeID;
-        public string GUID;
         public string Key;
         public int SourceId = -1;
         public TriggerType TriggerType;

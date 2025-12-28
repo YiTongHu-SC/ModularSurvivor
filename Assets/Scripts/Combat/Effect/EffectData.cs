@@ -6,10 +6,9 @@ namespace Combat.Effect
     [Serializable]
     public class EffectSpec
     {
-        public string GUID; // 效果节点ID（配置用）
         public string Key; // 效果节点Key（配置用）
         public EffectNodeType EffectNodeType;
-        public List<string> tags;
+        // public List<string> tags;
 
         public float Delay; // 效果执行延迟时间（秒）
         public float Duration; // 效果持续时间（秒），0表示瞬时效果, -1表示无限持续
