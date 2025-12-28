@@ -88,7 +88,7 @@ namespace Combat.Systems
             // Initialize systems
             GlobalAllocator.Initialize();
             ActorFactory.Initialize(GlobalAllocator);
-            EffectSystem.Initialize();
+            // EffectSystem.Initialize();
             MovementSystem.Initialize();
             ViewSystem.Initialize();
         }

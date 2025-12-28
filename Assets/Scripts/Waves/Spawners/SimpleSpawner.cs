@@ -15,7 +15,7 @@ namespace Waves.Spawners
     {
         private float _spawnRadius;
         private float _timer;
-        const float DeathDelayTime = 5f;
+        const float DeathDelayTime = 100f;
         private int _count;
         private bool _isWaveEnd;
 
@@ -105,6 +105,7 @@ namespace Waves.Spawners
             {
                 Key = "ChaseTargetEffect",
                 EffectNodeType = EffectNodeType.ChaseTarget,
+                Duration = -1f,
             };
             chaseAbilityData.EffectSpec = chaseEffect;
 

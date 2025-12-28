@@ -12,10 +12,6 @@ namespace Combat.Effect
         private readonly Dictionary<int, IEffectNode> _effectNodes = new();
         private readonly List<int> _effectRemoveQueue = new();
 
-        public void Initialize()
-        {
-        }
-
         public void Reset()
         {
             _effectNodes.Clear();
@@ -24,7 +20,7 @@ namespace Combat.Effect
 
         public void CastEffect(IEffectNode effectNode)
         {
-            effectNode.TryCast((() => { CastEffectCall(effectNode); }));
+            effectNode.TryCast(() => { CastEffectCall(effectNode); });
         }
 
         private void CastEffectCall(IEffectNode effectNode)
