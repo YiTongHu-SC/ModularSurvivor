@@ -14,8 +14,8 @@ namespace UI.Game
         {
             MvcManager.Instance.Open<LevelHudController>();
             MvcManager.Instance.Open<HeroHealthController>();
-            _levelHudController = MvcManager.Instance.GetController<LevelHudController>();
-            _heroHealthController = MvcManager.Instance.GetController<HeroHealthController>();
+            _levelHudController = MvcManager.Instance.GetUIController<LevelHudController>();
+            _heroHealthController = MvcManager.Instance.GetUIController<HeroHealthController>();
         }
 
         private void Update()

@@ -14,7 +14,7 @@ namespace UI.Framework
     /// </summary>
     public class MvcManager : BaseInstance<MvcManager>
     {
-        [Header("Settings")] [SerializeField] private bool _enableDebugLogging = true;
+        [Header("Settings")][SerializeField] private bool _enableDebugLogging = true;
 
         private UIConfig _uiConfig;
 
@@ -277,6 +277,15 @@ namespace UI.Framework
             return controllers.Count > 0 ? controllers[0] : null;
         }
 
+        public T GetUIController<T>()
+        {
+            if (_uiControllerInstances.TryGetValue(typeof(T), out var controller))
+            {
+                return (T)controller;
+            }
+
+            return default;
+        }
         /// <summary>
         /// 检查是否存在指定类型的控制器
         /// </summary>
@@ -474,10 +483,10 @@ namespace UI.Framework
                     CloseUIController(controller);
 
                     // 注销控制器
-                    UnregisterController(controller);
+                    UnregisterController<T>(controller as T);
 
                     // 移除实例缓存
-                    _uiControllerInstances.Remove(uiType);
+                    _uiControllerInstances.Remove(controller.GetType());
 
                     if (_enableDebugLogging)
                     {
