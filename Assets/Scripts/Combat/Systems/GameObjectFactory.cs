@@ -36,6 +36,7 @@ namespace Combat.Systems
             {
                 if (obj != null)
                 {
+                    LeanPool.Despawn(obj);
                     LeanPool.Detach(obj, true);
                     GameObject.Destroy(obj);
                 }

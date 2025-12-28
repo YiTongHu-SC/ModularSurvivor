@@ -17,8 +17,8 @@ namespace Tests.Core.Events
         public override void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             EventReceived = true;
-            LastUnitId = eventData.GUID;
-            Debug.Log($"[监听器对象] Unit {eventData.GUID} died");
+            LastUnitId = eventData.RuntimeId;
+            Debug.Log($"[监听器对象] Unit {eventData.RuntimeId} died");
         }
 
         public void Reset()

@@ -9,8 +9,8 @@ namespace Combat.Buff
         private static readonly Dictionary<BuffType, Func<BuffData, int, BaseBuff>> _creators
             = new()
             {
-                { BuffType.SpeedBoost, (data, targetId) => new BaseBuffSpeedBoost(data, targetId) },
-                { BuffType.DelayDeath, (data, targetId) => new BaseBuffDelayDeath(data, targetId) },
+                { BuffType.SpeedBoost, (data, targetId) => new BuffSpeedBoost(data, targetId) },
+                { BuffType.DelayDeath, (data, targetId) => new BuffDelayDeath(data, targetId) },
             };
 
         public static BaseBuff CreateBuff(BuffType id, BuffData data, int targetUnitId)

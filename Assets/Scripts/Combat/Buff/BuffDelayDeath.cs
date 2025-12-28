@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Combat.Buff
 {
-    public class BaseBuffDelayDeath : BaseBuff
+    public class BuffDelayDeath : BaseBuff
     {
-        public BaseBuffDelayDeath(BuffData data, int targetUnitId) : base(data, targetUnitId)
+        public BuffDelayDeath(BuffData data, int targetUnitId) : base(data, targetUnitId)
         {
         }
 

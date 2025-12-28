@@ -25,14 +25,13 @@ namespace Core.Events
         /// </summary>
         public class UnitDeathEvent : EventData
         {
-            public UnitDeathEvent(int guid, int killerId = -1)
+            public int RuntimeId { get; }
+            public int KillerId { get; }
+            public UnitDeathEvent(int runtimeId, int killerId = -1)
             {
-                GUID = guid;
+                RuntimeId = runtimeId;
                 KillerId = killerId;
             }
-
-            public int GUID { get; }
-            public int KillerId { get; }
         }
 
         /// <summary>

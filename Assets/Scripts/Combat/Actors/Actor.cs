@@ -125,7 +125,7 @@ namespace Combat.Actors
 
         public virtual void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
-            if (eventData.GUID != RuntimeId) return;
+            if (eventData.RuntimeId != RuntimeId) return;
             // 处理角色死亡逻辑
             KillSelf();
         }

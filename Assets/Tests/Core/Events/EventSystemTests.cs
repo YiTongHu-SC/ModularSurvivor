@@ -117,7 +117,7 @@ namespace Tests.Core.Events
             eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData =>
             {
                 callbackInvoked = true;
-                receivedUnitId = eventData.GUID;
+                receivedUnitId = eventData.RuntimeId;
             });
 
             // 发布事件

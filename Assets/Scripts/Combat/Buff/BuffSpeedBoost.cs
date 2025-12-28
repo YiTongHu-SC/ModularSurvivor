@@ -2,9 +2,9 @@
 
 namespace Combat.Buff
 {
-    public class BaseBuffSpeedBoost : BaseBuff
+    public class BuffSpeedBoost : BaseBuff
     {
-        public BaseBuffSpeedBoost(BuffData data, int targetUnitId) : base(data, targetUnitId)
+        public BuffSpeedBoost(BuffData data, int targetUnitId) : base(data, targetUnitId)
         {
         }
 

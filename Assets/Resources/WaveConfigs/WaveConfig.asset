@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f263d08089ec42899bfbbf5619139a25, type: 3}
   m_Name: WaveConfig
   m_EditorClassIdentifier: GameBase::Waves.Data.WaveConfig
-  EnemyID: 100001
+  EnemyKey: 
   EnemyCountEachSubWave: 3
   SpawnInterval: 0.2
   Duration: 100
-  TotalEnemies: 99
+  TotalEnemies: 1
   SpawnRadius: 10

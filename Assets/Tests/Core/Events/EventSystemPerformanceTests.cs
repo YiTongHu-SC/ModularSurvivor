@@ -145,7 +145,7 @@ namespace Tests.Core.Events
                 eventManager.Subscribe<GameEvents.UnitDeathEvent>(eventData =>
                 {
                     // 最简单的处理，模拟计数
-                    var temp = eventData.GUID;
+                    var temp = eventData.RuntimeId;
                 });
             }
 

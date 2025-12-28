@@ -15,7 +15,7 @@ namespace Waves.Spawners
     {
         private float _spawnRadius;
         private float _timer;
-        const float DeathDelayTime = 10f;
+        const float DeathDelayTime = 5f;
         private int _count;
         private bool _isWaveEnd;
 
@@ -35,13 +35,12 @@ namespace Waves.Spawners
             {
                 for (var i = 0; i < Config.EnemyCountEachSubWave; i++)
                 {
-                    SpawnEnemy();
-                    _count += 1;
                     if (_count >= Config.TotalEnemies)
                     {
                         _isWaveEnd = true;
                         break;
                     }
+                    SpawnEnemy();
                 }
 
                 _timer = 0f;
@@ -50,6 +49,7 @@ namespace Waves.Spawners
 
         private void SpawnEnemy()
         {
+            _count += 1;
             // TODO: 后面应该通过配置表直接读取敌人数据
             var angle = Random.Range(0f, 360f);
             var radian = angle * Mathf.Deg2Rad;

@@ -68,7 +68,7 @@ namespace Tests.Core.Events
         private static void OnUnitDeathEvent(GameEvents.UnitDeathEvent eventData)
         {
             callbackInvokedCount++;
-            Console.WriteLine($"收到单位死亡事件: {eventData.GUID}");
+            Console.WriteLine($"收到单位死亡事件: {eventData.RuntimeId}");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Tests.Core
         public void OnEventReceived(GameEvents.UnitDeathEvent eventData)
         {
             UnitDeathEventReceived = true;
-            Debug.Log($"UnitDeathEvent received for unit: {eventData.GUID}");
+            Debug.Log($"UnitDeathEvent received for unit: {eventData.RuntimeId}");
         }
 
         public void OnEventReceived(GameEvents.WaveStartEvent eventData)
