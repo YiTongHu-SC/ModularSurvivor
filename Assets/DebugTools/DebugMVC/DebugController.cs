@@ -1,4 +1,5 @@
-﻿using Combat.Ability;
+﻿using System.Collections.Generic;
+using Combat.Ability;
 using Combat.Effect;
 using Core.Events;
 using UI.Framework;
@@ -43,10 +44,10 @@ namespace DebugTools.DebugMVC
 
         private void ApplyDamage(DebugEvents.ApplyDamageEvent obj)
         {
-            var effectSpec = new EffectSpec
+            var effectSpec = new EffectSpec()
             {
                 EffectNodeType = EffectNodeType.Damage,
-                EffectParams =
+                EffectParams = new Dictionary<string, object>
                 {
                     { "DamageAmount", 10f },
                 }
