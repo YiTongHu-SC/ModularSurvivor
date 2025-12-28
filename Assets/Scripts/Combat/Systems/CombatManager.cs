@@ -63,6 +63,10 @@ namespace Combat.Systems
             StateMachine.AddState(defeatState);
             // set up transitions
             initState.AddTransition(CombatTransition.StartCombat, CombatState.InCombat);
+            inCombatState.AddTransition(CombatTransition.PauseCombat, CombatState.Pause);
+            inCombatState.AddTransition(CombatTransition.WinCombat, CombatState.Victory);
+            inCombatState.AddTransition(CombatTransition.LoseCombat, CombatState.Defeat);
+            pauseState.AddTransition(CombatTransition.ResumeCombat, CombatState.InCombat);
             if (!StateMachine.SetCurrent(CombatState.Init))
             {
                 Debug.LogError("Failed to set Bootstrap state");
@@ -105,6 +109,26 @@ namespace Combat.Systems
         public void InGameEnter()
         {
             StateMachine.PerformTransition(CombatTransition.StartCombat);
+        }
+
+        public void InGamePause()
+        {
+            StateMachine.PerformTransition(CombatTransition.PauseCombat);
+        }
+
+        public void InGameResume()
+        {
+            StateMachine.PerformTransition(CombatTransition.ResumeCombat);
+        }
+
+        public void InGameVictory()
+        {
+            StateMachine.PerformTransition(CombatTransition.WinCombat);
+        }
+
+        public void InGameDefeat()
+        {
+            StateMachine.PerformTransition(CombatTransition.LoseCombat);
         }
 
         public void Reset()
@@ -154,10 +178,12 @@ namespace Combat.Systems
 
             public override void Enter()
             {
+                Debug.Log("In Combat State Entered");
             }
 
             public override void Exit()
             {
+                Debug.Log("In Combat State Exited");
             }
 
             public override void Reason(float deltaTime = 0)
@@ -177,22 +203,20 @@ namespace Combat.Systems
 
             public override void Enter()
             {
-                throw new System.NotImplementedException();
+                Debug.Log("Pause State Entered");
             }
 
             public override void Exit()
             {
-                throw new System.NotImplementedException();
+                Debug.Log("Pause State Exited");
             }
 
             public override void Reason(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Act(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
         }
 
@@ -204,22 +228,19 @@ namespace Combat.Systems
 
             public override void Enter()
             {
-                throw new System.NotImplementedException();
+                Debug.Log("Victory State Entered");
             }
 
             public override void Exit()
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Reason(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Act(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
         }
 
@@ -231,22 +252,20 @@ namespace Combat.Systems
 
             public override void Enter()
             {
-                throw new System.NotImplementedException();
+                Debug.Log("Defeat State Entered");
             }
 
             public override void Exit()
             {
-                throw new System.NotImplementedException();
+                Debug.Log("Defeat State Exited");
             }
 
             public override void Reason(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
 
             public override void Act(float deltaTime = 0)
             {
-                throw new System.NotImplementedException();
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Core.Events;
+﻿using Combat.Systems;
+using Core.Events;
 using Core.Input;
 using UI.Framework;
 using UnityEngine;
@@ -57,11 +58,13 @@ namespace UI.Game
         private void CloseMenu()
         {
             MvcManager.Instance.Close<GameMenuController>();
+            CombatManager.Instance.InGameResume();
         }
 
         private void OpenMenu()
         {
             MvcManager.Instance.Open<GameMenuController>();
+            CombatManager.Instance.InGamePause();
         }
     }
 }
