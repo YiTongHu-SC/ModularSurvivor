@@ -17,7 +17,7 @@ namespace Core.Units
         /// Runtime 唯一标识符
         /// </summary>
         public int RuntimeId { get; set; } = -1;
-
+        public string Key { get; set; } = "";
         //碰撞检测数据
         public UnitCollisionData CollisionData;
         public GroupType Group = GroupType.Hero;

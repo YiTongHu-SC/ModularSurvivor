@@ -34,7 +34,7 @@ namespace UI.Framework
         /// 设置数据值并触发变更通知
         /// </summary>
         /// <param name="newValue">新值</param>
-        public virtual void SetValue(T newValue)
+        public virtual void SetValue(T newValue, bool forceUpdate = true)
         {
             if (IsDisposed)
             {
@@ -43,7 +43,7 @@ namespace UI.Framework
             }
             
             // 检查值是否实际发生变化
-            if (Equals(Value, newValue))
+            if (Equals(Value, newValue) && !forceUpdate)
             {
                 return;
             }

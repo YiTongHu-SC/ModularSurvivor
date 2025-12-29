@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Combat.Ability;
 using Combat.Effect;
 using Core.Events;
@@ -34,12 +35,29 @@ namespace DebugTools.DebugMVC
         {
             base.SubscribeEvents();
             EventManager.Instance.Subscribe<DebugEvents.ApplyDamageEvent>(ApplyDamage);
+            EventManager.Instance.Subscribe<DebugEvents.DebugActorEvent>(ProcessDebugActorEvent);
         }
 
         protected override void UnsubscribeEvents()
         {
             base.UnsubscribeEvents();
             EventManager.Instance.Unsubscribe<DebugEvents.ApplyDamageEvent>(ApplyDamage);
+            EventManager.Instance.Unsubscribe<DebugEvents.DebugActorEvent>(ProcessDebugActorEvent);
+        }
+
+        private void ProcessDebugActorEvent(DebugEvents.DebugActorEvent data)
+        {
+            switch (data.DebugActorAction)
+            {
+                case DebugEvents.DebugActorAction.CheckActor:
+                    var actorId = int.Parse(data.Value);
+                    Model.SetValue(new GameDebugData
+                    {
+                        IsShowActorInfo = true,
+                        SelectedActorId = actorId,
+                    });
+                    break;
+            }
         }
 
         private void ApplyDamage(DebugEvents.ApplyDamageEvent obj)

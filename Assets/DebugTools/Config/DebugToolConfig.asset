@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdae3f7292efba449a5f6930c130f213, type: 3}
+  m_Name: DebugToolConfig
+  m_EditorClassIdentifier: Assembly-CSharp::DebugTools.Data.DebugToolConfig
+  InfoShowPrefab: {fileID: 4641620825357910210, guid: ca567efd4308f054cac03a15509df4bd, type: 3}

@@ -12,24 +12,25 @@ namespace UI.Framework
         /// 模型数据值
         /// </summary>
         T Value { get; }
-        
+
         /// <summary>
         /// 数据变更事件
         /// </summary>
         event Action<T> OnValueChanged;
-        
+
         /// <summary>
         /// 设置数据值
         /// </summary>
         /// <param name="newValue">新值</param>
-        void SetValue(T newValue);
-        
+        /// <param name="forceUpdate">是否强制更新，即使值未变化</param>
+        void SetValue(T newValue, bool forceUpdate = true);
+
         /// <summary>
         /// 获取数据值
         /// </summary>
         /// <returns>当前值</returns>
         T GetValue();
-        
+
         /// <summary>
         /// 销毁模型，清理资源
         /// </summary>

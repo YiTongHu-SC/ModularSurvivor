@@ -12,11 +12,14 @@ namespace Combat.Ability
         /// 已应用的能力列表, key: AbilityData.RuntimeID
         /// </summary>
         private readonly Dictionary<int, BaseAbility> _abilities = new();
+        private readonly Dictionary<int, List<BaseAbility>> _actorAbilities = new();
         private readonly List<int> _expiredAbilities = new();
+        public Dictionary<int, List<BaseAbility>> ActorAbilities => _actorAbilities;
         public void Reset()
         {
             _abilities.Clear();
             _expiredAbilities.Clear();
+            _actorAbilities.Clear();
         }
 
         public bool ApplyAbility(AbilityData abilityData)
@@ -25,6 +28,11 @@ namespace Combat.Ability
             _abilities.TryAdd(ability.AbilityData.RuntimeID, ability);
             ability.ApplyAbility();
             Debug.Log($"应用能力: {ability.AbilityData.Key} to unit {ability.UnitId}");
+            if (!_actorAbilities.ContainsKey(ability.UnitId))
+            {
+                _actorAbilities[ability.UnitId] = new List<BaseAbility>();
+            }
+            _actorAbilities[ability.UnitId].Add(ability);
             return true;
         }
 
@@ -52,6 +60,10 @@ namespace Combat.Ability
             {
                 Debug.Log($"能力过期并移除: {_abilities[abilityId].AbilityData.Key}");
                 _abilities[abilityId].RemoveAbility();
+                if (_actorAbilities.ContainsKey(_abilities[abilityId].UnitId))
+                {
+                    _actorAbilities[_abilities[abilityId].UnitId].Remove(_abilities[abilityId]);
+                }
                 _abilities.Remove(abilityId);
             }
         }

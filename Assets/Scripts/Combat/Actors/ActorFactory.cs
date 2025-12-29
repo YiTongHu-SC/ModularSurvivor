@@ -67,6 +67,8 @@ namespace Combat.Actors
             };
 
             unitData.RuntimeId = Allocator.Next();
+            unitData.Key = characterId;
+            // set health
             unitData.SetHealth(ActorAttributeUtils.GetMaxHp(table.BaseStrength, table.StrengthBonuses, 1));
             // apply abilities
             foreach (var abilityKey in table.Abilities)
@@ -89,14 +91,18 @@ namespace Combat.Actors
             switch (config.TriggerType)
             {
                 case TriggerType.Once:
+                    // TODO: support more once types later
                     abilityData = new AbilityData
                     {
                         RuntimeID = Allocator.Next(),
                         Key = config.Name,
                         SourceId = sourceId,
+                        FindTargetType = config.FindTargetType,
+                        TriggerType = TriggerType.Once,
+                        Cooldown = config.Cooldown,
+                        Cost = config.Cost,
                         ExtraParams = new Dictionary<string, object>(),
                     };
-                    abilityData.TriggerType = TriggerType.Once;
                     break;
                 case TriggerType.Interval:
                     abilityData = new AbilityTriggerByIntervalData
@@ -104,24 +110,27 @@ namespace Combat.Actors
                         RuntimeID = Allocator.Next(),
                         Key = config.Name,
                         SourceId = sourceId,
-                        ExtraParams = new Dictionary<string, object>(),
+                        FindTargetType = config.FindTargetType,
                         TriggerType = TriggerType.Interval,
                         Interval = config.Interval,
-                        Cooldown = config.Cooldown
+                        Cooldown = config.Cooldown,
+                        Cost = config.Cost,
+                        ExtraParams = new Dictionary<string, object>(),
                     };
                     break;
                 case TriggerType.ByEvent:
-                    // TODO: 后续补充事件触发类型
+                    // TODO: support more event types later
                     abilityData = new AbilityTriggerByEventData
                     {
                         RuntimeID = Allocator.Next(),
                         Key = config.Name,
                         SourceId = sourceId,
+                        FindTargetType = config.FindTargetType,
+                        TriggerType = TriggerType.ByEvent,
+                        Cooldown = config.Cooldown,
+                        Cost = config.Cost,
                         ExtraParams = new Dictionary<string, object>(),
                     };
-                    abilityData.TriggerType = TriggerType.ByEvent;
-                    abilityData.Cooldown = config.Cooldown;
-                    // abilityData.EventTypes = new List<TriggerEventType>(config.EventTypes);
                     break;
                 default:
                     throw new ArgumentException($"Unsupported trigger type: {config.TriggerType}");
