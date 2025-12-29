@@ -142,8 +142,30 @@ namespace Combat.Actors
             return abilityData;
         }
 
+        // Limit recursion depth to prevent circular references
+        private const int MAX_EFFECT_RECURSION_DEPTH = 20;
+
         public EffectSpec GetEffectSpecFromConfig(EffectConfig config)
         {
+            return GetEffectSpecFromConfig(config, 0);
+        }
+
+        private EffectSpec GetEffectSpecFromConfig(EffectConfig config, int depth)
+        {
+            if (config == null)
+            {
+                Debug.LogError("EffectConfig is null!");
+                return null;
+            }
+
+            if (depth >= MAX_EFFECT_RECURSION_DEPTH)
+            {
+                Debug.LogError($"EffectConfig recursion depth limit ({MAX_EFFECT_RECURSION_DEPTH}) exceeded! " +
+                            $"Possible circular reference detected at config: {config.Key}. " +
+                            $"Check your EffectConfig for circular references in Children list.");
+                return null;
+            }
+
             var effectSpec = new EffectSpec
             {
                 Key = config.Key,
@@ -155,12 +177,21 @@ namespace Combat.Actors
             };
             // set effect params
             ParseEffectParams(effectSpec.EffectParams, config.ExtraParams);
-            for (int i = 0; i < config.Children.Count; i++)
+            if (config.Children != null && config.Children.Count > 0)
             {
-                var childConfig = config.Children[i];
-                var childEffectSpec = GetEffectSpecFromConfig(childConfig);
-                effectSpec.children ??= new List<EffectSpec>();
-                effectSpec.children.Add(childEffectSpec);
+                for (int i = 0; i < config.Children.Count; i++)
+                {
+                    var childConfig = config.Children[i];
+                    if (childConfig != null)
+                    {
+                        var childEffectSpec = GetEffectSpecFromConfig(childConfig, depth + 1);
+                        if (childEffectSpec != null)
+                        {
+                            effectSpec.Children ??= new List<EffectSpec>();
+                            effectSpec.Children.Add(childEffectSpec);
+                        }
+                    }
+                }
             }
             return effectSpec;
         }

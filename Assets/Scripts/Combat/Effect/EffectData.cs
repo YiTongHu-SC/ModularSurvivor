@@ -14,7 +14,7 @@ namespace Combat.Effect
         public float Duration; // 效果持续时间（秒），0表示瞬时效果, -1表示无限持续
 
         // 通用：子节点
-        public List<EffectSpec> children;
+        public List<EffectSpec> Children;
 
         // 通用参数（最简可先用 Dictionary 或强类型 Params）
         public Dictionary<string, object> EffectParams;

@@ -42,7 +42,7 @@ namespace Combat.Config
     }
 
     [Serializable]
-    public struct EffectConfig
+    public class EffectConfig
     {
         public string Key;
         public string PreferenceKey;
@@ -50,6 +50,7 @@ namespace Combat.Config
         public float Duration; // 效果持续时间（秒），0表示瞬时效果, -1表示无限持续
         public EffectNodeType EffectNodeType;
         public List<ParamData> ExtraParams;
+        [SerializeReference]
         public List<EffectConfig> Children;
     }
 }
