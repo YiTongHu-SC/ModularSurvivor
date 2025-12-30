@@ -30,6 +30,11 @@ MonoBehaviour:
     DefaultWeight: 0
   Overrides: []
   _generatedEntries:
+  - _key: Level:ActorConfigs:AbilityConfigChaseHero
+    _assetType: 1
+    _weight: 0
+    _isRequired: 1
+    _tags: []
   - _key: Level:ActorConfigs:AbilityConfigHeroLaserStrike
     _assetType: 1
     _weight: 0

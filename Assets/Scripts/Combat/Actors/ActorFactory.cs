@@ -70,6 +70,9 @@ namespace Combat.Actors
             unitData.Key = characterId;
             // set health
             unitData.SetHealth(ActorAttributeUtils.GetMaxHp(table.BaseStrength, table.StrengthBonuses, 1));
+            var unitInstance = GameObjectFactory.Spawn(targetPrefab);
+            var unit = unitInstance.GetComponent<Actor>();
+            unit.Initialize(unitData);
             // apply abilities
             foreach (var abilityKey in table.Abilities)
             {
@@ -77,9 +80,6 @@ namespace Combat.Actors
                 var abilityData = GetAbilityDataFromConfig(abilityConfig, unitData.RuntimeId);
                 CombatManager.Instance.AbilitySystem.ApplyAbility(abilityData);
             }
-            var unitInstance = GameObjectFactory.Spawn(targetPrefab);
-            var unit = unitInstance.GetComponent<Actor>();
-            unit.Initialize(unitData);
             return unit;
         }
 
@@ -203,6 +203,11 @@ namespace Combat.Actors
             {
                 switch (param.ParamType)
                 {
+                    case ParamType.TargetUnitId:
+                        extraParams["TargetUnitId"] = param.Value == "Hero"
+                            ? UnitManager.Instance.HeroUnitData.RuntimeId
+                            : int.Parse(param.Value);
+                        break;
                     case ParamType.DamageAmount:
                         extraParams["DamageAmount"] = float.Parse(param.Value);
                         break;

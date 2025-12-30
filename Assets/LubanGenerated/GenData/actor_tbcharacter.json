@@ -10,7 +10,8 @@
     "strength_bonuses": 2,
     "prefab": "Level:Characters:ActorSlime",
     "abilities": [
-      "Level:ActorConfigs:AbilityConfigHitOnCollision"
+      "Level:ActorConfigs:AbilityConfigHitOnCollision",
+      "Level:ActorConfigs:AbilityConfigChaseHero"
     ]
   },
   {
@@ -24,7 +25,8 @@
     "strength_bonuses": 3,
     "prefab": "Level:Characters:ActorSlime",
     "abilities": [
-      "Level:ActorConfigs:AbilityConfigHitOnCollision"
+      "Level:ActorConfigs:AbilityConfigHitOnCollision",
+      "Level:ActorConfigs:AbilityConfigChaseHero"
     ]
   },
   {

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 653c28dd486da504f97ed196c28270c7, type: 3}
+  m_Name: AbilityConfigChaseHero
+  m_EditorClassIdentifier: Combat::Combat.Config.ActorAbilityConfig
+  Name: ChaseHeroAbility
+  Description: "\u8FFD\u51FB\u73A9\u5BB6\u89D2\u8272"
+  TriggerType: 4
+  EventTypes: 
+  FindTargetType: 6
+  Cooldown: 0
+  Interval: 0
+  Cost: 0
+  EffectConfig:
+    Key: ChaseTargetEffect
+    PreferenceKey: 
+    Delay: 0
+    Duration: -1
+    EffectNodeType: 10009
+    ExtraParams: []
+    Children: []
+  ExtraParams:
+  - ParamType: 1
+    Value: Hero
+  references:
+    version: 2
+    RefIds: []
