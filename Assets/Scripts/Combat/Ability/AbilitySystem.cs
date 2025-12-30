@@ -59,11 +59,11 @@ namespace Combat.Ability
             foreach (var abilityId in _expiredAbilities)
             {
                 Debug.Log($"能力过期并移除: {_abilities[abilityId].AbilityData.Key}");
-                _abilities[abilityId].RemoveAbility();
                 if (_actorAbilities.ContainsKey(_abilities[abilityId].UnitId))
                 {
                     _actorAbilities[_abilities[abilityId].UnitId].Remove(_abilities[abilityId]);
                 }
+                _abilities[abilityId].RemoveAbility();
                 _abilities.Remove(abilityId);
             }
         }
