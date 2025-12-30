@@ -130,6 +130,7 @@ namespace Combat.Actors
                         Cooldown = config.Cooldown,
                         Cost = config.Cost,
                         ExtraParams = new Dictionary<string, object>(),
+                        EventTypes = new List<TriggerEventType>(config.EventTypes),
                     };
                     break;
                 default:

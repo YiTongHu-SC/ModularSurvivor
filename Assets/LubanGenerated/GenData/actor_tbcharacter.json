@@ -9,7 +9,9 @@
     "base_strength": 10,
     "strength_bonuses": 2,
     "prefab": "Level:Characters:ActorSlime",
-    "abilities": []
+    "abilities": [
+      "Level:ActorConfigs:AbilityConfigHitOnCollision"
+    ]
   },
   {
     "key": "actor_enemy_101",
@@ -21,7 +23,9 @@
     "base_strength": 20,
     "strength_bonuses": 3,
     "prefab": "Level:Characters:ActorSlime",
-    "abilities": []
+    "abilities": [
+      "Level:ActorConfigs:AbilityConfigHitOnCollision"
+    ]
   },
   {
     "key": "actor_hero_1",

@@ -13,6 +13,7 @@ namespace Combat.Config
         public string Name;
         public string Description;
         public TriggerType TriggerType;
+        public List<TriggerEventType> EventTypes;
         public FindTargetType FindTargetType;
         public float Cooldown;
         public float Interval;

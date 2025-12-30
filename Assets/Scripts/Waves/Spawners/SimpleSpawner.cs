@@ -61,55 +61,55 @@ namespace Waves.Spawners
             // Spawn unit
             // apply ability
             // TODO: 后面改成从配置表读取
-            var abilityData = new AbilityTriggerByEventData()
-            {
-                RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
-                Key = "HitOnCollision",
-                SourceId = enemy.UnitData.RuntimeId,
-                TriggerType = TriggerType.ByEvent,
-                Cooldown = 0.2f,
-                FindTargetType = FindTargetType.Ally,
-            };
-            abilityData.EventTypes.Clear();
-            abilityData.EventTypes.Add(TriggerEventType.OnCollideOtherUnit);
-            // set effect
-            // TODO: 后面改成从配置表读取
-            var effectDamage = new EffectSpec()
-            {
-                Key = "DamageEffect",
-                EffectNodeType = EffectNodeType.Damage,
-                EffectParams = new System.Collections.Generic.Dictionary<string, object>()
-                {
-                    { "DamageAmount", 5f }
-                }
-            };
+            // var abilityData = new AbilityTriggerByEventData()
+            // {
+            //     RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
+            //     Key = "HitOnCollision",
+            //     SourceId = enemy.UnitData.RuntimeId,
+            //     TriggerType = TriggerType.ByEvent,
+            //     Cooldown = 0.2f,
+            //     FindTargetType = FindTargetType.Ally,
+            // };
+            // abilityData.EventTypes.Clear();
+            // abilityData.EventTypes.Add(TriggerEventType.OnCollideOtherUnit);
+            // // set effect
+            // // TODO: 后面改成从配置表读取
+            // var effectDamage = new EffectSpec()
+            // {
+            //     Key = "DamageEffect",
+            //     EffectNodeType = EffectNodeType.Damage,
+            //     EffectParams = new System.Collections.Generic.Dictionary<string, object>()
+            //     {
+            //         { "DamageAmount", 5f }
+            //     }
+            // };
 
-            abilityData.EffectSpec = effectDamage;
+            // abilityData.EffectSpec = effectDamage;
 
-            CombatManager.Instance.AbilitySystem.ApplyAbility(abilityData);
+            // CombatManager.Instance.AbilitySystem.ApplyAbility(abilityData);
             // chase hero
-            var chaseAbilityData = new AbilityData
-            {
-                RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
-                Key = "ChaseHeroAbility",
-                SourceId = enemy.UnitData.RuntimeId,
-                TriggerType = TriggerType.Once,
-                FindTargetType = FindTargetType.Specific,
-                ExtraParams = new System.Collections.Generic.Dictionary<string, object>()
-                {
-                    { "TargetUnitId", UnitManager.Instance.HeroUnitData.RuntimeId },
-                }
-            };
-            // set effect
-            var chaseEffect = new EffectSpec()
-            {
-                Key = "ChaseTargetEffect",
-                EffectNodeType = EffectNodeType.ChaseTarget,
-                Duration = -1f,
-            };
-            chaseAbilityData.EffectSpec = chaseEffect;
+            // var chaseAbilityData = new AbilityData
+            // {
+            //     RuntimeID = CombatManager.Instance.GlobalAllocator.Next(),
+            //     Key = "ChaseHeroAbility",
+            //     SourceId = enemy.UnitData.RuntimeId,
+            //     TriggerType = TriggerType.Once,
+            //     FindTargetType = FindTargetType.Specific,
+            //     ExtraParams = new System.Collections.Generic.Dictionary<string, object>()
+            //     {
+            //         { "TargetUnitId", UnitManager.Instance.HeroUnitData.RuntimeId },
+            //     }
+            // };
+            // // set effect
+            // var chaseEffect = new EffectSpec()
+            // {
+            //     Key = "ChaseTargetEffect",
+            //     EffectNodeType = EffectNodeType.ChaseTarget,
+            //     Duration = -1f,
+            // };
+            // chaseAbilityData.EffectSpec = chaseEffect;
 
-            CombatManager.Instance.AbilitySystem.ApplyAbility(chaseAbilityData);
+            // CombatManager.Instance.AbilitySystem.ApplyAbility(chaseAbilityData);
 
             // apply Buff
             var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);

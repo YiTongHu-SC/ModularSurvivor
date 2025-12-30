@@ -29,6 +29,10 @@ MonoBehaviour:
     _resourcesPath: Level/ActorConfigs/AbilityConfigHeroLaserStrike
     _assetType: 1
     _tags: []
+  - _key: Level:ActorConfigs:AbilityConfigHitOnCollision
+    _resourcesPath: Level/ActorConfigs/AbilityConfigHitOnCollision
+    _assetType: 1
+    _tags: []
   - _key: Level:ActorConfigs:ActorViewData_1
     _resourcesPath: Level/ActorConfigs/ActorViewData_1
     _assetType: 1
