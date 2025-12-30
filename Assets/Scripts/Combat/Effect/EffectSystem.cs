@@ -10,12 +10,14 @@ namespace Combat.Effect
     public class EffectSystem : ISystem
     {
         private readonly Dictionary<int, IEffectNode> _effectNodes = new();
+        public readonly Dictionary<int, List<IEffectNode>> UnitEffectNodes = new();
         private readonly List<int> _effectRemoveQueue = new();
 
         public void Reset()
         {
             _effectNodes.Clear();
             _effectRemoveQueue.Clear();
+            UnitEffectNodes.Clear();
         }
 
         public void CastEffect(IEffectNode effectNode)
@@ -26,6 +28,11 @@ namespace Combat.Effect
         private void CastEffectCall(IEffectNode effectNode)
         {
             _effectNodes.TryAdd(effectNode.NodeId, effectNode);
+            if (!UnitEffectNodes.ContainsKey(effectNode.Context.SourceId))
+            {
+                UnitEffectNodes[effectNode.Context.SourceId] = new List<IEffectNode>();
+            }
+            UnitEffectNodes[effectNode.Context.SourceId].Add(effectNode);
         }
 
         /// <summary>
@@ -51,6 +58,10 @@ namespace Combat.Effect
             // 移除已完成的效果节点
             foreach (var nodeId in _effectRemoveQueue)
             {
+                if (UnitEffectNodes.ContainsKey(_effectNodes[nodeId].Context.SourceId))
+                {
+                    UnitEffectNodes[_effectNodes[nodeId].Context.SourceId].Remove(_effectNodes[nodeId]);
+                }
                 _effectNodes[nodeId].Remove();
                 _effectNodes.Remove(nodeId);
             }

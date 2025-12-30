@@ -101,17 +101,29 @@ namespace DebugTools.DebugMVC
                     CreateActorInfo("Move Speed", actor.MoveSpeed.ToString());
                     // abilities
                     var actorAbilities = CombatManager.Instance.AbilitySystem.ActorAbilities;
-                    if (actorAbilities.ContainsKey(actor.RuntimeId))
+                    if (actorAbilities.TryGetValue(actor.RuntimeId, out var abilities))
                     {
-                        var abilities = actorAbilities[actor.RuntimeId];
                         foreach (var ability in abilities)
                         {
-                            CreateActorInfo($"Ability", $"Key:{ability.AbilityData.Key},IsExpired:{ability.IsExpired}");
+                            CreateActorInfo($"Ability", $"Key:{ability.AbilityData.Key}");
                         }
                     }
                     else
                     {
                         CreateActorInfo("Abilities", "No abilities applied.");
+                    }
+                    // effects
+                    var actorEffects = CombatManager.Instance.EffectSystem.UnitEffectNodes;
+                    if (actorEffects.TryGetValue(actor.RuntimeId, out var effects))
+                    {
+                        foreach (var effect in effects)
+                        {
+                            CreateActorInfo($"Effect", $"Type:{effect.Type}");
+                        }
+                    }
+                    else
+                    {
+                        CreateActorInfo("Effects", "No effects applied.");
                     }
                 }
                 else
