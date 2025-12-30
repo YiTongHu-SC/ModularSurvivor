@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Combat::Combat.Buff.BuffDataConfig
   Name: BuffDelayDeath
   BuffType: 6
-  Duration: 10
+  Duration: 99999
   Value: 0
   CanStack: 0

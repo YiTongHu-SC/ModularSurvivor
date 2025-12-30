@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1857361766822337955}
   - component: {fileID: 6269420373531811641}
   - component: {fileID: 2369935223835813768}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ActorSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2789746566980873308}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,6 +156,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7635826562936255635, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -166,6 +170,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
       propertyPath: m_Name
       value: Blue_Stone_Buddy_1204160349_texture
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: eca47f6d1df623044b45e71a50d283a2, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
