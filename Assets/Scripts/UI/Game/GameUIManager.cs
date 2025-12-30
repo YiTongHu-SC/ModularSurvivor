@@ -58,13 +58,11 @@ namespace UI.Game
         private void CloseMenu()
         {
             MvcManager.Instance.Close<GameMenuController>();
-            CombatManager.Instance.InGameResume();
         }
 
         private void OpenMenu()
         {
             MvcManager.Instance.Open<GameMenuController>();
-            CombatManager.Instance.InGamePause();
         }
     }
 }

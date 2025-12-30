@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Combat.Ability;
 using Combat.Actors;
 using Combat.Data;
@@ -46,10 +47,12 @@ namespace Combat.Systems
         public CombatClockData CombatClock { get; set; }
         public Actor HeroActor { get; set; }
         public bool IsInitialized { get; private set; }
+        private HashSet<int> ActivePauseRequests { get; set; }
 
         public override void Initialize()
         {
             base.Initialize();
+            ActivePauseRequests = new HashSet<int>();
             StateMachine = new StateMachine<CombatManager, CombatState, CombatTransition>(this);
             var initState = new CombatStateInit();
             var inCombatState = new CombatStateInCombat();
@@ -111,14 +114,19 @@ namespace Combat.Systems
             StateMachine.PerformTransition(CombatTransition.StartCombat);
         }
 
-        public void InGamePause()
+        public void InGamePause(int runtimeId)
         {
+            ActivePauseRequests.Add(runtimeId);
             StateMachine.PerformTransition(CombatTransition.PauseCombat);
         }
 
-        public void InGameResume()
+        public void InGameResume(int runtimeId)
         {
-            StateMachine.PerformTransition(CombatTransition.ResumeCombat);
+            ActivePauseRequests.Remove(runtimeId);
+            if (ActivePauseRequests.Count == 0)
+            {
+                StateMachine.PerformTransition(CombatTransition.ResumeCombat);
+            }
         }
 
         public void InGameVictory()
@@ -134,6 +142,7 @@ namespace Combat.Systems
         public void Reset()
         {
             // 清理战斗相关数据
+            ActivePauseRequests.Clear();
             ActorFactory.Reset();
             AbilitySystem.Reset();
             EffectSystem.Reset();

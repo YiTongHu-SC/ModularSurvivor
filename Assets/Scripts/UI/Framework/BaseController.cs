@@ -12,6 +12,8 @@ namespace UI.Framework
         where TModel : class
         where TView : class
     {
+
+        public int RuntimeId { get; set; }
         /// <summary>
         /// 关联的模型
         /// </summary>
@@ -64,7 +66,7 @@ namespace UI.Framework
                     $"BaseController<{typeof(TModel).Name}, {typeof(TView).Name}>: Model or View cannot be null!");
                 return;
             }
-
+            RuntimeId = MvcManager.Instance.UIAllocator.Next();
             Model = model;
             View = view;
             IsInitialized = true;

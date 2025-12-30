@@ -74,6 +74,7 @@ namespace UI.Framework
         where TModel : class
         where TView : class
     {
+        public int RuntimeId { get; set; }
         protected bool EnableDebugLogging = true;
 
         public TModel Model { get; private set; }
@@ -125,6 +126,13 @@ namespace UI.Framework
 
         public virtual void Initialize(TModel model, TView view)
         {
+            if (IsInitialized)
+            {
+                Debug.LogWarning(
+                    $"BaseUIController<{typeof(TModel).Name}, {typeof(TView).Name}>: Controller already initialized!");
+                return;
+            }
+            RuntimeId = MvcManager.Instance.UIAllocator.Next();
             Model = model;
             View = view;
             IsInitialized = true;

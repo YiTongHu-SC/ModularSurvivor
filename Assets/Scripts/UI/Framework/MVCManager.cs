@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Assets;
 using Core.AssetsTool;
+using Core.GameInterface;
 using StellarCore.Singleton;
 using UI.Config;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.Core;
 
 namespace UI.Framework
 {
     /// <summary>
     /// MVC管理器 - 管理所有MVC控制器的生命周期
     /// </summary>
-    public class MvcManager : BaseInstance<MvcManager>
+    public class MvcManager : BaseInstance<MvcManager>, IManager
     {
         [Header("Settings")][SerializeField] private bool _enableDebugLogging = true;
+        public RuntimeIdAllocator UIAllocator { get; } = new RuntimeIdAllocator();
+
+        public bool IsInitialized => throw new NotImplementedException();
 
         private UIConfig _uiConfig;
 
@@ -72,6 +77,7 @@ namespace UI.Framework
         public override void Initialize()
         {
             base.Initialize();
+            UIAllocator.Initialize();
             InitializeUILayers();
             if (_enableDebugLogging)
             {
@@ -740,6 +746,15 @@ namespace UI.Framework
         public void SetDebugLogging(bool enable)
         {
             _enableDebugLogging = enable;
+        }
+
+        public void Reset()
+        {
+            UIAllocator.Reset();
+        }
+
+        public void Tick(float deltaTime)
+        {
         }
 
         #endregion

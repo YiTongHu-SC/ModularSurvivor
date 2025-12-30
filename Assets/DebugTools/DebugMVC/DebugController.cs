@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Combat.Ability;
 using Combat.Effect;
+using Combat.Systems;
 using Core.Events;
 using UI.Framework;
 using UnityEngine;
@@ -82,6 +83,20 @@ namespace DebugTools.DebugMVC
             });
             effect.Execute();
             MvcManager.Instance.Close<DebugController>();
+        }
+
+        override public void Open(object args = null)
+        {
+            base.Open(args);
+            UnityEngine.Debug.Log("DebugController opened.");
+            CombatManager.Instance.InGamePause(RuntimeId);
+        }
+
+        override public void Close()
+        {
+            base.Close();
+            UnityEngine.Debug.Log("DebugController closed.");
+            CombatManager.Instance.InGameResume(RuntimeId);
         }
     }
 }

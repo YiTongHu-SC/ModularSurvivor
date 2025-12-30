@@ -1,4 +1,5 @@
-﻿using UI.Framework;
+﻿using Combat.Systems;
+using UI.Framework;
 using UnityEngine;
 
 namespace UI.Game
@@ -23,6 +24,18 @@ namespace UI.Game
             Debug.Log("GameMenuController disposed.");
             Model.Dispose();
             Object.Destroy(View.gameObject);
+        }
+
+        public override void Open(object args = null)
+        {
+            base.Open(args);
+            CombatManager.Instance.InGamePause(RuntimeId);
+        }
+
+        public override void Close()
+        {
+            base.Close();
+            CombatManager.Instance.InGameResume(RuntimeId);
         }
     }
 }
