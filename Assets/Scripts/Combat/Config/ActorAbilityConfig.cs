@@ -45,11 +45,12 @@ namespace Combat.Config
     [Serializable]
     public class EffectConfig
     {
-        public string Key;
+        public string Name;
         public string PreferenceKey;
         public float Delay; // 效果执行延迟时间（秒）
         public float Duration; // 效果持续时间（秒），0表示瞬时效果, -1表示无限持续
         public EffectNodeType EffectNodeType;
+        public List<string> BuffKeys;
         public List<ParamData> ExtraParams;
         [SerializeReference]
         public List<EffectConfig> Children;

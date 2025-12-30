@@ -49,7 +49,7 @@ namespace Combat.Buff
         /// <returns>是否成功叠加</returns>
         public virtual bool TryStack(BaseBuff newBaseBuff)
         {
-            if (!Data.CanStack || Data.ID != newBaseBuff.Data.ID) return false;
+            if (!Data.CanStack || Data.RuntimeId != newBaseBuff.Data.RuntimeId) return false;
 
             StackCount++;
             // 刷新持续时间

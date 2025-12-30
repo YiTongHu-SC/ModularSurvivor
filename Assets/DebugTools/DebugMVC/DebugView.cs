@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using cfg.game;
 using Combat.Systems;
 using Core.Events;
@@ -9,7 +10,6 @@ using Lean.Pool;
 using TMPro;
 using UI.Framework;
 using UI.Utils;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,9 +23,10 @@ namespace DebugTools.DebugMVC
         private TMP_InputField InputFieldSelectActorId;
         private Button ButtonSelectHeroActor;
         private Button ButtonCheckActorStatus;
+        private Button ButtonLoopActorSelect;
         private Transform CurrentActorInfoContainer;
         private List<InfoShow> CurrentActorInfoShows = new();
-
+        private int _currentLoopActorIndex = 0;
         protected override void Awake()
         {
             base.Awake();
@@ -35,9 +36,31 @@ namespace DebugTools.DebugMVC
             UiTool.TryBind(transform, "ButtonSelectHeroActor", out ButtonSelectHeroActor);
             UiTool.TryBind(transform, "ButtonCheckActorStatus", out ButtonCheckActorStatus);
             UiTool.TryBind(transform, "CurrentActorInfoContainer", out CurrentActorInfoContainer);
+            UiTool.TryBind(transform, "ButtonLoopActorSelect", out ButtonLoopActorSelect);
             ButtonTryDamageToHero.onClick.AddListener(TryDamageToHero);
             ButtonSelectHeroActor.onClick.AddListener(SelectHeroActor);
             ButtonCheckActorStatus.onClick.AddListener(CheckActorStatus);
+            ButtonLoopActorSelect.onClick.AddListener(LoopActorSelect);
+        }
+
+        /// <summary>
+        /// Loop select actor for testing purpose.
+        /// </summary>
+        private void LoopActorSelect()
+        {
+            if (!UnitManager.Instance.IsInitialized) return;
+            var count = 0;
+            foreach (var unit in UnitManager.Instance.Units.Keys)
+            {
+                if (count == _currentLoopActorIndex)
+                {
+                    InputFieldSelectActorId.text = unit.ToString();
+                    CheckActorStatus();
+                    _currentLoopActorIndex = (_currentLoopActorIndex + 1) % UnitManager.Instance.Units.Count;
+                    break;
+                }
+                count++;
+            }
         }
 
         private void Start()
@@ -124,6 +147,19 @@ namespace DebugTools.DebugMVC
                     else
                     {
                         CreateActorInfo("Effects", "No effects applied.");
+                    }
+                    // buffs
+                    var actorBuffs = CombatManager.Instance.BuffSystem.UnitBuffs;
+                    if (actorBuffs.TryGetValue(actor.RuntimeId, out var buffs))
+                    {
+                        foreach (var buff in buffs)
+                        {
+                            CreateActorInfo($"Buff", $"{buff.Data.Name}");
+                        }
+                    }
+                    else
+                    {
+                        CreateActorInfo("Buffs", "No buffs applied.");
                     }
                 }
                 else

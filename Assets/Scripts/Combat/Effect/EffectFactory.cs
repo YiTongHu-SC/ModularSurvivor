@@ -21,7 +21,11 @@ namespace Combat.Effect
                 {
                     EffectNodeType.DamageOnComplete,
                     (spec) => new DamageOnCompleteEffect(spec)
-                }
+                },
+                {
+                    EffectNodeType.ApplyBuff,
+                    (spec) => new BuffEffect(spec)
+                },
             };
 
         /// <summary>

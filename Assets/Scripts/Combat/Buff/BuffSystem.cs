@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Combat.Buff;
+using Combat.Utils;
+using Core.AssetsTool;
 using Core.Events;
 using Core.GameInterface;
 using Core.Units;
 using UnityEngine;
 
-namespace Combat.Systems
+namespace Combat.Buff
 {
     /// <summary>
     /// Buff系统，管理所有单位的增益和减益效果
     /// </summary>
-    public class BuffSystem: ISystem
+    public class BuffSystem : ISystem
     {
         // 按单位ID存储Buff列表
         private readonly Dictionary<int, List<BaseBuff>> _unitBuffs = new();
+        public Dictionary<int, List<BaseBuff>> UnitBuffs => _unitBuffs;
 
         public void Reset()
         {
@@ -63,9 +65,20 @@ namespace Combat.Systems
             // 应用Buff效果
             newBuff.ApplyEffect();
             // 发布事件
-            EventManager.Instance.Publish(new GameEvents.BuffAppliedEvent(newBuff.Data.ID, newBuff.TargetUnitId));
+            EventManager.Instance.Publish(new GameEvents.BuffAppliedEvent(newBuff.Data.RuntimeId, newBuff.TargetUnitId));
 
             return true;
+        }
+
+        /// <summary>
+        /// 通过Buff Config Key应用Buff到指定单位
+        /// </summary>
+        /// <param name="buffKey"></param>
+        /// <param name="unitId"></param>
+        public void ApplyBuffByKey(string buffKey, int unitId)
+        {
+            var buffData = CombatDataUtils.CreateBuffDataByKey(buffKey);
+            ApplyBuff(buffData.BuffType, buffData, unitId);
         }
 
         /// <summary>
@@ -79,7 +92,7 @@ namespace Combat.Systems
             if (!_unitBuffs.TryGetValue(unitId, out var unitBuffs))
                 return false;
 
-            var buffToRemove = unitBuffs.FirstOrDefault(b => b.Data.ID == buffId && b.IsActive);
+            var buffToRemove = unitBuffs.FirstOrDefault(b => b.Data.RuntimeId == buffId && b.IsActive);
             if (buffToRemove == null)
                 return false;
 
@@ -101,7 +114,7 @@ namespace Combat.Systems
         /// <param name="deltaTime">时间增量</param>
         public void Tick(float deltaTime)
         {
-            var expiredBuffs = new List<(int unitId, Combat.Buff.BaseBuff buff)>();
+            var expiredBuffs = new List<(int unitId, Buff.BaseBuff buff)>();
 
             foreach (var kvp in _unitBuffs)
             {
@@ -131,7 +144,7 @@ namespace Combat.Systems
             {
                 buff.RemoveEffect();
                 EventManager.Instance.Publish(
-                    new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
+                    new GameEvents.BuffRemovedEvent(unitId, buff.Data.RuntimeId, buff.Data.Name));
             }
         }
 
@@ -172,14 +185,14 @@ namespace Combat.Systems
         /// </summary>
         /// <param name="unitId">单位ID</param>
         /// <returns>Buff列表</returns>
-        public List<Combat.Buff.BaseBuff> GetUnitBuffs(int unitId)
+        public List<Buff.BaseBuff> GetUnitBuffs(int unitId)
         {
             if (_unitBuffs.TryGetValue(unitId, out var buffs))
             {
                 return buffs.Where(b => b.IsActive).ToList();
             }
 
-            return new List<Combat.Buff.BaseBuff>();
+            return new List<Buff.BaseBuff>();
         }
 
         /// <summary>
@@ -196,10 +209,12 @@ namespace Combat.Systems
             {
                 buff.RemoveEffect();
                 EventManager.Instance.Publish(
-                    new GameEvents.BuffRemovedEvent(unitId, buff.Data.ID, buff.Data.Name));
+                    new GameEvents.BuffRemovedEvent(unitId, buff.Data.RuntimeId, buff.Data.Name));
             }
 
             buffs.Clear();
         }
+
+
     }
 }

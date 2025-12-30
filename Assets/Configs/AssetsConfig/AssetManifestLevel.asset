@@ -30,6 +30,11 @@ MonoBehaviour:
     DefaultWeight: 0
   Overrides: []
   _generatedEntries:
+  - _key: Level:ActorConfigs:AbilityConfigAddBuff
+    _assetType: 1
+    _weight: 0
+    _isRequired: 1
+    _tags: []
   - _key: Level:ActorConfigs:AbilityConfigChaseHero
     _assetType: 1
     _weight: 0
@@ -51,6 +56,11 @@ MonoBehaviour:
     _isRequired: 1
     _tags: []
   - _key: Level:ActorConfigs:ActorViewData_2
+    _assetType: 1
+    _weight: 0
+    _isRequired: 1
+    _tags: []
+  - _key: Level:ActorConfigs:BuffDelayDeath
     _assetType: 1
     _weight: 0
     _isRequired: 1

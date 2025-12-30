@@ -5,16 +5,16 @@
     /// </summary>
     public class BuffData
     {
-        public int ID { get; set; }
+        public int RuntimeId { get; set; }
         public string Name { get; set; }
         public BuffType BuffType { get; set; }
         public float Duration { get; set; }
         public float Value { get; set; }
         public bool CanStack { get; set; }
 
-        public BuffData(int id, string name, BuffType buffType, float duration, float value = 0, bool canStack = false)
+        public BuffData(int runtimeId, string name, BuffType buffType, float duration, float value = 0, bool canStack = false)
         {
-            ID = id;
+            RuntimeId = runtimeId;
             Name = name;
             BuffType = buffType;
             Duration = duration;

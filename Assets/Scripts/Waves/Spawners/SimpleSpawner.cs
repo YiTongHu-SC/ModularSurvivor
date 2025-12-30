@@ -59,8 +59,6 @@ namespace Waves.Spawners
 
             var enemy = CombatManager.Instance.ActorFactory.SpawnCharacter("actor_enemy_100", spawnPosition);
             // apply Buff
-            var buffData = new BuffData(0, "DelayDeath", BuffType.DelayDeath, DeathDelayTime);
-            CombatManager.Instance.BuffSystem.ApplyBuff(BuffType.DelayDeath, buffData, enemy.UnitData.RuntimeId);
             Debug.Log($"Spawning enemy {enemy.name} from SimpleSpawner");
         }
     }

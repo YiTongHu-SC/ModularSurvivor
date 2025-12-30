@@ -25,6 +25,10 @@ MonoBehaviour:
     _resourcesPath: Global/CameraManager
     _assetType: 0
     _tags: []
+  - _key: Level:ActorConfigs:AbilityConfigAddBuff
+    _resourcesPath: Level/ActorConfigs/AbilityConfigAddBuff
+    _assetType: 1
+    _tags: []
   - _key: Level:ActorConfigs:AbilityConfigChaseHero
     _resourcesPath: Level/ActorConfigs/AbilityConfigChaseHero
     _assetType: 1
@@ -43,6 +47,10 @@ MonoBehaviour:
     _tags: []
   - _key: Level:ActorConfigs:ActorViewData_2
     _resourcesPath: Level/ActorConfigs/ActorViewData_2
+    _assetType: 1
+    _tags: []
+  - _key: Level:ActorConfigs:BuffDelayDeath
+    _resourcesPath: Level/ActorConfigs/BuffDelayDeath
     _assetType: 1
     _tags: []
   - _key: Level:Characters:ActorDragon

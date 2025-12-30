@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Combat.Systems;
 
 namespace Combat.Buff
 {
@@ -19,7 +20,7 @@ namespace Combat.Buff
             {
                 throw new ArgumentException($"未找到对应的 Buff 创建器: {id}");
             }
-
+            data.RuntimeId = CombatManager.Instance.GlobalAllocator.Next();
             return creator(data, targetUnitId);
         }
     }

@@ -11,7 +11,8 @@
     "prefab": "Level:Characters:ActorSlime",
     "abilities": [
       "Level:ActorConfigs:AbilityConfigHitOnCollision",
-      "Level:ActorConfigs:AbilityConfigChaseHero"
+      "Level:ActorConfigs:AbilityConfigChaseHero",
+      "Level:ActorConfigs:AbilityConfigAddBuff"
     ]
   },
   {
@@ -26,7 +27,8 @@
     "prefab": "Level:Characters:ActorSlime",
     "abilities": [
       "Level:ActorConfigs:AbilityConfigHitOnCollision",
-      "Level:ActorConfigs:AbilityConfigChaseHero"
+      "Level:ActorConfigs:AbilityConfigChaseHero",
+      "Level:ActorConfigs:AbilityConfigAddBuff"
     ]
   },
   {

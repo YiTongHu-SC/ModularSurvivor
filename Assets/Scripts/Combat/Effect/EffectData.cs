@@ -16,6 +16,8 @@ namespace Combat.Effect
         // 通用：子节点
         public List<EffectSpec> Children;
 
+        // Buff
+        public List<string> BuffKeys;
         // 通用参数（最简可先用 Dictionary 或强类型 Params）
         public Dictionary<string, object> EffectParams;
 

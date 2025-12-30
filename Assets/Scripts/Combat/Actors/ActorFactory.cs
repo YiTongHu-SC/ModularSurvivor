@@ -162,19 +162,20 @@ namespace Combat.Actors
             if (depth >= MAX_EFFECT_RECURSION_DEPTH)
             {
                 Debug.LogError($"EffectConfig recursion depth limit ({MAX_EFFECT_RECURSION_DEPTH}) exceeded! " +
-                            $"Possible circular reference detected at config: {config.Key}. " +
+                            $"Possible circular reference detected at config: {config.Name}. " +
                             $"Check your EffectConfig for circular references in Children list.");
                 return null;
             }
 
             var effectSpec = new EffectSpec
             {
-                Key = config.Key,
+                Key = config.Name,
                 PreferenceKey = config.PreferenceKey,
                 EffectNodeType = config.EffectNodeType,
                 Delay = config.Delay,
                 Duration = config.Duration,
                 EffectParams = new Dictionary<string, object>(),
+                BuffKeys = new List<string>(config.BuffKeys),
             };
             // set effect params
             ParseEffectParams(effectSpec.EffectParams, config.ExtraParams);
