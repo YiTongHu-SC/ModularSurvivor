@@ -19,14 +19,22 @@ public partial class Tables
     /// 目录下包含所有英雄和敌人角色
     /// </summary>
     public actor.TbCharacter TbCharacter {get; }
-    public demo.Tbitem Tbitem {get; }
+    /// <summary>
+    /// 英雄升级表
+    /// </summary>
+    public actor.TbHeroLevel TbHeroLevel {get; }
+    /// <summary>
+    /// 战斗内道具表
+    /// </summary>
+    public game.TbItem TbItem {get; }
     public game.Tbconfig Tbconfig {get; }
 
     public Tables(System.Func<string, JSONNode> loader)
     {
         TbReward = new demo.TbReward(loader("demo_tbreward"));
         TbCharacter = new actor.TbCharacter(loader("actor_tbcharacter"));
-        Tbitem = new demo.Tbitem(loader("demo_tbitem"));
+        TbHeroLevel = new actor.TbHeroLevel(loader("actor_tbherolevel"));
+        TbItem = new game.TbItem(loader("game_tbitem"));
         Tbconfig = new game.Tbconfig(loader("game_tbconfig"));
         ResolveRef();
     }
@@ -35,7 +43,8 @@ public partial class Tables
     {
         TbReward.ResolveRef(this);
         TbCharacter.ResolveRef(this);
-        Tbitem.ResolveRef(this);
+        TbHeroLevel.ResolveRef(this);
+        TbItem.ResolveRef(this);
         Tbconfig.ResolveRef(this);
     }
 }

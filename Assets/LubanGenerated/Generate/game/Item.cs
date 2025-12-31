@@ -11,27 +11,27 @@ using Luban;
 using SimpleJSON;
 
 
-namespace cfg.demo
+namespace cfg.game
 {
-public sealed partial class item : Luban.BeanBase
+public sealed partial class Item : Luban.BeanBase
 {
-    public item(JSONNode _buf) 
+    public Item(JSONNode _buf) 
     {
-        { if(!_buf["id"].IsNumber) { throw new SerializationException(); }  Id = _buf["id"]; }
+        { if(!_buf["key"].IsString) { throw new SerializationException(); }  Key = _buf["key"]; }
         { if(!_buf["name"].IsString) { throw new SerializationException(); }  Name = _buf["name"]; }
         { if(!_buf["desc"].IsString) { throw new SerializationException(); }  Desc = _buf["desc"]; }
-        { if(!_buf["count"].IsNumber) { throw new SerializationException(); }  Count = _buf["count"]; }
+        { var __json0 = _buf["values"]; if(!__json0.IsArray) { throw new SerializationException(); } int _n0 = __json0.Count; Values = new string[_n0]; int __index0=0; foreach(JSONNode __e0 in __json0.Children) { string __v0;  { if(!__e0.IsString) { throw new SerializationException(); }  __v0 = __e0; }  Values[__index0++] = __v0; }   }
     }
 
-    public static item Deserializeitem(JSONNode _buf)
+    public static Item DeserializeItem(JSONNode _buf)
     {
-        return new demo.item(_buf);
+        return new game.Item(_buf);
     }
 
     /// <summary>
     /// id
     /// </summary>
-    public readonly int Id;
+    public readonly string Key;
     /// <summary>
     /// 名称
     /// </summary>
@@ -41,11 +41,11 @@ public sealed partial class item : Luban.BeanBase
     /// </summary>
     public readonly string Desc;
     /// <summary>
-    /// 个数
+    /// 参数列表
     /// </summary>
-    public readonly int Count;
+    public readonly string[] Values;
    
-    public const int __ID__ = 750578750;
+    public const int __ID__ = 954631087;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
@@ -55,10 +55,10 @@ public sealed partial class item : Luban.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "id:" + Id + ","
+        + "key:" + Key + ","
         + "name:" + Name + ","
         + "desc:" + Desc + ","
-        + "count:" + Count + ","
+        + "values:" + Luban.StringUtil.CollectionToString(Values) + ","
         + "}";
     }
 }

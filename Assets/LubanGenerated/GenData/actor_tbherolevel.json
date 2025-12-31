@@ -1,0 +1,242 @@
+[
+  {
+    "key": "actor_hero_1",
+    "level": 1,
+    "exp": 100,
+    "strength": 25,
+    "health_point": 550,
+    "hp_regenration": 2.5
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 2,
+    "exp": 110,
+    "strength": 28,
+    "health_point": 616,
+    "hp_regenration": 2.8
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 3,
+    "exp": 130,
+    "strength": 31,
+    "health_point": 682,
+    "hp_regenration": 3.1
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 4,
+    "exp": 160,
+    "strength": 34,
+    "health_point": 748,
+    "hp_regenration": 3.4
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 5,
+    "exp": 200,
+    "strength": 37,
+    "health_point": 814,
+    "hp_regenration": 3.7
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 6,
+    "exp": 250,
+    "strength": 40,
+    "health_point": 880,
+    "hp_regenration": 4
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 7,
+    "exp": 310,
+    "strength": 43,
+    "health_point": 946,
+    "hp_regenration": 4.3
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 8,
+    "exp": 380,
+    "strength": 46,
+    "health_point": 1012,
+    "hp_regenration": 4.6
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 9,
+    "exp": 460,
+    "strength": 49,
+    "health_point": 1078,
+    "hp_regenration": 4.9
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 10,
+    "exp": 550,
+    "strength": 52,
+    "health_point": 1144,
+    "hp_regenration": 5.2
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 11,
+    "exp": 650,
+    "strength": 55,
+    "health_point": 1210,
+    "hp_regenration": 5.5
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 12,
+    "exp": 760,
+    "strength": 58,
+    "health_point": 1276,
+    "hp_regenration": 5.8
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 13,
+    "exp": 880,
+    "strength": 61,
+    "health_point": 1342,
+    "hp_regenration": 6.1
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 14,
+    "exp": 1010,
+    "strength": 64,
+    "health_point": 1408,
+    "hp_regenration": 6.4
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 15,
+    "exp": 1150,
+    "strength": 67,
+    "health_point": 1474,
+    "hp_regenration": 6.7
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 16,
+    "exp": 1300,
+    "strength": 70,
+    "health_point": 1540,
+    "hp_regenration": 7
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 17,
+    "exp": 1460,
+    "strength": 73,
+    "health_point": 1606,
+    "hp_regenration": 7.3
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 18,
+    "exp": 1630,
+    "strength": 76,
+    "health_point": 1672,
+    "hp_regenration": 7.6
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 19,
+    "exp": 1810,
+    "strength": 79,
+    "health_point": 1738,
+    "hp_regenration": 7.9
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 20,
+    "exp": 2000,
+    "strength": 82,
+    "health_point": 1804,
+    "hp_regenration": 8.2
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 21,
+    "exp": 2200,
+    "strength": 85,
+    "health_point": 1870,
+    "hp_regenration": 8.5
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 22,
+    "exp": 2410,
+    "strength": 88,
+    "health_point": 1936,
+    "hp_regenration": 8.8
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 23,
+    "exp": 2630,
+    "strength": 91,
+    "health_point": 2002,
+    "hp_regenration": 9.1
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 24,
+    "exp": 2860,
+    "strength": 94,
+    "health_point": 2068,
+    "hp_regenration": 9.4
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 25,
+    "exp": 3100,
+    "strength": 97,
+    "health_point": 2134,
+    "hp_regenration": 9.7
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 26,
+    "exp": 3350,
+    "strength": 100,
+    "health_point": 2200,
+    "hp_regenration": 10
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 27,
+    "exp": 3610,
+    "strength": 103,
+    "health_point": 2266,
+    "hp_regenration": 10.3
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 28,
+    "exp": 3880,
+    "strength": 106,
+    "health_point": 2332,
+    "hp_regenration": 10.6
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 29,
+    "exp": 4160,
+    "strength": 109,
+    "health_point": 2398,
+    "hp_regenration": 10.9
+  },
+  {
+    "key": "actor_hero_1",
+    "level": 30,
+    "exp": 4450,
+    "strength": 112,
+    "health_point": 2464,
+    "hp_regenration": 11.2
+  }
+]
