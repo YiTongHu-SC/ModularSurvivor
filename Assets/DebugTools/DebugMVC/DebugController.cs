@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Combat.Ability;
 using Combat.Effect;
 using Combat.Systems;
 using Core.Events;
+using Core.Units;
 using UI.Framework;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -57,6 +57,14 @@ namespace DebugTools.DebugMVC
                         IsShowActorInfo = true,
                         SelectedActorId = actorId,
                     });
+                    break;
+                case DebugEvents.DebugActorAction.SetHeroSightRange:
+                    var sightRange = float.Parse(data.Value);
+                    var heroActor = UnitManager.Instance.HeroUnitData;
+                    if (UnitManager.Instance.HeroUnitData != null)
+                    {
+                        UnitManager.Instance.HeroUnitData.SightRange = sightRange;
+                    }
                     break;
             }
         }

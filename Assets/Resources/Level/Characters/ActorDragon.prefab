@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4872096266858635593}
   - component: {fileID: 9146983658919152006}
   - component: {fileID: 6173607299639592862}
+  - component: {fileID: 247111406667400060}
   m_Layer: 7
   m_Name: ActorDragon
   m_TagString: Untagged
@@ -71,6 +72,19 @@ CapsuleCollider:
   m_Height: 1.46
   m_Direction: 1
   m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &247111406667400060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240105959614190555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d7d2c20f3e599a4088d932303e940ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Combat::Combat.Views.Hero.LightShow
+  LightSource: {fileID: 7370875714796264850}
 --- !u!1 &1179703943844536083
 GameObject:
   m_ObjectHideFlags: 0

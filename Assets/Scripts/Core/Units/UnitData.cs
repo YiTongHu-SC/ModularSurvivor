@@ -26,8 +26,8 @@ namespace Core.Units
         ///     模型数据
         /// </summary>
         public UnitModelView ModelView;
-
-        public Vector2 MoveDirection;
+        public Vector2 MoveDirection; // 移动方向单位向量
+        public float SightRange = 20f; // 视野范围
 
         public MovementContext MovementContext = new();
 

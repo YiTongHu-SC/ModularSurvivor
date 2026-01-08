@@ -27,6 +27,9 @@ namespace DebugTools.DebugMVC
         private Transform CurrentActorInfoContainer;
         private List<InfoShow> CurrentActorInfoShows = new();
         private int _currentLoopActorIndex = 0;
+        private TMP_InputField InputFieldSetHeroSightRange;
+        private Button ButtonSetHeroSightRange;
+
         protected override void Awake()
         {
             base.Awake();
@@ -37,10 +40,27 @@ namespace DebugTools.DebugMVC
             UiTool.TryBind(transform, "ButtonCheckActorStatus", out ButtonCheckActorStatus);
             UiTool.TryBind(transform, "CurrentActorInfoContainer", out CurrentActorInfoContainer);
             UiTool.TryBind(transform, "ButtonLoopActorSelect", out ButtonLoopActorSelect);
+            UiTool.TryBind(transform, "InputFieldSetHeroSightRange", out InputFieldSetHeroSightRange);
+            UiTool.TryBind(transform, "ButtonSetHeroSightRange", out ButtonSetHeroSightRange);
             ButtonTryDamageToHero.onClick.AddListener(TryDamageToHero);
             ButtonSelectHeroActor.onClick.AddListener(SelectHeroActor);
             ButtonCheckActorStatus.onClick.AddListener(CheckActorStatus);
             ButtonLoopActorSelect.onClick.AddListener(LoopActorSelect);
+            ButtonSetHeroSightRange.onClick.AddListener(SetHeroSightRange);
+        }
+
+        /// <summary>
+        /// Set hero sight range based on input field value.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void SetHeroSightRange()
+        {
+            if (!UnitManager.Instance.IsInitialized) return;
+            if (float.TryParse(InputFieldSetHeroSightRange.text, out var sightRange))
+            {
+                Debug.Log($"Set hero sight range to {sightRange}");
+                EventManager.Instance.Publish(new DebugEvents.DebugActorEvent(DebugEvents.DebugActorAction.SetHeroSightRange, sightRange.ToString()));
+            }
         }
 
         /// <summary>
