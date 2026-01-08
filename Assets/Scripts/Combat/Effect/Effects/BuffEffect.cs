@@ -8,6 +8,7 @@ namespace Combat.Effect.Effects
     {
         public BuffEffect(EffectSpec effectSpec) : base(effectSpec)
         {
+            EffectType = EffectNodeType.ApplyBuff;
         }
 
         public override void Execute()

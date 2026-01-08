@@ -10,7 +10,7 @@ namespace Combat.Effect.Effects
     public abstract class BaseEffect : IEffectNode
     {
         public int NodeId { get; private set; }
-        public EffectNodeType Type { get; } = EffectNodeType.Damage;
+        public EffectNodeType EffectType { get; protected set; }
         public AbilityContext Context { get; set; }
         public EffectSpec Spec { get; set; }
         public bool IsComplete { get; protected set; } = false;
@@ -69,12 +69,24 @@ namespace Combat.Effect.Effects
 
         public virtual void Tick(float deltaTime)
         {
+            var getSource = UnitManager.Instance.TryGetAvailableUnit(Context.SourceId, out var sourceUnit);
+            if (!getSource)
+            {
+                OnUnitDead();
+                return;
+            }
+
             if (Spec.Duration < 0) return;
             _elapsedTime += deltaTime;
             if (_elapsedTime >= Spec.Duration)
             {
                 OnComplete();
             }
+        }
+
+        protected virtual void OnUnitDead()
+        {
+            OnComplete();
         }
 
         // 效果完成时的处理逻辑

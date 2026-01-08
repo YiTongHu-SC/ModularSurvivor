@@ -26,6 +26,10 @@ namespace Combat.Effect
                     EffectNodeType.ApplyBuff,
                     (spec) => new BuffEffect(spec)
                 },
+                {
+                    EffectNodeType.DropItemOnDead,
+                    (spec) => new DropItemOnDead(spec)
+                },
             };
 
         /// <summary>

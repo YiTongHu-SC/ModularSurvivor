@@ -8,6 +8,7 @@ namespace Combat.Effect.Effects
 
         public ChaseTargetEffect(EffectSpec effectSpec) : base(effectSpec)
         {
+            EffectType = EffectNodeType.ChaseTarget;
         }
 
         public override void Execute()

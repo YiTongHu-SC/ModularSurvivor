@@ -11,6 +11,7 @@ namespace Combat.Effect.Effects
 
         public DamageEffect(EffectSpec spec) : base(spec)
         {
+            EffectType = EffectNodeType.Damage;
         }
 
         public override void SetContext(AbilityContext context)

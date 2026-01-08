@@ -161,7 +161,7 @@ namespace DebugTools.DebugMVC
                     {
                         foreach (var effect in effects)
                         {
-                            CreateActorInfo($"Effect", $"Type:{effect.Type}");
+                            CreateActorInfo($"Effect", $"Type:{effect.EffectType}");
                         }
                     }
                     else

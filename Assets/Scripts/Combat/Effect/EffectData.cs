@@ -41,6 +41,7 @@ namespace Combat.Effect
         SpeedBoost = 10008,
         ChaseTarget = 10009,
         DamageOnComplete = 10010,
+        DropItemOnDead = 100011,
 
         /// 组合方式
         Chain = 20000,
@@ -50,5 +51,6 @@ namespace Combat.Effect
         If = 20004,
         Chance = 20005,
         Fork = 20006,
+
     }
 }

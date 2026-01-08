@@ -10,7 +10,7 @@ namespace Combat.Effect
         /// </summary>
         public int NodeId { get; }
 
-        public EffectNodeType Type { get; }
+        public EffectNodeType EffectType { get; }
         public AbilityContext Context { get; set; }
         public EffectSpec Spec { get; set; }
 

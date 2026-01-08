@@ -9,6 +9,11 @@ namespace Combat.Effect.Effects
     {
         private float DamageAmount { get; set; } = 0;
 
+        public DamageOnCompleteEffect(EffectSpec effectSpec) : base(effectSpec)
+        {
+            EffectType = EffectNodeType.DamageOnComplete;
+        }
+
         public override void SetContext(AbilityContext context)
         {
             base.SetContext(context);
@@ -16,10 +21,6 @@ namespace Combat.Effect.Effects
             {
                 DamageAmount = (float)Spec.EffectParams["DamageAmount"];
             }
-        }
-
-        public DamageOnCompleteEffect(EffectSpec effectSpec) : base(effectSpec)
-        {
         }
 
         public override void Execute()
